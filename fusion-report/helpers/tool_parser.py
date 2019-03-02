@@ -6,11 +6,14 @@ class ToolParser():
     
     def __init__(self):
         self.__fusions = {}
+        self.__tools = []
 
     def parse(self, tool, file):
         if not file:
             print(f"File '{file}' for {tool} tool is missing , skipping ...")
         else:
+            # add tool into list of using tools
+            self.__tools.append(tool)
             try:
                 with open(file, 'r') as in_file:
                     next(in_file) # skip header
@@ -34,6 +37,26 @@ class ToolParser():
 
     def get_fusions(self):
         return self.__fusions
+
+    def get_unique_fusions(self):
+        return set(self.__fusions.keys())
+
+    def get_tools_count(self):
+        counts = {
+            'ericscript': 0,
+            'fusioncatcher': 0,
+            'pizzly': 0,
+            'squid': 0,
+            'starfusion': 0,
+            'together': 0
+        }
+        for fusion, tool_list in self.__fusions.items():
+            if len(tool_list) == len(self.__tools):
+                counts['together'] += 1
+
+            for tool in tool_list:
+                counts[tool] += 1
+        return counts
 
     def save(self, path, file_name):
         try:
