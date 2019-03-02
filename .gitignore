@@ -1,0 +1,3 @@
+.vscode
+rnafusion-summary-report/db/*.db
+__pycache__
