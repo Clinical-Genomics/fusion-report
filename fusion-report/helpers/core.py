@@ -1,32 +1,16 @@
 #!/usr/bin/env python3
-import yaml
+def tool_detection_chart(counts, tools):
+    return [[str(tool), count] for tool, count in counts.items() if tool in tools or tool == 'together']
 
-def parse_summary(p_summary):
-    """
-    Helper function for parsing summary.yaml
-    Args:
-        p_summary (string): summary.yaml
-    """
-    try:
-        with open(p_summary, 'r') as in_file:
-            return yaml.safe_load(in_file.read())
-    except IOError:
-        exit('File ' + p_summary + ' was not found!')
+def known_vs_unknown_chart(known, unknown):
+    return [['known', known], ['unknown', unknown]]
 
-def create_tool_detection_chart(p_summary):
-    """
-    Helper function that generates Tool detection graph
-    Args:
-        p_summary (dictionary): parsed summary.yaml
-    """
-    result = []
-    all_fusions = []
-    for tool, fusions in p_summary.items():
-        all_fusions.append(fusions)
-        result.append([tool, len(fusions)])
-    result.append(['all tools', len(set.intersection(*map(set, all_fusions)))])
+def distribution_chart(fusions, tools):
+    data = [0] * len(tools)
+    for _, fusion_details in fusions.items():
+        data[len(fusion_details) - 1] += 1
 
-    return result
+    return [[f"{index + 1} tool/s", data[index]] for index in range(len(data))]
 
 def create_ppi_graph(p_data):
     """
@@ -100,21 +84,6 @@ def create_ppi_graph(p_data):
         })
 
     return graph_data
-
-def create_distribution_chart(p_summary):
-    """
-    Helper function that generates Tool distribution chart
-    Args:
-        p_summary (dictionary): parsed summary.yaml
-    """
-    graph_data = [set() for i in range(len(p_summary.keys()))]
-    all_fusions = [fusions for _, fusions in p_summary.items()]
-    all_fusions = sum(all_fusions, [])
-    for fusion in all_fusions:
-        index = all_fusions.count(fusion)
-        graph_data[index - 1].add(fusion)
-
-    return [[str(index + 1) + ' tool/s', len(value)] for index, value in enumerate(graph_data)]
 
 def create_fusions_table(p_summary, p_known_fusions, cutoff):
     """

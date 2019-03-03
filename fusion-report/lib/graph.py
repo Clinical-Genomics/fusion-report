@@ -6,3 +6,6 @@ class Graph:
         self.title = title
         self.subtitle = subtitle
         self.graph = data
+    
+    def content(self):
+        return vars(self)

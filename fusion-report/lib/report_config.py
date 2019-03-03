@@ -11,7 +11,7 @@ class ReportConfig:
         self.current_path = os.path.dirname(os.path.abspath(__file__))
         self.report_title = 'nfcore/rnafusion summary report'
         self.logo = base64.b64encode(
-            open(os.path.join(self.current_path, 'assets/img/rnafusion_logo.png'), 'rb').read()
+            open(os.path.join(self.current_path, '../templates/assets/img/rnafusion_logo.png'), 'rb').read()
         ).decode('utf-8')
         self.institution = ''
         self.date_format = '%d/%m/%Y'

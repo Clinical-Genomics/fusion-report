@@ -11,11 +11,12 @@
         </div>
     </div>
     <div class="alert alert-success" role="alert">
-        <p class="mb-0">The pipeline ran successfully and was able to detect <strong>{{ page_variables.total_fusions }}</strong> fusions 
+        <p class="mb-0">The pipeline ran successfully and was able to detect <strong>{{ page_variables.fusions_sum }}</strong> fusions 
             for sample <strong>{{ page_variables.sample }}</strong>.</p>
-        <p class="mb-0">We were able to find and describe <strong>{{ page_variables.known_fusions }}</strong> fusions from our local database.</p>
-        <p class="mb-0">Tools used during the analysis were {{ page_variables.tools | map('capitalize') | join(', ') }}.</p>
+        <p class="mb-0">We were able to find and describe <strong>{{ page_variables.known_fusion_sum }}</strong> fusions from our local database.</p>
+        <p class="mb-0">Tools used during the analysis were {{ page_variables.fusion_tools | map('capitalize') | join(', ') }}.</p>
     </div>
+
     <section class="" id="dashboard">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
             <h1 class="h3">{{ sections['dashboard'].title }}</h1>
@@ -28,75 +29,18 @@
         </div>
     </section>
 
-    <section class="" id="fusion_list">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h3">{{ sections['fusion_list'].title }}</h1>
-        </div>
-        <p>{{ sections['fusion_list'].content | safe }}</p>
-        <table id="fusion_list_table" class="table table-hover table-striped table-bordered">
-            <thead>
-                <th>Fusion gene</th>
-                <th>Found in DB</th>
-                {% for tool in sections['fusion_list'].data.tools %}
-                <th>{{ tool }}</th>
-                {% endfor %}
-                <th>Tools hits</th>
-            </thead>
-            <tbody>
-                {% for fusion, fusion_info in sections['fusion_list'].data.fusions.items() %}
-                <tr>
-                    <td>
-                        <code>
-                        {% if fusion_info['known'] %}
-                        <a href="{{ fusion | replace('--', '_') }}.html">{{ fusion }}</a>
-                        {% else %}
-                        {{ fusion }}
-                        {% endif %}
-                        </code>
-                    </td>
-                    <td>
-                        <code>
-                        {% if fusion_info['known'] %}
-                        <span class="badge badge-success">Found</span>
-                        {% else %}
-                        <span class="badge badge-danger">Not found</span>
-                        {% endif %}
-                        </code>
-                    </td>
-                    {% for found_by_tool in fusion_info['tools'] %}
-                    <td>
-                        <code>
-                        {% if found_by_tool %}
-                        <span class="badge badge-success">Found</span>
-                        {% else %}
-                        <span class="badge badge-danger">Not found</span>
-                        {% endif %}
-                        </code>
-                    </td>
-                    {% endfor %}
-                    <td>
-                        {% set progress_value = (fusion_info['tools_total'] / fusion_info['tools']|length) * 100 %}
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: {{ progress_value }}%;" 
-                                aria-valuenow="{{ progress_value }}" aria-valuemin="0" aria-valuemax="100">
-                                {{ fusion_info['tools_total'] }}
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </section>
 </main>
 
-{% set distribution_chart_colors_length = sections['dashboard'].graphs['distribution_chart'].graph | length %}
+<!-- Hidden values for Javascript to process -->
+<input type="hidden" name="tool_detection_chart" value='{{ sections["dashboard"].graphs["tool_detection_chart"].content() | tojson | safe }}'>
+<input type="hidden" name="known_vs_unknown_chart" value='{{ sections["dashboard"].graphs["known_vs_unknown_chart"].content() | tojson | safe }}'>
+<input type="hidden" name="distribution_chart" value='{{ sections["dashboard"].graphs["distribution_chart"].content() | tojson | safe }}'>
+
 <script>
-    $(document).ready(function () {
-        $('#fusion_list_table').DataTable({
-            'pageLength': 25
-        }).columns(-1).order('desc').draw();
-    });
+    var tool_detecton_chart = JSON.parse(document.getElementsByName("tool_detection_chart")[0].getAttribute("value"));
+    var known_vs_unknown_chart = JSON.parse(document.getElementsByName("known_vs_unknown_chart")[0].getAttribute("value"));
+    var distribution_chart = JSON.parse(document.getElementsByName("distribution_chart")[0].getAttribute("value"));
+    
     Highcharts.chart('tool_detection_chart', {
         chart: {
             plotBackgroundColor: null,
@@ -107,13 +51,13 @@
             enabled: false
         },
         title: {
-            text: "{{ sections['dashboard'].graphs['tool_detection_chart'].title | replace(' ', '<br>') | safe }}",
+            text: tool_detecton_chart.title.replace(' ', '<br>'),
             align: 'center',
             verticalAlign: 'middle',
             y: 40
         },
         subtitle: {
-            text: "{{ sections['dashboard'].graphs['tool_detection_chart'].subtitle| safe }}",
+            text: tool_detecton_chart.subtitle,
             floating: true,
             align: 'center',
             verticalAlign: 'bottom',
@@ -142,11 +86,11 @@
             type: 'pie',
             name: 'Count',
             innerSize: '50%',
-            data: {{ sections['dashboard'].graphs['tool_detection_chart'].graph | safe }}
+            data: tool_detecton_chart.graph
         }]
     });
-
-    Highcharts.chart('known_unknown_chart', {
+    
+    Highcharts.chart('known_vs_unknown_chart', {
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: 0,
@@ -156,13 +100,13 @@
             enabled: false
         },
         title: {
-            text: "{{ sections['dashboard'].graphs['known_unknown_chart'].title | replace(' ', '<br>') | safe }}",
+            text: known_vs_unknown_chart.title.replace(' ', '<br>'),
             align: 'center',
             verticalAlign: 'middle',
             y: 40
         },
         subtitle: {
-            text: "{{ sections['dashboard'].graphs['known_unknown_chart'].subtitle| safe }}",
+            text: known_vs_unknown_chart.subtitle,
             floating: true,
             align: 'center',
             verticalAlign: 'bottom',
@@ -192,7 +136,7 @@
             type: 'pie',
             name: 'Count',
             innerSize: '50%',
-            data: {{ sections['dashboard'].graphs['known_unknown_chart'].graph | safe }}
+            data: known_vs_unknown_chart.graph
         }]
     });
     
@@ -206,13 +150,13 @@
             enabled: false
         },
         title: {
-            text: "{{ sections['dashboard'].graphs['distribution_chart'].title | replace(' ', '<br>') | safe }}",
+            text: distribution_chart.title.replace(' ', '<br>'),
             align: 'center',
             verticalAlign: 'middle',
             y: 40
         },
         subtitle: {
-            text: "{{ sections['dashboard'].graphs['distribution_chart'].subtitle| safe }}",
+            text: distribution_chart.subtitle,
             floating: true,
             align: 'center',
             verticalAlign: 'bottom',
@@ -237,12 +181,12 @@
                 size: '110%'
             }
         },
-        {% if distribution_chart_colors_length > 2 %} colors: colorbrewer.Oranges[{{ distribution_chart_colors_length}}], {% endif %}
+        colors: distribution_chart.graph.length > 2 ? colorbrewer.Oranges[distribution_chart.graph.length] : '',
         series: [{
             type: 'pie',
             name: 'Count',
             innerSize: '50%',
-            data: {{ sections['dashboard'].graphs['distribution_chart'].graph | safe }}
+            data: distribution_chart.graph
         }]
     });
 </script>

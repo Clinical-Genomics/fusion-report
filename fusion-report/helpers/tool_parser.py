@@ -38,6 +38,9 @@ class ToolParser():
     def get_fusions(self):
         return self.__fusions
 
+    def get_tools(self):
+        return self.__tools
+
     def get_unique_fusions(self):
         return set(self.__fusions.keys())
 
