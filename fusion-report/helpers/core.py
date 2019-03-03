@@ -85,28 +85,25 @@ def create_ppi_graph(p_data):
 
     return graph_data
 
-def create_fusions_table(p_summary, p_known_fusions, cutoff):
+def create_fusions_table(fusions, tools, known_fusions, cutoff):
     """
     Helper function that generates Fusion table
     Args:
-        p_summary (dictionary): parsed summary.yaml
-        p_known_fusions (list): list of all known fusions found in the local database
+        
         cutoff (int): If not defined, using the default TOOL_DETECTION_CUTOFF
     """
-    fusions = {}
-    all_fusions = [fusions for _, fusions in p_summary.items()]
-    unique_fusions = set(sum(all_fusions, []))
-
-    for fusion in unique_fusions:
-        tools = [fusion in x for x in all_fusions]
-        summary_tools = len(p_summary.keys())
+    rows = []
+    for fusion, fusion_details in fusions.items():
         # Add only fusions that are detected by at least <cutoff>, default = TOOL_DETECTION_CUTOFF
         # If # of tools is less than cutoff => ignore
-        if sum(tools) >= cutoff or summary_tools < cutoff:
-            fusions[fusion] = {
-                'known': fusion in p_known_fusions,
-                'tools': tools,
-                'tools_total': sum(tools)
+        if len(tools) >= cutoff or len(fusion_details.keys()) < cutoff:
+            row = {
+                'fusion': fusion,
+                'found_db': 'true' if fusion in known_fusions else 'false',
+                'tools_hits': len(fusion_details.keys())
             }
+            for tool in tools:
+                row[tool] = 'true' if tool in fusion_details.keys() else 'false'
+            rows.append(row)
 
-    return {'fusions': fusions, 'tools': p_summary.keys()}
+    return {'fusions': rows, 'tools': tools}

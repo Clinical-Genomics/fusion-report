@@ -1,13 +1,13 @@
 """Module for Section"""
 class Section:
     """This class is used to define a Section in a report with predefined variables"""
-    def __init__(self, section_id, title):
+    def __init__(self, section_id, title, subtitle = '', content = ''):
         self.set_id(section_id)
         self.set_title(title)
+        self.set_subtitle(subtitle)
+        self.set_content(content)
         
         # Defaults
-        self.subtitle = ''
-        self.content = ''
         self.data = []
         self.graphs = {}
 

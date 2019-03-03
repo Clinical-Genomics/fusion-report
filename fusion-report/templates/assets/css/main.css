@@ -2,6 +2,10 @@ body {
   font-size: .875rem;
 }
 
+.tabulator {
+  font-size: .875rem!important;
+}
+
 .feather {
   width: 16px;
   height: 16px;
@@ -112,12 +116,16 @@ body {
   fill: #333;
   width: 15px;
 }
+/*
+.tabulator {
+  font-size: .875rem!important;
+}*/
 
-table .badge {
-  font-size: 95%;
+.tabulator .badge {
+  font-size: 85%;
 }
 
-table code {
+.tabulator code {
   font-size: 85%;
   color: black;
 }

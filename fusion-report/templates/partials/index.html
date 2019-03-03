@@ -29,18 +29,61 @@
         </div>
     </section>
 
+    <section class="" id="fusion_list">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h3">{{ sections['fusion_list'].title }}</h1>
+        </div>
+        <p>{{ sections['fusion_list'].content | safe }}</p>
+        <div id="fusion_table" class="bootstrap tabulator"></div>
+    </section>
+
 </main>
 
 <!-- Hidden values for Javascript to process -->
 <input type="hidden" name="tool_detection_chart" value='{{ sections["dashboard"].graphs["tool_detection_chart"].content() | tojson | safe }}'>
 <input type="hidden" name="known_vs_unknown_chart" value='{{ sections["dashboard"].graphs["known_vs_unknown_chart"].content() | tojson | safe }}'>
 <input type="hidden" name="distribution_chart" value='{{ sections["dashboard"].graphs["distribution_chart"].content() | tojson | safe }}'>
+<input type="hidden" name="fusion_list" value='{{ sections["fusion_list"].data | tojson | safe }}'>
 
 <script>
     var tool_detecton_chart = JSON.parse(document.getElementsByName("tool_detection_chart")[0].getAttribute("value"));
     var known_vs_unknown_chart = JSON.parse(document.getElementsByName("known_vs_unknown_chart")[0].getAttribute("value"));
     var distribution_chart = JSON.parse(document.getElementsByName("distribution_chart")[0].getAttribute("value"));
     
+    var tabledata = JSON.parse(document.getElementsByName("fusion_list")[0].getAttribute("value"));
+    var tools_length = tabledata.tools.length
+    var foundFormatter = function(cell, formatterParams){
+        return cell.getValue() === 'true' ? '<span class="badge badge-success">Found</span>' : '<span class="badge badge-danger">Not found</span>'
+    };
+    var table = new Tabulator("#fusion_table", {
+        data:tabledata.fusions,
+        responsiveLayout:true,
+        layout:"fitColumns",
+        pagination:"local",
+        paginationSize: 25,
+        initialSort:[{column:"tools_hits", dir:"desc"}],
+        columns:[
+            {title:"Fusion gene", field:"fusion", formatter:function(cell, formatterParams){
+                var fusion = cell.getValue();
+                return cell.getData()['found_db'] == 'true'? `<code><a href="${fusion.replace('--','_')}.html">${fusion}</a></code>` : `<code>${fusion}</code>`
+            }},
+            {title:"Found in DB", field:"found_db", formatter:foundFormatter},
+            {title:"Fusioncatcher", field:"fusioncatcher", formatter:foundFormatter},
+            {title:"Ericscript", field:"ericscript", formatter:foundFormatter},
+            {title:"STAR-Fusion", field:"starfusion", formatter:foundFormatter},
+            {title:"Tools hits", field:"tools_hits", formatter:function(cell, formatterParams){
+                var value = cell.getValue(),
+                    progress_value = (value / tools_length) * 100;
+                return `<div class="progress">
+                          <div class="progress-bar" role="progressbar" style="width: ${progress_value}%;" 
+                            aria-valuenow="${progress_value}" aria-valuemin="0" aria-valuemax="100">
+                            ${value}
+                          </div>
+                        </div>`
+             }},
+        ]
+    });
+
     Highcharts.chart('tool_detection_chart', {
         chart: {
             plotBackgroundColor: null,
@@ -51,7 +94,7 @@
             enabled: false
         },
         title: {
-            text: tool_detecton_chart.title.replace(' ', '<br>'),
+            text: tool_detecton_chart.title.replace(/ /g, '<br>'),
             align: 'center',
             verticalAlign: 'middle',
             y: 40
@@ -100,7 +143,7 @@
             enabled: false
         },
         title: {
-            text: known_vs_unknown_chart.title.replace(' ', '<br>'),
+            text: known_vs_unknown_chart.title.replace(/ /g, '<br>'),
             align: 'center',
             verticalAlign: 'middle',
             y: 40
@@ -150,7 +193,7 @@
             enabled: false
         },
         title: {
-            text: distribution_chart.title.replace(' ', '<br>'),
+            text: distribution_chart.title.replace(/ /g, '<br>'),
             align: 'center',
             verticalAlign: 'middle',
             y: 40
