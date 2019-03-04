@@ -45,14 +45,8 @@ class ToolParser():
         return set(self.__fusions.keys())
 
     def get_tools_count(self):
-        counts = {
-            'ericscript': 0,
-            'fusioncatcher': 0,
-            'pizzly': 0,
-            'squid': 0,
-            'starfusion': 0,
-            'together': 0
-        }
+        counts = { tool:0 for tool in self.__tools }
+        counts['together'] = 0
         for fusion, tool_list in self.__fusions.items():
             if len(tool_list) == len(self.__tools):
                 counts['together'] += 1

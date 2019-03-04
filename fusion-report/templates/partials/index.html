@@ -77,6 +77,32 @@
     var foundFormatter = function(cell, formatterParams){
         return cell.getValue() === 'true' ? '<span class="badge badge-success">Found</span>' : '<span class="badge badge-danger">Not found</span>'
     };
+    var columns = [
+        {title:"Fusion gene", field:"fusion", formatter:function(cell, formatterParams){
+            var fusion = cell.getValue();
+            return cell.getData()['found_db'] == 'true'? `<code><a href="${fusion.replace('--','_')}.html">${fusion}</a></code>` : `<code>${fusion}</code>`
+        }},
+        {title:"Found in DB", field:"found_db", formatter:foundFormatter}
+    ];
+    for (var i in tabledata.tools) {
+        columns.push({
+            title: tabledata.tools[i],
+            field: tabledata.tools[i],
+            formatter: foundFormatter
+        })
+    }
+    columns.push(
+        {title:"Tools hits", field:"tools_hits", formatter:function(cell, formatterParams){
+            var value = cell.getValue(),
+                progress_value = (value / tools_length) * 100;
+            return `<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: ${progress_value}%;" 
+                        aria-valuenow="${progress_value}" aria-valuemin="0" aria-valuemax="100">
+                        ${value}
+                    </div>
+                    </div>`
+            }}
+    )
     var table = new Tabulator("#fusion_table", {
         data:tabledata.fusions,
         responsiveLayout:true,
@@ -85,26 +111,7 @@
         clipboard: true,
         paginationSize: 25,
         initialSort:[{column:"tools_hits", dir:"desc"}],
-        columns:[
-            {title:"Fusion gene", field:"fusion", formatter:function(cell, formatterParams){
-                var fusion = cell.getValue();
-                return cell.getData()['found_db'] == 'true'? `<code><a href="${fusion.replace('--','_')}.html">${fusion}</a></code>` : `<code>${fusion}</code>`
-            }},
-            {title:"Found in DB", field:"found_db", formatter:foundFormatter},
-            {title:"Fusioncatcher", field:"fusioncatcher", formatter:foundFormatter},
-            {title:"Ericscript", field:"ericscript", formatter:foundFormatter},
-            {title:"STAR-Fusion", field:"starfusion", formatter:foundFormatter},
-            {title:"Tools hits", field:"tools_hits", formatter:function(cell, formatterParams){
-                var value = cell.getValue(),
-                    progress_value = (value / tools_length) * 100;
-                return `<div class="progress">
-                          <div class="progress-bar" role="progressbar" style="width: ${progress_value}%;" 
-                            aria-valuenow="${progress_value}" aria-valuemin="0" aria-valuemax="100">
-                            ${value}
-                          </div>
-                        </div>`
-             }},
-        ]
+        columns:columns
     });
 
     // Table buttons
