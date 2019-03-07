@@ -34,8 +34,7 @@ class Section:
     def set_data(self, data):
         """Helper method for setting data content, usually generated from local database but can
         be custom"""
-        if data.strip():
-            self.data = data
+        self.data = [] if data else data
 
     def add_graph(self, graph):
         """Helper method for adding graph to the section, unlimited number"""

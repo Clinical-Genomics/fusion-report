@@ -34,27 +34,9 @@
             <h1 class="h3">{{ sections['fusion_list'].title }}</h1>
         </div>
         <p>{{ sections['fusion_list'].content | safe }}</p>
-        <div id="tabulator-controls" class="table-controls">
-            <form>
-                <div class="form-row align-items-center">
-                    <div class="col-md-2">
-                    <label class="sr-only" for="inlineFormInputGroup">Filter by fusion</label>
-                    <div class="input-group mb-2">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">@</div>
-                        </div>
-                        <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Filter by fusion" onkeyup="filter_by_fusion(event, this)">
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                    <button type="button" class="btn btn-primary mb-2" onclick="copy_table()">Copy</button>
-                    <button type="button" class="btn btn-warning mb-2" onclick="export_to('csv')">CSV</button>
-                    <button type="button" class="btn btn-success mb-2" onclick="export_to('xlsx')">XLSX</button>
-                    <button type="button" class="btn btn-danger mb-2" onclick="export_to('pdf')">PDF</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+        {% with table_name='fusion_table' %}
+            {% include "partials/table-buttons.html" %}
+        {% endwith %}
         <div id="fusion_table" class="bootstrap tabulator table-striped table-bordered"></div>
     </section>
 
@@ -67,19 +49,15 @@
 <input type="hidden" name="fusion_list" value='{{ sections["fusion_list"].data | tojson | safe }}'>
 
 <script>
-    var tool_detecton_chart = JSON.parse(document.getElementsByName("tool_detection_chart")[0].getAttribute("value"));
-    var known_vs_unknown_chart = JSON.parse(document.getElementsByName("known_vs_unknown_chart")[0].getAttribute("value"));
-    var distribution_chart = JSON.parse(document.getElementsByName("distribution_chart")[0].getAttribute("value"));
+    const tool_detecton_chart = JSON.parse(document.getElementsByName("tool_detection_chart")[0].getAttribute("value"));
+    const known_vs_unknown_chart = JSON.parse(document.getElementsByName("known_vs_unknown_chart")[0].getAttribute("value"));
+    const distribution_chart = JSON.parse(document.getElementsByName("distribution_chart")[0].getAttribute("value"));
     
-    var output_filename = "{{ page_variables.sample }}";
-    var tabledata = JSON.parse(document.getElementsByName("fusion_list")[0].getAttribute("value"));
-    var tools_length = tabledata.tools.length
-    var foundFormatter = function(cell, formatterParams){
-        return cell.getValue() === 'true' ? '<span class="badge badge-success">Found</span>' : '<span class="badge badge-danger">Not found</span>'
-    };
-    var columns = [
+    const output_filename = "{{ page_variables.sample }}";
+    const tabledata = JSON.parse(document.getElementsByName("fusion_list")[0].getAttribute("value"));
+    let columns = [
         {title:"Fusion gene", field:"fusion", formatter:function(cell, formatterParams){
-            var fusion = cell.getValue();
+            let fusion = cell.getValue();
             return cell.getData()['found_db'] == 'true'? `<code><a href="${fusion.replace('--','_')}.html">${fusion}</a></code>` : `<code>${fusion}</code>`
         }},
         {title:"Found in DB", field:"found_db", formatter:foundFormatter}
@@ -93,8 +71,8 @@
     }
     columns.push(
         {title:"Tools hits", field:"tools_hits", formatter:function(cell, formatterParams){
-            var value = cell.getValue(),
-                progress_value = (value / tools_length) * 100;
+            let value = cell.getValue(),
+                progress_value = (value / tabledata.tools.length) * 100;
             return `<div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: ${progress_value}%;" 
                         aria-valuenow="${progress_value}" aria-valuemin="0" aria-valuemax="100">
@@ -103,32 +81,18 @@
                     </div>`
             }}
     )
-    var table = new Tabulator("#fusion_table", {
-        data:tabledata.fusions,
-        responsiveLayout:true,
-        layout:"fitColumns",
-        pagination:"local",
-        clipboard: true,
-        paginationSize: 25,
-        initialSort:[{column:"tools_hits", dir:"desc"}],
-        columns:columns
-    });
-
-    // Table buttons
-    function filter_by_fusion(event, obj) {
-        if (obj.value !== undefined) {
-            table.setFilter('fusion', 'like', obj.value);
-        }
-    }
-
-    function copy_table() {
-        table.copyToClipboard("table");
-    }
-
-    function export_to(type) {
-        table.download(type, `${output_filename}.${type}`)
-    }
-
+    register_table(new Tabulator("#fusion_table", {
+            data:tabledata.fusions,
+            responsiveLayout:true,
+            layout:"fitColumns",
+            pagination:"local",
+            clipboard: true,
+            paginationSize: 25,
+            initialSort:[{column:"tools_hits", dir:"desc"}],
+            columns:columns
+        })
+    );
+    
     Highcharts.chart('tool_detection_chart', {
         chart: {
             plotBackgroundColor: null,

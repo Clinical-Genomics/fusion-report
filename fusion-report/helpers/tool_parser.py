@@ -35,6 +35,9 @@ class ToolParser():
             except IOError as error:
                 print(error)
 
+    def get_fusion(self, fusion):
+        return {} if fusion not in self.__fusions else self.__fusions[fusion]
+
     def get_fusions(self):
         return self.__fusions
 

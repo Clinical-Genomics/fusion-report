@@ -1,22 +1,42 @@
 """Module for accessing local database"""
+import os
+from pathlib import Path
 import sqlite3
 
 class Db:
     """Database wrapper around sqlite3 for summary report"""
-    def __init__(self, db_file=None):
-        self.connect(db_file)
+    def __init__(self, path=None):
+        self.__connection = None
+        self.__connections = {}
+        self.__dbs = self.__scan_folder(path)
 
-    def connect(self, db_file):
+    def __scan_folder(self, path):
+        if path is None:
+            path = '/script-db'
+        
+        db_files = []
+        if os.path.exists(path):
+           db_files = [entry for entry in os.scandir(path) if entry.is_file() and Path(entry).suffix == '.db'] 
+        else:
+            exit('Defined path doesn\'t exist')
+
+        return db_files
+
+    def connect(self, db_name):
         """
         Wrapper around default connect function
         Args:
             db_file: local database file *.db
         """
         try:
-            if db_file is None:
-                db_file = '/script-db/fusions.db'
-            self.connection = sqlite3.connect(db_file)
-            self.connection.row_factory = self.__dict_factory
+            if db_name in self.__connections:
+                self.__connection = self.__connections[db_name]
+            else:
+                db_file = [db_file for db_file in self.__dbs if db_file.name == f'{db_name}.db'][0]
+                connection = sqlite3.connect(db_file.path)
+                connection.row_factory = self.__dict_factory
+                self.__connections[db_file.name] = connection
+                self.__connection = connection
         except sqlite3.Error as error:
             exit(error)
 
@@ -28,7 +48,7 @@ class Db:
             query_params (list): list of all parameters, SQL statement should be sanitized
         """
         try:
-            cur = self.connection.cursor()
+            cur = self.__connection.cursor()
             if query_params is None:
                 cur.execute(query)
             else:

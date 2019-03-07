@@ -1,0 +1,21 @@
+<div id="tabulator-controls" class="table-controls">
+    <form>
+        <div class="form-row align-items-center">
+            <div class="col-md-2">
+            <label class="sr-only" for="inlineFormInputGroup">Filter by anything</label>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">@</div>
+                </div>
+                <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Filter by anything" onkeyup='filter_by("{{ table_name }}", "*", this)'>
+                </div>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("{{ table_name }}")'>Copy</button>
+                <button type="button" class="btn btn-warning mb-2" onclick='export_to("{{ table_name }}", "csv")'>CSV</button>
+                <button type="button" class="btn btn-success mb-2" onclick='export_to("{{ table_name }}", "xlsx")'>XLSX</button>
+                <button type="button" class="btn btn-danger mb-2" onclick='export_to("{{ table_name }}", "pdf")'>PDF</button>
+            </div>
+        </div>
+    </form>
+</div>

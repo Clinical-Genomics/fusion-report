@@ -116,18 +116,14 @@ body {
   fill: #333;
   width: 15px;
 }
-/*
-.tabulator {
-  font-size: .875rem!important;
-}*/
 
 .tabulator .badge {
-  font-size: 85%;
+  font-size: 90%;
 }
 
-.tabulator code {
+.tabulator-row {
+  font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
   font-size: 85%;
-  color: black;
 }
 
 #ppi_graph {

@@ -18,6 +18,7 @@
 </head>
 
 <body>
+  {{ include_raw('assets/js/main.js') | safe }}
   {{ include_raw('assets/js/tabulator.min.js') | safe }}
   {{ include_raw('assets/js/xlsx.core-0.14.0.min.js') | safe }}
   {{ include_raw('assets/js/jspdf-1.5.3.min.js') | safe }}
