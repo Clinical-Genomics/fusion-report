@@ -17,4 +17,10 @@ for detecting fusion genes from RNA-seq data. Running the script is simple, just
 bin/fusion-report --help
 ```
 
+## Installation
+
+```bash
+pip3 install -r requirements.txt
+```
+
 ![Example summary report](docs/images/example-summary-report.png)
