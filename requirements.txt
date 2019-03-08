@@ -1,0 +1,3 @@
+python-rapidjson==0.7.0
+PyYAML==3.13
+Jinja2==2.9.5

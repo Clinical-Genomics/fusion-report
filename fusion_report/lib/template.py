@@ -1,12 +1,13 @@
+""" Template module """
 import os
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, Markup
 
 class Template():
-
+    """ Class for generating report using Jinja2."""
     def __init__(self, config, output_dir):
         self.j2_env = Environment(
-            loader=FileSystemLoader('fusion-report/templates/'),
+            loader=FileSystemLoader('fusion_report/templates/'),
             trim_blocks=True,
             autoescape=True
         )
@@ -19,12 +20,19 @@ class Template():
         if not os.path.exists(output_dir):
             os.mkdir(output_dir)
 
-    def render(self, filename, template_variables):
+    def render(self, page, template_variables):
+        """
+        Method for rendering page in the report.
+
+        Args:
+            page (Page):
+            template_variables (dict): additional variables required by templating.
+        """
         merged_variables = {**self.j2_variables, **template_variables}
         output = self.j2_env.get_template('template.html').render(merged_variables)
-        with open(os.path.join(self.output_dir, filename), 'w') as file_out:
+        with open(os.path.join(self.output_dir, page.get_filename()), 'w') as file_out:
             file_out.write(output)
-    
+
     def __include_raw(self, filename):
         """Helper fusion for including raw content in Jinja, mostly used to include custom
         or vendor javascript and custom css"""

@@ -7,17 +7,17 @@ class MasterPage:
         self.__dynamic_partial = 'partials/' + partial_template + ".html"
 
     def get_title(self):
+        """ Method returning title of the page."""
         return self.__title
 
     def get_filename(self):
+        """ Method returning name of the page."""
         return self.__filename
 
-    def get_content(self, page_content):
+    def get_content(self):
         """Helper method returning all variables. Used for Jinja templating"""
-        master_content = {
+        return {
             'title': self.__title,
             'filename': self.__filename,
             'dynamic_partial': self.__dynamic_partial
         }
-        
-        return {**master_content, **page_content}

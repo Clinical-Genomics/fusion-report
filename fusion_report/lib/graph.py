@@ -6,6 +6,7 @@ class Graph:
         self.title = title
         self.subtitle = subtitle
         self.graph = data
-    
+
     def content(self):
+        """Helper method returning all variables. Used for Jinja templating"""
         return vars(self)

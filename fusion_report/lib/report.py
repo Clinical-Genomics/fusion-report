@@ -23,10 +23,10 @@ class Report(Template):
             # after adding immediately generate fusion page
             self.render(page)
 
-    def render(self, page):
-        """Helper method rendering page using Jinja template engine"""
-        template_variables = page.get_content()        
+    def render(self, page, template_variables=''):
+        """Helper method rendering page using Jinja template engine."""
+        template_variables = page.get_content()
         template_variables['menu'] = [
             (key, page.get_section(key).title) for key in template_variables['sections'].keys()
         ]
-        super().render(page.get_filename(), template_variables)
+        super().render(page, template_variables)

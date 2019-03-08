@@ -1,14 +1,21 @@
-import sys
+""" Module for tool parser. """
 import os
-from rapidjson import dumps
+import rapidjson
 
 class ToolParser():
-    
+    """ Class for processing output from fusion tools. """
     def __init__(self):
         self.__fusions = {}
         self.__tools = []
 
     def parse(self, tool, file):
+        """
+        Method for processing output from fusion tool.
+
+        Args:
+            tool (str): Fusion tool name
+            file (str): Output filename
+        """
         if not file:
             print(f"File '{file}' for {tool} tool is missing , skipping ...")
         else:
@@ -20,9 +27,9 @@ class ToolParser():
                     for line in in_file:
                         func = getattr(self, tool) # get function from parameter
                         fusion, details = func(line.strip().split('\t')) # call function
-                        
+
                         # check if we actually got something back
-                        if fusion == None or details == None:
+                        if fusion is None or details is None:
                             continue
 
                         if fusion in self.__fusions:
@@ -31,26 +38,58 @@ class ToolParser():
                             else:
                                 self.__fusions[fusion][tool] = [details]
                         else:
-                            self.__fusions[fusion] = { tool: [details] }
+                            self.__fusions[fusion] = {tool: [details]}
             except IOError as error:
                 print(error)
 
     def get_fusion(self, fusion):
+        """
+        Method for getting a specific fusion by name.
+
+        Args:
+            fusion (str): Name of the fusion
+        Returns:
+            dict: (fusion:fusion_details)
+        """
         return {} if fusion not in self.__fusions else self.__fusions[fusion]
 
     def get_fusions(self):
+        """
+        Method for returning fusions
+
+        Returns:
+            dict: (fusion: fusion_details)
+        """
         return self.__fusions
 
     def get_tools(self):
+        """
+        Method for returning list of used fusion tools.
+
+        Returns:
+            list: List of used tools
+        """
         return self.__tools
 
     def get_unique_fusions(self):
+        """
+        Method returning list of unique fusion names.
+
+        Returns:
+            set: Set of unique fusions (names only)
+        """
         return set(self.__fusions.keys())
 
     def get_tools_count(self):
-        counts = { tool:0 for tool in self.__tools }
+        """
+        Method for counting how many fusions were found by which tool.
+
+        Returns:
+            dict: (tool: number of fusions)
+        """
+        counts = {tool:0 for tool in self.__tools}
         counts['together'] = 0
-        for fusion, tool_list in self.__fusions.items():
+        for _, tool_list in self.__fusions.items():
             if len(tool_list) == len(self.__tools):
                 counts['together'] += 1
 
@@ -59,18 +98,30 @@ class ToolParser():
         return counts
 
     def save(self, path, file_name):
+        """
+        Method for saving fusion structure into json.
+
+        Args:
+            path (str): Path
+            file_name (str): Name of the file
+        """
         try:
             if self.__fusions:
                 dest = f"{os.path.join(path, file_name)}.json"
                 with open(dest, 'w') as output:
-                    output.write(dumps(self.__fusions))
+                    output.write(rapidjson.dump(self.__fusions))
         except IOError as error:
-            print(error)
+            exit(error)
 
-    def ericscript(self, col):
-        """Extracting fusions from EricScript output file
+    @staticmethod
+    def ericscript(col):
+        """
+        Function for parsing output from EricScript.
+
         Args:
             col (list): List of columns of a single line
+        Returns:
+            tuple: fusion (str) and details (dict)
         """
         fusion = f"{col[0]}--{col[1]}"
         details = {
@@ -85,10 +136,15 @@ class ToolParser():
 
         return fusion, details
 
-    def fusioncatcher(self, col):
-        """Extracting fusions from FusionCatcher output file
+    @staticmethod
+    def fusioncatcher(col):
+        """
+        Function for parsing output from FusionCatcher.
+
         Args:
             col (list): List of columns of a single line
+        Returns:
+            tuple: fusion (str) and details (dict)
         """
         fusion = f"{col[0]}--{col[1]}"
         details = {
@@ -101,11 +157,16 @@ class ToolParser():
         }
 
         return fusion, details
-    
-    def pizzly(self, col):
-        """Extracting fusions from Pizzly output file
+
+    @staticmethod
+    def pizzly(col):
+        """
+        Function for parsing output from Pizzly.
+
         Args:
             col (list): List of columns of a single line
+        Returns:
+            tuple: fusion (str) and details (dict)
         """
         fusion = f"{col[0]}--{col[2]}"
         details = {
@@ -115,23 +176,38 @@ class ToolParser():
 
         return fusion, details
 
-    def squid(self, col):
+    @staticmethod
+    def squid(col):
+        """
+        Function for parsing output from Squid.
+
+        Args:
+            col (list): List of columns of a single line
+        Returns:
+            tuple: fusion (str) and details (dict)
+        """
         # check for type
         if col[10].strip() == 'non-fusion-gene':
             return None, None
 
         fusion = '--'.join(map(str.strip, col[11].split(':')))
         details = {
-            'position': f"{col[0]}:{col[1]}-{col[2]}:{col[8]}#{col[3]}:{col[4]}-{col[5]}:{col[9]}".replace('chr', ''),
+            'position': f"{col[0]}:{col[1]}-{col[2]}:{col[8]}#{col[3]}:{col[4]}-{col[5]}:{col[9]}"
+                        .replace('chr', ''),
             'score': int(col[7])
         }
-        
+
         return fusion, details
-    
-    def starfusion(self, col):
-        """Extracting fusions from STAR-Fusion output file
+
+    @staticmethod
+    def starfusion(col):
+        """
+        Function for parsing output from STAR-Fusion.
+
         Args:
             col (list): List of columns of a single line
+        Returns:
+            tuple: fusion (str) and details (dict)
         """
         fusion = f"{col[0]}"
         details = {
