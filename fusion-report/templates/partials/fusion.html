@@ -3,7 +3,7 @@
 {{ include_raw('assets/js/cytoscape-cose-bilkent-4.0.0.min.js') | safe }}
 
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
         <h1 class="h2">{{ title }}</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group mr-2">
@@ -18,7 +18,7 @@
         </section>
         <!-- FUSION VARIANTS -->
         <section class="fusion" id="variations">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
                 <h1 class="h3">{{ sections['variations'].title | safe }}</h1>
             </div>
             <p>{{ sections['variations'].content | safe }}</p>
@@ -29,7 +29,7 @@
         </section>
         <!-- ENSEMBL TRANSCRIPTS  -->
         <section class="fusion" id="transcripts">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
                 <h1 class="h3">{{ sections['transcripts'].title }}</h1>
             </div>
             <p>{{ sections['transcripts'].content | safe }}</p>
@@ -40,7 +40,7 @@
         </section>
         <!-- PPI GRAPH -->
         <section class="fusion" id="ppi">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
                 <h1 class="h3">{{ sections['ppi'].title | safe }}</h1>
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <button class="btn btn-secondary" onclick="export_cytoscape_chart('PNG', 'protein-protein-interactions')">Export PNG</button>
@@ -54,7 +54,7 @@
         </section>
         <!-- TARGETING DRUGS -->
         <section class="fusion" id="targeting_drugs">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
                 <h1 class="h3">{{ sections['targeting_drugs'].title | safe }}</h1>
             </div>
             <p>{{ sections['targeting_drugs'].content | safe }}</p>
@@ -65,7 +65,7 @@
         </section>
         <!-- RELATED DISEASES -->
         <section class="fusion" id="related_diseases">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
                 <h1 class="h3">{{ sections['related_diseases'].title | safe }}</h1>
             </div>
             <p>{{ sections['related_diseases'].content | safe }}</p>
@@ -176,7 +176,7 @@
                     return `${cell.getValue()} (<a href="https://www.drugbank.ca/drugs/${drug_bank_id}" target="_blank">${drug_bank_id}</a>)`;
                 }},
                 {title:"Drug status", field:"drug_status", formatter: function(cell) {
-                    return cell.getValue().replace(/|/g, ",")
+                    return cell.getValue().replace("|", ",");
                 }},
                 {title:"Drug name", field:"drug_name"},
                 {title:"Drug function", field:"drug_action"}

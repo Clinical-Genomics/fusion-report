@@ -52,7 +52,7 @@ function copy_table(name) {
 
 function export_to(name, type) {
     let table = get_table(name);
-    if (table !== undefined) table.download(type, `${output_filename}.${type}`)   
+    if (table !== undefined) table.download(type, `${name}.${type}`)   
 }
 
 function match_any(data, value) {
