@@ -1,3 +1,6 @@
 .vscode
-rnafusion-summary-report/db/*.db
-__pycache__
+db/
+build/
+dist/
+*.egg-info
+*__pycache__*

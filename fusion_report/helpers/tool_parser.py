@@ -22,7 +22,7 @@ class ToolParser():
             # add tool into list of using tools
             self.__tools.append(tool)
             try:
-                with open(file, 'r') as in_file:
+                with open(file, 'r', encoding='utf-8') as in_file:
                     next(in_file) # skip header
                     for line in in_file:
                         func = getattr(self, tool) # get function from parameter
@@ -108,7 +108,7 @@ class ToolParser():
         try:
             if self.__fusions:
                 dest = f"{os.path.join(path, file_name)}.json"
-                with open(dest, 'w') as output:
+                with open(dest, 'w', encoding='utf-8') as output:
                     output.write(rapidjson.dump(self.__fusions))
         except IOError as error:
             exit(error)

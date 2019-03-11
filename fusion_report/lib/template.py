@@ -30,7 +30,7 @@ class Template():
         """
         merged_variables = {**self.j2_variables, **template_variables}
         output = self.j2_env.get_template('template.html').render(merged_variables)
-        with open(os.path.join(self.output_dir, page.get_filename()), 'w') as file_out:
+        with open(os.path.join(self.output_dir, page.get_filename()), 'w', encoding='utf-8') as file_out:
             file_out.write(output)
 
     def __include_raw(self, filename):

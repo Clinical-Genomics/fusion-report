@@ -144,7 +144,7 @@ def create_fusions_table(fusions, tools, known_fusions, cutoff):
 
     return {'fusions': rows, 'tools': tools}
 
-def print_progress_bar(iteration, total, decimals=1, length=50, fill='█'):
+def print_progress_bar(iteration, total, decimals=1, length=50, fill='='):
     """
     Call in a loop to create terminal progress bar.
     Taken from: https://stackoverflow.com/a/34325723

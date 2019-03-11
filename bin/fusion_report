@@ -2,14 +2,14 @@
 """Module for generating a summary report from various fusion detection tools."""
 import argparse
 from time import sleep
-from lib.db import Db
-from lib.page import Page
-from lib.report import Report
-from lib.section import Section
-from lib.graph import Graph
-from helpers.tool_parser import ToolParser
-from helpers.core import tool_detection_chart, known_vs_unknown_chart, distribution_chart, \
-    create_fusions_table, create_ppi_graph, print_progress_bar
+from fusion_report.lib.db import Db
+from fusion_report.lib.page import Page
+from fusion_report.lib.report import Report
+from fusion_report.lib.section import Section
+from fusion_report.lib.graph import Graph
+from fusion_report.helpers.tool_parser import ToolParser
+from fusion_report.helpers.core import tool_detection_chart, known_vs_unknown_chart, \
+    distribution_chart, create_fusions_table, create_ppi_graph, print_progress_bar
 
 # Minimum number of tools that have to detect a fusion, used as a filter in Dashboard
 TOOL_DETECTION_CUTOFF = 2

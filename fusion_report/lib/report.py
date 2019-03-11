@@ -1,6 +1,6 @@
 """Module for Report"""
-from .report_config import ReportConfig
-from .template import Template
+from fusion_report.lib.report_config import ReportConfig
+from fusion_report.lib.template import Template
 
 class Report(Template):
     """Class containing core functionality for generating report"""

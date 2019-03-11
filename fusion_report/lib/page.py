@@ -1,5 +1,5 @@
 """Module for Page"""
-from .master_page import MasterPage
+from fusion_report.lib.master_page import MasterPage
 
 class Page(MasterPage):
     """This class is used to define a custom Page in a report, inherits some defaults from Master"""

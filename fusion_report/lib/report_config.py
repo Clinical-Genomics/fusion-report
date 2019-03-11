@@ -33,7 +33,7 @@ class ReportConfig:
             config (string): path to configuration file
         """
         try:
-            with open(config, 'r') as in_file:
+            with open(config, 'r', encoding='utf-8') as in_file:
                 try:
                     data = safe_load(in_file)
                     self.__set_title(data)
