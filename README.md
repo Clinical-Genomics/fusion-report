@@ -1,7 +1,7 @@
 # Fusion report
 
 [![Build Status](https://travis-ci.org/matq007/fusion-report.svg?branch=master)](https://travis-ci.org/matq007/fusion-report)
-[![MIT License](https://img.shields.io/github/license/nf-core/rnafusion.svg)](https://github.com/nf-core/rnafusion/blob/master/LICENSE)
+[![MIT License](https://img.shields.io/github/license/matq007/fusion-report.svg)](https://github.com/matq007/fusion-report/blob/master/LICENSE)
 
 This is a python script for generating interactive summary report from output of fusion detection tools.
 Currently tools below are supported:
@@ -17,13 +17,13 @@ Fusion-report is part of a bigger project [nf-core/rnafusion](https://github.com
 for detecting fusion genes from RNA-seq data. Running the script is simple, just type:
 
 ```bash
-bin/fusion-report --help
+fusion_report --help
 ```
 
 ## Installation
 
 ```bash
-pip3 install -r requirements.txt
+python3 setup.py install
 ```
 
 ![Example summary report](docs/images/example-summary-report.png)
