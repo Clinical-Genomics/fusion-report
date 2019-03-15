@@ -1,6 +1,7 @@
 """ Module for tool parser. """
 import os
 import rapidjson
+from fusion_report.helpers.fusion_detail import FusionDetail
 
 class ToolParser():
     """ Class for processing output from fusion tools. """
@@ -32,13 +33,10 @@ class ToolParser():
                         if fusion is None or details is None:
                             continue
 
-                        if fusion in self.__fusions:
-                            if tool in self.__fusions[fusion]:
-                                self.__fusions[fusion][tool].append(details)
-                            else:
-                                self.__fusions[fusion][tool] = [details]
-                        else:
-                            self.__fusions[fusion] = {tool: [details]}
+                        if fusion not in self.__fusions.keys():
+                            self.__fusions[fusion] = FusionDetail()
+
+                        self.__fusions[fusion].add_tool(tool, details)
             except IOError as error:
                 print(error)
 
@@ -49,18 +47,18 @@ class ToolParser():
         Args:
             fusion (str): Name of the fusion
         Returns:
-            dict: (fusion:fusion_details)
+            dict: (fusion:FusionDetail)
         """
-        return {} if fusion not in self.__fusions else self.__fusions[fusion]
+        return {} if fusion not in self.__fusions.keys() else self.__fusions[fusion]
 
     def get_fusions(self):
         """
         Method for returning fusions
 
         Returns:
-            dict: (fusion: fusion_details)
+            dict: (fusion: FusionDetail)
         """
-        return self.__fusions
+        return self.__fusions.items()
 
     def get_tools(self):
         """
@@ -87,15 +85,27 @@ class ToolParser():
         Returns:
             dict: (tool: number of fusions)
         """
-        counts = {tool:0 for tool in self.__tools}
+        counts = {tool:0 for tool in self.get_tools()}
         counts['together'] = 0
-        for _, tool_list in self.__fusions.items():
-            if len(tool_list) == len(self.__tools):
+        for _, fusion_detail in self.get_fusions():
+            if len(fusion_detail.tools) == len(self.get_tools()):
                 counts['together'] += 1
 
-            for tool in tool_list:
+            for tool in fusion_detail.tools:
                 counts[tool] += 1
         return counts
+
+    def get_db_counts(self):
+        """Get list of known and unknown fusion genes derived from provided databases."""
+        known_fusions = 0
+        unknown_fusion = 0
+        for _, detail in self.get_fusions():
+            if not detail.dbs:
+                unknown_fusion += 1
+            else:
+                known_fusions += 1
+
+        return known_fusions, unknown_fusion
 
     def save(self, path, file_name):
         """
@@ -108,8 +118,11 @@ class ToolParser():
         try:
             if self.__fusions:
                 dest = f"{os.path.join(path, file_name)}.json"
+                res = {}
+                for fusion, fusion_detail in self.get_fusions():
+                    res[fusion] = vars(fusion_detail)
                 with open(dest, 'w', encoding='utf-8') as output:
-                    output.write(rapidjson.dump(self.__fusions))
+                    output.write(rapidjson.dumps(res))
         except IOError as error:
             exit(error)
 
@@ -191,9 +204,11 @@ class ToolParser():
             return None, None
 
         fusion = '--'.join(map(str.strip, col[11].split(':')))
+        left_breakpoint = f"{col[0]}:{col[1]}-{col[2]}:{col[8]}".replace('chr', '')
+        right_breakpoint = f"{col[3]}:{col[4]}-{col[5]}:{col[9]}".replace('chr', '')
         details = {
-            'position': f"{col[0]}:{col[1]}-{col[2]}:{col[8]}#{col[3]}:{col[4]}-{col[5]}:{col[9]}"
-                        .replace('chr', ''),
+            'position': f"{left_breakpoint}#{right_breakpoint}" if col[8] == '+'
+                        else f"{right_breakpoint}#{left_breakpoint}",
             'score': int(col[7])
         }
 

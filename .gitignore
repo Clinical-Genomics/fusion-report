@@ -1,5 +1,5 @@
 .vscode
-db/
+*.db
 build/
 dist/
 *.egg-info

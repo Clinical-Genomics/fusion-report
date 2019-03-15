@@ -2,6 +2,8 @@
 """Module contains all helper functions together with all functions
 for generating charts and tables.
 """
+import re
+
 def tool_detection_chart(counts, tools):
     """Returns tuple tool and sum of fusions found by the tool.
 
@@ -30,14 +32,14 @@ def distribution_chart(fusions, tools):
     """Returns distribution of tools that found fusions.
 
     Args:
-        fusions (dict): (fusion:fusion_details)
+        fusions (dict): (fusion:FusionDetail)
         tools (list): List of specified tools
     Returns:
         list: Distribution of detection per tool, i.e: ['1 tool': 10, '2 tools': 4, ...]
     """
     data = [0] * len(tools)
-    for _, fusion_details in fusions.items():
-        data[len(fusion_details) - 1] += 1
+    for _, fusion_details in fusions:
+        data[len(fusion_details.tools) - 1] += 1
 
     return [[f"{index + 1} tool/s", data[index]] for index in range(len(data))]
 
@@ -116,35 +118,35 @@ def create_ppi_graph(data):
 
     return graph_data
 
-def create_fusions_table(fusions, tools, known_fusions, cutoff):
+def create_fusions_table(fusions, tools, params):
     """
     Helper function that generates fusion table.
 
     Args:
-        fusions (dict): (fusion:fusion_details)
+        fusions (dict): (fusion:FusionDetail)
         tools (list): List of specified tools
-        known_fusions (list): List of known fusions
-        cutoff (int): If not defined, using the default TOOL_DETECTION_CUTOFF
+        params (ArgumentParser)
     Returns:
         dict: fusions (dict) and tools (list)
     """
     rows = []
-    for fusion, fusion_details in fusions.items():
+    for fusion, fusion_details in fusions:
         # Add only fusions that are detected by at least <cutoff>, default = TOOL_DETECTION_CUTOFF
         # If # of tools is less than cutoff => ignore
-        if len(tools) >= cutoff or len(fusion_details.keys()) < cutoff:
+        if len(tools) >= params.tool_num or len(fusion_details.tools.keys()) < params.tool_num:
             row = {
                 'fusion': fusion,
-                'found_db': 'true' if fusion in known_fusions else 'false',
-                'tools_hits': len(fusion_details.keys())
+                'found_db': fusion_details.dbs,
+                'tools_hits': len(fusion_details.tools.keys()),
+                'score': score(fusion_details, params)
             }
             for tool in tools:
-                row[tool] = 'true' if tool in fusion_details.keys() else 'false'
+                row[tool] = 'true' if tool in fusion_details.tools.keys() else 'false'
             rows.append(row)
 
     return {'fusions': rows, 'tools': tools}
 
-def print_progress_bar(iteration, total, decimals=1, length=50, fill='='):
+def print_progress_bar(iteration, total, length=50, fill='='):
     """
     Call in a loop to create terminal progress bar.
     Taken from: https://stackoverflow.com/a/34325723
@@ -152,7 +154,6 @@ def print_progress_bar(iteration, total, decimals=1, length=50, fill='='):
     Args:
         iteration (int): current iteration
         total (int): total iterations
-        decimals (int): positive number of decimals in percent complete
         length (int): character length of progress bar
         fill (str): progress bar fill character
     Returns:
@@ -165,3 +166,71 @@ def print_progress_bar(iteration, total, decimals=1, length=50, fill='='):
     # Print New Line on Complete
     if iteration == total:
         print()
+
+def get_db_fusions(db):
+    """
+    Helper function for retrieving all fusions from used databases.
+
+    Args:
+        db (Db)
+    Returns:
+        dict: (database_name: list of fusions)
+    """
+    database = {}
+    db_names = db.get_db_names()
+    # FusionGDB
+    if 'fusiongdb' in db_names:
+        db.connect('fusiongdb')
+        res = db.select('''
+            SELECT DISTINCT (h_gene || "--" || t_gene) as fusion_pair 
+            FROM TCGA_ChiTaRS_combined_fusion_information_on_hg19
+            ''')
+        database['FusionGDB'] = [fusion['fusion_pair'] for fusion in res]
+
+    # Mitelman
+    if 'mitelman' in db_names:
+        db.connect('mitelman')
+        res = db.select('''
+            SELECT DISTINCT GeneShort FROM MolBiolClinAssoc WHERE GeneShort LIKE "%/%"
+            ''')
+        database['Mitelman'] = [fusion['GeneShort'].strip().replace('/', '--') for fusion in res]
+
+    # COSMIC
+    if 'cosmic' in db_names:
+        db.connect('cosmic')
+        res = db.select('''
+            SELECT DISTINCT translocation_name FROM CosmicFusionExport
+            WHERE translocation_name != ""
+            ''')
+        database['COSMIC'] = [
+            '--'.join(re.findall(r'[A-Z0-9]+(?=\{)', x['translocation_name'])) for x in res
+        ]
+
+    return database
+
+def score(fusion_detail, params):
+    """Custom scoring function for individual fusion.
+    More information about the scoring function can be found in the documentation
+    at https://github.com/matq007/fusion-report/docs/scoring-fusion
+
+    Args:
+        fusion_detail (FusionDetail)
+        params (ArgumentParser)
+    Returns:
+        float: Estimate score of how genuine is the fusion.
+    """
+
+    # Tools found
+    params = vars(params)
+    tool_score = sum(
+        [1 * (params[f'{tool}_weight'] / 100.0) for tool in fusion_detail.tools.keys()
+         if f'{tool}_weight' in params]
+    )
+
+    # Scoring based on DB
+    weights = {'fusiongdb': 0.20, 'cosmic': 0.40, 'mitelman': 0.40}
+    db_score = 0.0
+    for db_name in fusion_detail.dbs:
+        db_score += 1.0 * weights[db_name.lower()]
+
+    return tool_score * 0.5 + db_score * 0.5

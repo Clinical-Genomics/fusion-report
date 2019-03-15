@@ -23,7 +23,7 @@ class ReportConfig:
 
     def get_variables(self):
         """Helper method returning all variables. Used for Jinja templating."""
-        return vars(self)
+        return self.__dict__
 
     def __parse(self, config):
         """

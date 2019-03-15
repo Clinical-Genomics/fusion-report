@@ -21,6 +21,19 @@ let foundFormatter = function(cell, formatterParams){
     return cell.getValue() === 'true' ? '<span class="badge badge-success">Found</span>' : '<span class="badge badge-danger">Not found</span>'
 };
 
+let foundDBFormatter = function(cell, formatterParams) {
+    let new_cell = '';
+    let items = cell.getValue()
+    if (items.length === 0) {
+        new_cell = '<span class="badge badge-danger">Not found</span>'
+    } else {
+        for (let i in items) {
+            new_cell += `<span class="badge badge-${formatterParams[items[i]]}">${items[i]}</span>&nbsp;`
+        }
+    }
+    return new_cell
+}
+
 let break_ncbiFormatter = function(cell, formatterParams) {
     const row = cell.getData();
     const version = 'hg19', url = 'http://genome.ucsc.edu/cgi-bin';

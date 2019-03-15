@@ -29,6 +29,10 @@ class Db:
         except sqlite3.Error as error:
             exit(error)
 
+    def get_db_names(self):
+        """Return all filename databases."""
+        return [x.name.split('.')[0] for x in self.__dbs]
+
     def select(self, query, query_params=None):
         """
         Wrapper around default fetch function.

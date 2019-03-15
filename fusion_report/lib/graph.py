@@ -9,4 +9,4 @@ class Graph:
 
     def content(self):
         """Helper method returning all variables. Used for Jinja templating"""
-        return vars(self)
+        return self.__dict__

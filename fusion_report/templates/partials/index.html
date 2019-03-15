@@ -58,9 +58,13 @@
     let columns = [
         {title:"Fusion gene", field:"fusion", formatter:function(cell, formatterParams){
             let fusion = cell.getValue();
-            return cell.getData()['found_db'] == 'true'? `<code><a href="${fusion.replace('--','_')}.html">${fusion}</a></code>` : `<code>${fusion}</code>`
+            return cell.getData()['found_db'].indexOf('FusionGDB') > -1 ? `<code><a href="${fusion.replace('--','_')}.html">${fusion}</a></code>` : `<code>${fusion}</code>`
         }},
-        {title:"Found in DB", field:"found_db", formatter:foundFormatter}
+        {title:"Found in DB", field:"found_db", widthGrow:1.4, formatter:foundDBFormatter, formatterParams: {
+            'Mitelman': 'secondary',
+            'FusionGDB': 'warning',
+            'COSMIC': 'primary'
+        }}
     ];
     for (var i in tabledata.tools) {
         columns.push({
@@ -79,7 +83,9 @@
                         ${value}
                     </div>
                     </div>`
-            }}
+            }
+        },
+        {title:"Score", field:"score"}
     )
     register_table(new Tabulator("#fusion_table", {
             data:tabledata.fusions,
@@ -233,7 +239,7 @@
                 size: '110%'
             }
         },
-        colors: distribution_chart.graph.length > 2 ? colorbrewer.Oranges[distribution_chart.graph.length] : '',
+        colors: distribution_chart.graph.length > 2 ? colorbrewer.Oranges[distribution_chart.graph.length] : ["#F7A35C", "#F15C80"],
         series: [{
             type: 'pie',
             name: 'Count',

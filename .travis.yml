@@ -3,8 +3,11 @@ python:
   - "3.6"
 
 install:
+  - pip install pylint
+  - pip install Sphinx sphinxcontrib-napoleon
   - pip install -r requirements.txt
   - python setup.py install
 
 script:
-  - fusion_report --help
+  - pylint fusion_report/
+  - pytest
