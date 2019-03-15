@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/matq007/fusion-report.svg?branch=master)](https://travis-ci.org/matq007/fusion-report)
 [![MIT License](https://img.shields.io/github/license/matq007/fusion-report.svg)](https://github.com/matq007/fusion-report/blob/master/LICENSE)
 
+**Live demo [(here)](https://matq007.github.io/fusion-report/example/).**
+
 This is a python script for generating interactive summary report from output of fusion detection tools.
 Currently tools below are supported:
 
@@ -25,5 +27,3 @@ fusion_report --help
 ```bash
 python3 setup.py install
 ```
-
-![Example summary report](docs/images/example-summary-report.png)
