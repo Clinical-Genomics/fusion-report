@@ -1,0 +1,37 @@
+Usage
+=====
+
+Before running the tool make sure you have downloaded all the databases you want to use.
+
+Run all fusion detection tools
+------------------------------
+
+.. code-block:: bash
+
+    fusion_report "<SAMPLE NAME>" /path/to/output /path/to/db/ 
+        --ericscript tests/test_data/ericscript.tsv 
+        --starfusion tests/test_data/starfusion.tsv 
+        --fusioncatcher tests/test_data/fusioncatcher.txt
+        --squid tests/test_data/squid.txt 
+        --pizzly tests/test_data/pizzly.tsv
+
+Set a custom weight for tool
+----------------------------
+
+The total sum of all triggered tools has to be 100. By default the weights are
+equal `100 / (number of tools)`.
+
+.. code-block:: bash
+
+    fusion_report "<SAMPLE NAME>" /path/to/output /path/to/db/ 
+        --ericscript tests/test_data/ericscript.tsv 
+        --ericscript_weight 30.5
+        --fusioncatcher tests/test_data/fusioncatcher.txt
+        --fusioncatcher_weight 70.5
+
+All parameters and options
+--------------------------
+
+.. code-block:: bash
+
+    fusion_report --help
