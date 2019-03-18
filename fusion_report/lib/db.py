@@ -64,7 +64,7 @@ class Db:
     @staticmethod
     def scan_folder(path=None, extension='.db'):
         """
-        Function scans defined path and searches for files with an extention \*.db. If path is not 
+        Function scans defined path and searches for files with an extention ".db". If path is not
         defined search in a path /script-db.
 
         Args:
