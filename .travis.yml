@@ -14,7 +14,7 @@ script:
 before_deploy:
   - pip install sphinx sphinx-rtd-theme m2r
   - cd docs && make html && touch build/.nojekyll
-  - cp -r ${TRAVIS_BUILD_DIR}/docs/example ${TRAVIS_BUILD_DIR}/docs/build/
+  - cp -r ${TRAVIS_BUILD_DIR}/docs/example ${TRAVIS_BUILD_DIR}/docs/build/html
 
 deploy:
   - provider: pages
