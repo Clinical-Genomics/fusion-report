@@ -4,10 +4,23 @@ python:
 
 install:
   - pip install pylint
-  - pip install sphinx sphinx-rtd-theme m2r
   - pip install -r requirements.txt
   - python setup.py install
 
 script:
   - pylint fusion_report/
   - pytest
+
+before_deploy:
+  - pip install sphinx sphinx-rtd-theme m2r
+  - cd docs && make html && touch build/.nojekyll
+  - cp -r ${TRAVIS_BUILD_DIR}/docs/example ${TRAVIS_BUILD_DIR}/docs/build/
+
+deploy:
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: docs/build
+    on:
+      branch: master
+      python: 3.6
