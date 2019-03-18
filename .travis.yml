@@ -20,7 +20,7 @@ deploy:
   - provider: pages
     skip_cleanup: true
     github_token: $GITHUB_TOKEN
-    local_dir: docs/build
+    local_dir: docs/build/html
     on:
       branch: master
       python: 3.6
