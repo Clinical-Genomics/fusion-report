@@ -4,7 +4,7 @@ python:
 
 install:
   - pip install pylint
-  - pip install sphinx sphinx_rld_theme m2r
+  - pip install sphinx sphinx-rtd-theme m2r
   - pip install -r requirements.txt
   - python setup.py install
 
