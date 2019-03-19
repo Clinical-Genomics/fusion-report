@@ -21,11 +21,14 @@ class Db:
             if db_name in self.__connections:
                 self.__connection = self.__connections[db_name]
             else:
-                db_file = [db_file for db_file in self.__dbs if db_file.name == f'{db_name}.db'][0]
-                connection = sqlite3.connect(db_file.path)
-                connection.row_factory = self.__dict_factory
-                self.__connections[db_file.name] = connection
-                self.__connection = connection
+                db_files = [db_file for db_file in self.__dbs if db_file.name == f'{db_name}.db']
+                if db_files:
+                    connection = sqlite3.connect(db_files[0].path)
+                    connection.row_factory = self.__dict_factory
+                    self.__connections[db_files[0].name] = connection
+                    self.__connection = connection
+                else:
+                    exit('Database not found')
         except sqlite3.Error as error:
             exit(error)
 
@@ -50,7 +53,7 @@ class Db:
             res = cur.fetchall()
             cur.close()
             return res
-        except sqlite3.Error as error:
+        except sqlite3.OperationalError as error:
             exit(error)
 
     @classmethod

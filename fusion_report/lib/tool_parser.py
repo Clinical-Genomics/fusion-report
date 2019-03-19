@@ -1,7 +1,7 @@
 """ Module for tool parser. """
 import os
 import rapidjson
-from fusion_report.helpers.fusion_detail import FusionDetail
+from fusion_report.lib.fusion_detail import FusionDetail
 
 class ToolParser():
     """ Class for processing output from fusion tools. """
@@ -18,7 +18,7 @@ class ToolParser():
             file (str): Output filename
         """
         if not file:
-            print(f"File '{file}' for {tool} tool is missing , skipping ...")
+            print(f"Skipping {tool}, due to missing {file}")
         else:
             # add tool into list of using tools
             self.__tools.append(tool)
@@ -38,7 +38,7 @@ class ToolParser():
 
                         self.__fusions[fusion].add_tool(tool, details)
             except IOError as error:
-                print(error)
+                exit(error)
 
     def get_fusion(self, fusion):
         """
@@ -68,15 +68,6 @@ class ToolParser():
             list: List of used tools
         """
         return self.__tools
-
-    def get_unique_fusions(self):
-        """
-        Method returning list of unique fusion names.
-
-        Returns:
-            set: Set of unique fusions (names only)
-        """
-        return set(self.__fusions.keys())
 
     def get_tools_count(self):
         """
