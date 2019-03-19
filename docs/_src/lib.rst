@@ -4,6 +4,7 @@ Lib
 .. toctree::
 
    lib/db
+   lib/fusion_detail
    lib/graph
    lib/master_page
    lib/page
@@ -11,3 +12,4 @@ Lib
    lib/report
    lib/section
    lib/template
+   lib/tool_parser

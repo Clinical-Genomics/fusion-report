@@ -25,5 +25,5 @@
    :maxdepth: 2
    :caption: Source code
 
-   helpers
+   core
    lib
