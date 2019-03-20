@@ -130,7 +130,7 @@
 }
 
 .tabulator .badge {
-  font-size: 90%;
+  font-size: 95%;
 }
 
 .tabulator-row {
@@ -211,6 +211,18 @@ let break_ensemblFormatter = function(cell, formatterParams) {
     return `<a href="${url}/${urlParams}" target="_blank">${position}</a>`;
 }
 
+let progressFormatter = function(cell, formatterParams) {
+    let value = cell.getValue();
+    let progress_value = ('delimiter' in formatterParams ? value / formatterParams.delimiter : value) * 100
+    let style = 'style' in formatterParams ? formatterParams.style : 'bg-primary'
+    return `<div class="progress">
+                <div class="progress-bar ${style}" role="progressbar" style="width: ${progress_value}%;" 
+                    aria-valuenow="${progress_value}" aria-valuemin="0" aria-valuemax="100">
+                    ${value}
+                </div>
+            </div>`
+}
+
 // Table function buttons
 function copy_table(name) {
     let table = get_table(name);
@@ -244,7 +256,6 @@ function filter_by(name, field, obj) {
         } else {
             table.setFilter(field, 'like', obj.value);
         }
-        
     }
 }
 
@@ -1261,7 +1272,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
 <input type="hidden" name="tool_detection_chart" value='{"graph": [["ericscript", 12], ["starfusion", 10], ["fusioncatcher", 17], ["pizzly", 8], ["squid", 7], ["together", 5]], "graph_id": "tool_detection_chart", "subtitle": "Displays number of found fusions per tool.", "title": "Tool detection"}'>
 <input type="hidden" name="known_vs_unknown_chart" value='{"graph": [["known", 14], ["unknown", 4]], "graph_id": "known_vs_unknown_chart", "subtitle": "Shows the ration between found and unknown missing fusions in the local database.", "title": "Known Vs Unknown"}'>
 <input type="hidden" name="distribution_chart" value='{"graph": [["1 tool/s", 5], ["2 tool/s", 4], ["3 tool/s", 0], ["4 tool/s", 4], ["5 tool/s", 5]], "graph_id": "distribution_chart", "subtitle": "Sum of counts detected by different tools per fusion.", "title": "Tool detection distribution"}'>
-<input type="hidden" name="fusion_list" value='{"fusions": [{"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "AKAP9--BRAF", "fusioncatcher": "true", "pizzly": "true", "score": 0.9, "squid": "true", "starfusion": "false", "tools_hits": 4}, {"ericscript": "true", "found_db": ["Mitelman", "COSMIC"], "fusion": "GOPC--ROS1", "fusioncatcher": "true", "pizzly": "false", "score": 0.6000000000000001, "squid": "false", "starfusion": "false", "tools_hits": 2}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "FGFR3--TACC3", "fusioncatcher": "true", "pizzly": "true", "score": 1.0, "squid": "true", "starfusion": "true", "tools_hits": 5}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman"], "fusion": "FIP1L1--PDGFRA", "fusioncatcher": "true", "pizzly": "false", "score": 0.5, "squid": "false", "starfusion": "false", "tools_hits": 2}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman"], "fusion": "BRD4--NUTM1", "fusioncatcher": "true", "pizzly": "true", "score": 0.8, "squid": "true", "starfusion": "true", "tools_hits": 5}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "HOOK3--RET", "fusioncatcher": "true", "pizzly": "true", "score": 1.0, "squid": "true", "starfusion": "true", "tools_hits": 5}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "TMPRSS2--ETV1", "fusioncatcher": "true", "pizzly": "false", "score": 0.9, "squid": "true", "starfusion": "true", "tools_hits": 4}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "CD74--ROS1", "fusioncatcher": "true", "pizzly": "true", "score": 0.9, "squid": "false", "starfusion": "true", "tools_hits": 4}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "EWSR1--ATF1", "fusioncatcher": "true", "pizzly": "true", "score": 1.0, "squid": "true", "starfusion": "true", "tools_hits": 5}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "EWSR1--FLI1", "fusioncatcher": "true", "pizzly": "true", "score": 0.9, "squid": "false", "starfusion": "true", "tools_hits": 4}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "ETV6--NTRK3", "fusioncatcher": "true", "pizzly": "true", "score": 1.0, "squid": "true", "starfusion": "true", "tools_hits": 5}, {"ericscript": "true", "found_db": ["Mitelman", "COSMIC"], "fusion": "CIC--DUX4", "fusioncatcher": "true", "pizzly": "false", "score": 0.6000000000000001, "squid": "false", "starfusion": "false", "tools_hits": 2}, {"ericscript": "false", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "EML4--ALK", "fusioncatcher": "true", "pizzly": "false", "score": 0.7, "squid": "false", "starfusion": "true", "tools_hits": 2}, {"ericscript": "false", "found_db": [], "fusion": "CD74--AL132671.2", "fusioncatcher": "false", "pizzly": "false", "score": 0.1, "squid": "false", "starfusion": "true", "tools_hits": 1}, {"ericscript": "false", "found_db": [], "fusion": "IGH@--CRLF2", "fusioncatcher": "true", "pizzly": "false", "score": 0.1, "squid": "false", "starfusion": "false", "tools_hits": 1}, {"ericscript": "false", "found_db": [], "fusion": "DUX4--IGH@", "fusioncatcher": "true", "pizzly": "false", "score": 0.1, "squid": "false", "starfusion": "false", "tools_hits": 1}, {"ericscript": "false", "found_db": [], "fusion": "MALT1--IGH@", "fusioncatcher": "true", "pizzly": "false", "score": 0.1, "squid": "false", "starfusion": "false", "tools_hits": 1}, {"ericscript": "false", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "NPM1--ALK", "fusioncatcher": "true", "pizzly": "false", "score": 0.6, "squid": "false", "starfusion": "false", "tools_hits": 1}], "tools": ["ericscript", "starfusion", "fusioncatcher", "pizzly", "squid"]}'>
+<input type="hidden" name="fusion_list" value='{"fusions": [{"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "AKAP9--BRAF", "fusioncatcher": "true", "pizzly": "true", "score": "0.9", "squid": "true", "starfusion": "false", "tools_hits": 4}, {"ericscript": "true", "found_db": ["Mitelman", "COSMIC"], "fusion": "GOPC--ROS1", "fusioncatcher": "true", "pizzly": "false", "score": "0.6", "squid": "false", "starfusion": "false", "tools_hits": 2}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "FGFR3--TACC3", "fusioncatcher": "true", "pizzly": "true", "score": "1.0", "squid": "true", "starfusion": "true", "tools_hits": 5}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman"], "fusion": "FIP1L1--PDGFRA", "fusioncatcher": "true", "pizzly": "false", "score": "0.5", "squid": "false", "starfusion": "false", "tools_hits": 2}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman"], "fusion": "BRD4--NUTM1", "fusioncatcher": "true", "pizzly": "true", "score": "0.8", "squid": "true", "starfusion": "true", "tools_hits": 5}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "HOOK3--RET", "fusioncatcher": "true", "pizzly": "true", "score": "1.0", "squid": "true", "starfusion": "true", "tools_hits": 5}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "TMPRSS2--ETV1", "fusioncatcher": "true", "pizzly": "false", "score": "0.9", "squid": "true", "starfusion": "true", "tools_hits": 4}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "CD74--ROS1", "fusioncatcher": "true", "pizzly": "true", "score": "0.9", "squid": "false", "starfusion": "true", "tools_hits": 4}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "EWSR1--ATF1", "fusioncatcher": "true", "pizzly": "true", "score": "1.0", "squid": "true", "starfusion": "true", "tools_hits": 5}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "EWSR1--FLI1", "fusioncatcher": "true", "pizzly": "true", "score": "0.9", "squid": "false", "starfusion": "true", "tools_hits": 4}, {"ericscript": "true", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "ETV6--NTRK3", "fusioncatcher": "true", "pizzly": "true", "score": "1.0", "squid": "true", "starfusion": "true", "tools_hits": 5}, {"ericscript": "true", "found_db": ["Mitelman", "COSMIC"], "fusion": "CIC--DUX4", "fusioncatcher": "true", "pizzly": "false", "score": "0.6", "squid": "false", "starfusion": "false", "tools_hits": 2}, {"ericscript": "false", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "EML4--ALK", "fusioncatcher": "true", "pizzly": "false", "score": "0.7", "squid": "false", "starfusion": "true", "tools_hits": 2}, {"ericscript": "false", "found_db": [], "fusion": "CD74--AL132671.2", "fusioncatcher": "false", "pizzly": "false", "score": "0.1", "squid": "false", "starfusion": "true", "tools_hits": 1}, {"ericscript": "false", "found_db": [], "fusion": "IGH@--CRLF2", "fusioncatcher": "true", "pizzly": "false", "score": "0.1", "squid": "false", "starfusion": "false", "tools_hits": 1}, {"ericscript": "false", "found_db": [], "fusion": "DUX4--IGH@", "fusioncatcher": "true", "pizzly": "false", "score": "0.1", "squid": "false", "starfusion": "false", "tools_hits": 1}, {"ericscript": "false", "found_db": [], "fusion": "MALT1--IGH@", "fusioncatcher": "true", "pizzly": "false", "score": "0.1", "squid": "false", "starfusion": "false", "tools_hits": 1}, {"ericscript": "false", "found_db": ["FusionGDB", "Mitelman", "COSMIC"], "fusion": "NPM1--ALK", "fusioncatcher": "true", "pizzly": "false", "score": "0.6", "squid": "false", "starfusion": "false", "tools_hits": 1}], "tools": ["ericscript", "starfusion", "fusioncatcher", "pizzly", "squid"]}'>
 
 <script>
     const tool_detecton_chart = JSON.parse(document.getElementsByName("tool_detection_chart")[0].getAttribute("value"));
@@ -1289,18 +1300,11 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
         })
     }
     columns.push(
-        {title:"Tools hits", field:"tools_hits", formatter:function(cell, formatterParams){
-            let value = cell.getValue(),
-                progress_value = (value / tabledata.tools.length) * 100;
-            return `<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: ${progress_value}%;" 
-                        aria-valuenow="${progress_value}" aria-valuemin="0" aria-valuemax="100">
-                        ${value}
-                    </div>
-                    </div>`
-            }
-        },
-        {title:"Score", field:"score"}
+        {title:"Tools hits", field:"tools_hits", formatter:progressFormatter, formatterParams: {
+            'delimiter': tabledata.tools.length,
+            'style': 'bg-info'
+        }},
+        {title:"Score", field:"score", formatter:progressFormatter}
     )
     register_table(new Tabulator("#fusion_table", {
             data:tabledata.fusions,
@@ -1309,7 +1313,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
             pagination:"local",
             clipboard: true,
             paginationSize: 25,
-            initialSort:[{column:"tools_hits", dir:"desc"}],
+            initialSort:[{column:"score", dir:"desc"}],
             columns:columns
         })
     );
