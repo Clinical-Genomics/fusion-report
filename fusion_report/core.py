@@ -233,4 +233,5 @@ def score(fusion_detail, params):
     for db_name in fusion_detail.dbs:
         db_score += 1.0 * weights[db_name.lower()]
 
-    return tool_score * 0.5 + db_score * 0.5
+    total_score = tool_score * 0.5 + db_score * 0.5
+    return f'{total_score:.3}'

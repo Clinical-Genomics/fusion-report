@@ -57,6 +57,18 @@ let break_ensemblFormatter = function(cell, formatterParams) {
     return `<a href="${url}/${urlParams}" target="_blank">${position}</a>`;
 }
 
+let progressFormatter = function(cell, formatterParams) {
+    let value = cell.getValue();
+    let progress_value = ('delimiter' in formatterParams ? value / formatterParams.delimiter : value) * 100
+    let style = 'style' in formatterParams ? formatterParams.style : 'bg-primary'
+    return `<div class="progress">
+                <div class="progress-bar ${style}" role="progressbar" style="width: ${progress_value}%;" 
+                    aria-valuenow="${progress_value}" aria-valuemin="0" aria-valuemax="100">
+                    ${value}
+                </div>
+            </div>`
+}
+
 // Table function buttons
 function copy_table(name) {
     let table = get_table(name);
@@ -90,7 +102,6 @@ function filter_by(name, field, obj) {
         } else {
             table.setFilter(field, 'like', obj.value);
         }
-        
     }
 }
 

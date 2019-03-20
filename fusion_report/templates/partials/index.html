@@ -74,18 +74,11 @@
         })
     }
     columns.push(
-        {title:"Tools hits", field:"tools_hits", formatter:function(cell, formatterParams){
-            let value = cell.getValue(),
-                progress_value = (value / tabledata.tools.length) * 100;
-            return `<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: ${progress_value}%;" 
-                        aria-valuenow="${progress_value}" aria-valuemin="0" aria-valuemax="100">
-                        ${value}
-                    </div>
-                    </div>`
-            }
-        },
-        {title:"Score", field:"score"}
+        {title:"Tools hits", field:"tools_hits", formatter:progressFormatter, formatterParams: {
+            'delimiter': tabledata.tools.length,
+            'style': 'bg-info'
+        }},
+        {title:"Score", field:"score", formatter:progressFormatter}
     )
     register_table(new Tabulator("#fusion_table", {
             data:tabledata.fusions,
@@ -94,7 +87,7 @@
             pagination:"local",
             clipboard: true,
             paginationSize: 25,
-            initialSort:[{column:"tools_hits", dir:"desc"}],
+            initialSort:[{column:"score", dir:"desc"}],
             columns:columns
         })
     );
