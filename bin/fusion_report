@@ -10,7 +10,7 @@ from fusion_report.lib.graph import Graph
 from fusion_report.lib.tool_parser import ToolParser
 from fusion_report.core import tool_detection_chart, known_vs_unknown_chart, \
     distribution_chart, create_fusions_table, create_ppi_graph, print_progress_bar, \
-    get_db_fusions
+    get_db_fusions, score_fusion
 
 # Minimum number of tools that have to detect a fusion, used as a filter in Dashboard
 TOOL_DETECTION_CUTOFF = 2
@@ -244,6 +244,8 @@ def generate_report(params):
         for db_name, db_list in db_fusions.items():
             if fusion in db_list:
                 detail.add_db(db_name)
+
+        score_fusion(detail, params)
 
         if 'FusionGDB' in detail.dbs:
             fusion_page = generate_fusion_page(params, parser, fusion, db)

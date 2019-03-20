@@ -138,7 +138,7 @@ def create_fusions_table(fusions, tools, params):
                 'fusion': fusion,
                 'found_db': fusion_details.dbs,
                 'tools_hits': len(fusion_details.tools.keys()),
-                'score': score(fusion_details, params)
+                'score': f'{fusion_details.score:.3}'
             }
             for tool in tools:
                 row[tool] = 'true' if tool in fusion_details.tools.keys() else 'false'
@@ -208,7 +208,7 @@ def get_db_fusions(db):
 
     return database
 
-def score(fusion_detail, params):
+def score_fusion(fusion_detail, params):
     """Custom scoring function for individual fusion.
     More information about the scoring function can be found in the documentation
     at https://github.com/matq007/fusion-report/docs/scoring-fusion
@@ -221,10 +221,10 @@ def score(fusion_detail, params):
     """
 
     # Tools found
-    params = vars(params)
+    params_dict = vars(params)
     tool_score = sum(
-        [1 * (params[f'{tool}_weight'] / 100.0) for tool in fusion_detail.tools.keys()
-         if f'{tool}_weight' in params]
+        [1 * (params_dict[f'{tool}_weight'] / 100.0) for tool in fusion_detail.tools.keys()
+         if f'{tool}_weight' in params_dict]
     )
 
     # Scoring based on DB
@@ -234,4 +234,4 @@ def score(fusion_detail, params):
         db_score += 1.0 * weights[db_name.lower()]
 
     total_score = tool_score * 0.5 + db_score * 0.5
-    return f'{total_score:.3}'
+    fusion_detail.score = float('%0.3f' % total_score)
