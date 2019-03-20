@@ -9,11 +9,15 @@ class ReportConfig:
     def __init__(self, config=None):
         self.current_path = os.path.dirname(os.path.abspath(__file__))
         self.report_title = 'nfcore/rnafusion summary report'
-        self.logo = base64.b64encode(
-            open(
+        self.logos = {
+            'main': base64.b64encode(open(
+                os.path.join(self.current_path, '../../docs/_src/_static/fusion-report.png'), 'rb'
+            ).read()).decode('utf-8'),
+            'rnafusion': base64.b64encode(open(
                 os.path.join(self.current_path, '../templates/assets/img/rnafusion_logo.png'), 'rb'
             ).read()).decode('utf-8')
-        self.institution = ''
+        }
+        self.institution = {}
         self.date_format = '%d/%m/%Y'
         self.date = datetime.now().strftime(self.date_format)
         self.assets = {}
@@ -52,11 +56,18 @@ class ReportConfig:
             self.report_title = config['report_title'].strip()
 
     def __set_institution(self, config):
-        """Helper function for adding an institution logo."""
-        if config['institution'] is not None and os.path.exists(config['institution']):
-            self.institution = base64.b64encode(
-                open(os.path.join(self.current_path, config['institution']), 'rb').read()
-            ).decode('utf-8')
+        """Helper function for adding an institution."""
+        if config['institution'] is not None:
+            if 'name' in config['institution']:
+                self.institution['name'] = config['institution']['name']
+
+            if 'img' in config['institution'] and os.path.exists(config['institution']['img']):
+                self.institution['img'] = base64.b64encode(
+                    open(os.path.join(self.current_path, config['institution']['img']), 'rb').read()
+                ).decode('utf-8')
+
+            if 'url' in config['institution']:
+                self.institution['url'] = config['institution']['url']
 
     def __set_date_format(self, config):
         """Helper function for setting a custom date format."""
@@ -68,5 +79,5 @@ class ReportConfig:
         """Helper function for adding custom CSS or Javascript."""
         if config['assets'] is not None:
             for key, value in config['assets'].items():
-                if key in ('css', 'js'):
+                if key in ('css', 'js') and value is not None:
                     self.assets[key] = [x for x in value if os.path.exists(x)]
