@@ -39,3 +39,7 @@ fusion_report --help
 ```
 
 For more info on how to run the script, please see the [documentation](https://matq007.github.io/fusion-report/).
+
+## Credits
+
+DNA icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/).
