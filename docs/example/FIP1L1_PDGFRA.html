@@ -103,6 +103,11 @@
   margin-bottom: 20px;
 }
 
+.card-header .nav-link {
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
 /*
  * Utilities
  */
@@ -129,7 +134,7 @@
   font-size: .875rem!important;
 }
 
-.tabulator .badge {
+.badge {
   font-size: 95%;
 }
 
@@ -263,6 +268,18 @@ function filter_by(name, field, obj) {
 function toggle_view(id) {
     var item = document.getElementById(id);
     item.style.display = item.style.display == "none" ? "block" : "none";
+}
+
+function toggle_card(current_link, id) {
+    prev_active = document.getElementsByClassName('card-header')[0].querySelector('.active');
+    prev_active.className = 'nav-link'
+    current_link.className = 'nav-link active'
+    
+    let all_cards = document.getElementsByClassName('card-body');
+    Array.from(all_cards).map(function(card) {
+        card.style.display = 'none'
+    });
+    document.getElementById(id).style.display = 'block';
 }
 
 // Cytoscape helper functions
@@ -1188,14 +1205,70 @@ var r=function(){function e(e){return-e.tension*e.x-e.friction*e.v}function t(t,
         <h1 class="h2">FIP1L1--PDGFRA</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group mr-2">
-                <p class="mb-0">Generated 20/03/2019<br><strong>test</strong></p>
+                <p class="mb-0">Generated 22/03/2019<br><strong>test</strong></p>
             </div>
         </div>
     </div>
     <div>
-        <section>
-            <button class="btn btn-secondary" onclick="toggle_view('raw_view')">Raw data</button>
-            <pre id="raw_view" style="display: none">{"dbs": ["FusionGDB", "Mitelman"], "score": 0.5, "tools": {"ericscript": [{"discordant_reads": 68, "fusion_type": "intra-chromosomal", "gene_expr1": 0.0, "gene_expr2": 0.01, "gene_expr_fusion": 29.15, "junction_reads": 39, "position": "4:53425965:+#4:54274925:+"}], "fusioncatcher": [{"common_mapping_reads": 0, "fusion_type": "in-frame", "longest_anchor": 45, "position": "4:53425965:+#4:54274925:+", "spanning_pairs": 50, "spanning_unique_reads": 42}]}}</pre>
+        <section id="details">
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" onclick="toggle_card(this, 'card-summary')">Summary</a>
+                    </li>
+                                            <li class="nav-item">
+                            <a class="nav-link" onclick="toggle_card(this, 'card-ericscript')">ericscript</a>
+                            </li>
+                                            <li class="nav-item">
+                            <a class="nav-link" onclick="toggle_card(this, 'card-fusioncatcher')">fusioncatcher</a>
+                            </li>
+                                        <li class="nav-item">
+                        <a class="nav-link" onclick="toggle_card(this, 'card-raw')">Raw data</a>
+                    </li>
+                    </ul>
+                </div>
+                <div class="card-body" id="card-summary">
+                    <p class="card-text">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512" style="fill: #495057; vertical-align: sub;">
+                            <path d="M256 0c-141.385 0-256 35.817-256 80v64c0 44.183 114.615 80 256 80s256-35.817 256-80v-64c0-44.183-114.615-80-256-80z"></path>
+                            <path d="M256 272c-141.385 0-256-35.817-256-80v96c0 44.183 114.615 80 256 80s256-35.817 256-80v-96c0 44.183-114.615 80-256 80z"></path>
+                            <path d="M256 416c-141.385 0-256-35.817-256-80v96c0 44.183 114.615 80 256 80s256-35.817 256-80v-96c0 44.183-114.615 80-256 80z"></path>
+                        </svg> Database:
+                                                    <span class="badge badge-light">FusionGDB</span>
+                                                    <span class="badge badge-light">Mitelman</span>
+                                            </p>
+                    <p class="card-text">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512" style="fill: #495057; vertical-align: sub;">
+                            <path d="M470.803 367.354l22.197-47.354h19l-32 192h-480v-37.121l165.773-195.606-165.773-165.773v-113.5h490l22 128h-17.188l-9.36-19.44c-17.659-36.682-30.952-44.56-69.452-44.56h-331l176.528 176.528-148.71 175.472h271.182c58.004 0 73.324-20.789 86.803-48.646z"></path>
+                        </svg> Score: <strong>0.5</strong>
+                    </p>
+                </div>
+                                    <div class="card-body" id="card-ericscript" style="display: none">
+                                            <p class="card-text">
+                                                    <strong>position:</strong> 4:53425965:+#4:54274925:+<br>
+                                                    <strong>discordant_reads:</strong> 68<br>
+                                                    <strong>junction_reads:</strong> 39<br>
+                                                    <strong>fusion_type:</strong> intra-chromosomal<br>
+                                                    <strong>gene_expr1:</strong> 0.0<br>
+                                                    <strong>gene_expr2:</strong> 0.01<br>
+                                                    <strong>gene_expr_fusion:</strong> 29.15<br>
+                                                </p>
+                                        </div>
+                                    <div class="card-body" id="card-fusioncatcher" style="display: none">
+                                            <p class="card-text">
+                                                    <strong>position:</strong> 4:53425965:+#4:54274925:+<br>
+                                                    <strong>common_mapping_reads:</strong> 0<br>
+                                                    <strong>spanning_pairs:</strong> 50<br>
+                                                    <strong>spanning_unique_reads:</strong> 42<br>
+                                                    <strong>longest_anchor:</strong> 45<br>
+                                                    <strong>fusion_type:</strong> in-frame<br>
+                                                </p>
+                                        </div>
+                                <div class="card-body" id="card-raw" style="display: none">
+                    <code>{"dbs": ["FusionGDB", "Mitelman"], "score": 0.5, "tools": {"ericscript": [{"discordant_reads": 68, "fusion_type": "intra-chromosomal", "gene_expr1": 0.0, "gene_expr2": 0.01, "gene_expr_fusion": 29.15, "junction_reads": 39, "position": "4:53425965:+#4:54274925:+"}], "fusioncatcher": [{"common_mapping_reads": 0, "fusion_type": "in-frame", "longest_anchor": 45, "position": "4:53425965:+#4:54274925:+", "spanning_pairs": 50, "spanning_unique_reads": 42}]}}</code>
+                </div>
+            </div>
         </section>
         <!-- FUSION VARIANTS -->
         <section class="fusion" id="variations">
@@ -1517,8 +1590,6 @@ var r=function(){function e(e){return-e.tension*e.x-e.friction*e.v}function t(t,
 
 <script>
     var ppi_obj = undefined;
-    let raw_view = document.getElementById('raw_view');
-    raw_view.innerHTML = JSON.stringify(JSON.parse(raw_view.innerText), undefined, 2);
     
     // variation_table
     let variations_data = JSON.parse(document.getElementsByName("variations_data")[0].getAttribute("value"));

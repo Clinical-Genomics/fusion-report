@@ -103,6 +103,11 @@
   margin-bottom: 20px;
 }
 
+.card-header .nav-link {
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
 /*
  * Utilities
  */
@@ -129,7 +134,7 @@
   font-size: .875rem!important;
 }
 
-.tabulator .badge {
+.badge {
   font-size: 95%;
 }
 
@@ -263,6 +268,18 @@ function filter_by(name, field, obj) {
 function toggle_view(id) {
     var item = document.getElementById(id);
     item.style.display = item.style.display == "none" ? "block" : "none";
+}
+
+function toggle_card(current_link, id) {
+    prev_active = document.getElementsByClassName('card-header')[0].querySelector('.active');
+    prev_active.className = 'nav-link'
+    current_link.className = 'nav-link active'
+    
+    let all_cards = document.getElementsByClassName('card-body');
+    Array.from(all_cards).map(function(card) {
+        card.style.display = 'none'
+    });
+    document.getElementById(id).style.display = 'block';
 }
 
 // Cytoscape helper functions
@@ -1167,7 +1184,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
         <h1 class="h2">Summary</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group mr-2">
-                <p class="mb-0">Generated 20/03/2019<br><strong>test</strong></p>
+                <p class="mb-0">Generated 22/03/2019<br><strong>test</strong></p>
             </div>
         </div>
     </div>
