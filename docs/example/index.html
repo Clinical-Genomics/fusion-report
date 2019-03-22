@@ -1475,12 +1475,12 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
                 size: '110%'
             }
         },
-        colors: distribution_chart.graph.length > 2 ? colorbrewer.Oranges[distribution_chart.graph.length] : ["#F7A35C", "#F15C80"],
+        colors: distribution_chart.graph.length > 2 ? colorbrewer.Oranges[distribution_chart.graph.length].reverse() : ["#F15C80", "#F7A35C"],
         series: [{
             type: 'pie',
             name: 'Count',
             innerSize: '50%',
-            data: distribution_chart.graph
+            data: distribution_chart.graph.reverse()
         }]
     });
 </script>    </div>
