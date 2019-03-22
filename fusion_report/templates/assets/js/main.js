@@ -40,7 +40,7 @@ let break_ncbiFormatter = function(cell, formatterParams) {
     const end = position + RANGE;
     const chr = row[formatterParams.chr];
     const urlParams = `hgTracks?db=${version}&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=${chr}%3A${start}-${end}`
-    return `<a href="${url}/${urlParams}" target="_blank">${position}</a>`;
+    return `<a href="${url}/${urlParams}" target="_blank" data-toggle="tooltip" data-placement="top" title="Open in UCSC browser">${position}</a>`;
 }
 
 let break_ensemblFormatter = function(cell, formatterParams) {
@@ -52,7 +52,7 @@ let break_ensemblFormatter = function(cell, formatterParams) {
     const transcript = row[formatterParams.transcript];
     const chr = row[formatterParams.chr];
     const urlParams = `Homo_sapiens/Location/View?db=core;r=${chr}:${start}-${end};t=${transcript}`
-    return `<a href="${url}/${urlParams}" target="_blank">${position}</a>`;
+    return `<a href="${url}/${urlParams}" target="_blank" data-toggle="tooltip" data-placement="top" title="Open in Ensembl genome browser">${position}</a>`;
 }
 
 let progressFormatter = function(cell, formatterParams) {
@@ -65,6 +65,12 @@ let progressFormatter = function(cell, formatterParams) {
                     ${value}
                 </div>
             </div>`
+}
+
+let linkFormatter = function(cell, formatterParams) {
+    let value = cell.getValue();
+    let target = formatterParams.target ? formatterParams.target : "_blank";
+    return `<a href="${formatterParams.url}/${value}" target="${target}" data-toggle="tooltip" data-placement="top" title="${formatterParams.title}">${value}</a>`;
 }
 
 // Table function buttons
