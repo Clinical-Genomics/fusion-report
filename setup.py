@@ -4,11 +4,12 @@ from setuptools import find_packages, setup
 
 VERSION = '1.0'
 PACKAGE_DATA = {
-    '': ['LICENSE', '*.md'],
+    '': ['LICENSE', 'README.md'],
     'fusion_report': [
         'templates/*',
-        'templates/assets/*'
-        'templates/partials/*'
+        'templates/assets/*/*',
+        'templates/partials/*/*',
+        '../docs/_src/_static/*'
     ]
 }
 
@@ -28,7 +29,7 @@ setup(
     author_email='mproksik@gmail.com',
     url='https://github.com/matq007/fusion-report',
     license='GPL_v3',
-    packages=find_packages(exclude=('tests')),
+    packages=find_packages(exclude=('tests', 'docs')),
     install_requires=INSTALL_REQUIREMENTS,
     zip_safe=False,
     scripts=['bin/fusion_report'],
@@ -47,6 +48,5 @@ setup(
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Visualization',
     ],
-    # package_data=PACKAGE_DATA,
-    include_package_data=True
+    package_data=PACKAGE_DATA
 )

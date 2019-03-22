@@ -1,3 +1,4 @@
 include LICENSE
 include README.md
+include docs/_src/_static/fusion-report.png
 recursive-include fusion_report *
