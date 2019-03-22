@@ -176,10 +176,6 @@ function get_table(name) {
 }
 
 // Table formatters
-let foundFormatter = function(cell, formatterParams){
-    return cell.getValue() === 'true' ? '<span class="badge badge-success">Found</span>' : '<span class="badge badge-danger">Not found</span>'
-};
-
 let foundDBFormatter = function(cell, formatterParams) {
     let new_cell = '';
     let items = cell.getValue()
@@ -187,7 +183,9 @@ let foundDBFormatter = function(cell, formatterParams) {
         new_cell = '<span class="badge badge-danger">Not found</span>'
     } else {
         for (let i in items) {
-            new_cell += `<span class="badge badge-${formatterParams[items[i]]}">${items[i]}</span>&nbsp;`
+            new_cell += `<span class="badge badge-${formatterParams[items[i]]}">
+                            <span class="label">${items[i][0]}<span class="d-none d-xl-inline">${items[i].substr(1)}</span></span>
+                        </span>&nbsp;`
         }
     }
     return new_cell
@@ -1313,7 +1311,8 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
         columns.push({
             title: tabledata.tools[i],
             field: tabledata.tools[i],
-            formatter: foundFormatter
+            align: "center",
+            formatter: "tickCross"
         })
     }
     columns.push(
