@@ -3,6 +3,7 @@ class FusionDetail:
     """ Class for defining structure of fusion detail. """
     def __init__(self):
         self.score = 0.0
+        self.score_explained = ''
         self.tools = {}
         self.dbs = []
 

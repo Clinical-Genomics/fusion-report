@@ -222,16 +222,23 @@ def score_fusion(fusion_detail, params):
 
     # Tools found
     params_dict = vars(params)
-    tool_score = sum(
-        [1 * (params_dict[f'{tool}_weight'] / 100.0) for tool in fusion_detail.tools.keys()
-         if f'{tool}_weight' in params_dict]
-    )
+    tool_score = 0.0
+    score_explained = []
+    for tool in fusion_detail.tools.keys():
+        if f'{tool}_weight' in params_dict:
+            tool_score += params_dict[f'{tool}_weight'] / 100.0
+            score_explained.append(format((params_dict[f'{tool}_weight'] / 100.0), '.3f'))
+
+    fusion_detail.score_explained = f'0.5 * ({" + ".join(score_explained)})'
 
     # Scoring based on DB
-    weights = {'fusiongdb': 0.20, 'cosmic': 0.40, 'mitelman': 0.40}
+    score_explained = []
     db_score = 0.0
+    weights = {'fusiongdb': 0.20, 'cosmic': 0.40, 'mitelman': 0.40}
     for db_name in fusion_detail.dbs:
         db_score += 1.0 * weights[db_name.lower()]
+        score_explained.append(format(weights[db_name.lower()], '.3f'))
 
+    fusion_detail.score_explained += f' + 0.5 * ({" + ".join(score_explained)})'
     total_score = tool_score * 0.5 + db_score * 0.5
     fusion_detail.score = float('%0.3f' % total_score)
