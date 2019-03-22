@@ -111,6 +111,18 @@ function toggle_view(id) {
     item.style.display = item.style.display == "none" ? "block" : "none";
 }
 
+function toggle_card(current_link, id) {
+    prev_active = document.getElementsByClassName('card-header')[0].querySelector('.active');
+    prev_active.className = 'nav-link'
+    current_link.className = 'nav-link active'
+    
+    let all_cards = document.getElementsByClassName('card-body');
+    Array.from(all_cards).map(function(card) {
+        card.style.display = 'none'
+    });
+    document.getElementById(id).style.display = 'block';
+}
+
 // Cytoscape helper functions
 function export_cytoscape_chart(type, filename) {
     let image = type === 'JPG' ? ppi_obj.jpg() : ppi_obj.png();

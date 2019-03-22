@@ -84,6 +84,11 @@ body {
   margin-bottom: 20px;
 }
 
+.card-header .nav-link {
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
 /*
  * Utilities
  */
@@ -110,7 +115,7 @@ body {
   font-size: .875rem!important;
 }
 
-.tabulator .badge {
+.badge {
   font-size: 95%;
 }
 
