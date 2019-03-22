@@ -12,6 +12,7 @@
    self
    download_db
    usage
+   scoring
 
 .. toctree::
    :maxdepth: 2
