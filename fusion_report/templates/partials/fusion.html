@@ -50,9 +50,12 @@
                     <div class="card-body" id="card-{{ tool }}" style="display: none">
                     {% for tool_info in tool_list %}
                         <p class="card-text">
-                        {% for key, value in tool_info.items() %}
-                            <strong>{{ key }}:</strong> {{ value }}<br>
-                        {% endfor %}
+                            <dl class="row">
+                            {% for key, value in tool_info.items() %}
+                                <dt class="col-sm-2">{{ key }}</dt>
+                                <dd class="col-sm-10">{{ value }}</dd>
+                            {% endfor %}
+                            </dl>  
                         </p>
                     {% endfor %}
                     </div>
