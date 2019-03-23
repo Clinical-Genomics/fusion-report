@@ -62,13 +62,13 @@ body {
   text-transform: uppercase;
 }
 
-@media screen and (max-height: 375px) {
+@media screen and (max-height: 545px) {
   .footer {
     display: none;
   }
 }
 
-@media screen and (max-height: 490px) {
+@media screen and (max-height: 667px) {
   .footer img{
     display: none;
   }
