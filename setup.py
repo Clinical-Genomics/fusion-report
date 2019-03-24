@@ -7,8 +7,8 @@ PACKAGE_DATA = {
     '': ['LICENSE', 'README.md'],
     'fusion_report': [
         'templates/*',
-        'templates/assets/*/*',
-        'templates/partials/*/*',
+        'templates/assets/*',
+        'templates/partials/*',
         '../docs/_src/_static/*'
     ]
 }
