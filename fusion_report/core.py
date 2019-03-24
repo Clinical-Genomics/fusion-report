@@ -3,6 +3,8 @@
 for generating charts and tables.
 """
 import re
+import os
+import rapidjson
 
 def tool_detection_chart(counts, tools):
     """Returns tuple tool and sum of fusions found by the tool.
@@ -145,6 +147,39 @@ def create_fusions_table(fusions, tools, params):
             rows.append(row)
 
     return {'fusions': rows, 'tools': tools}
+
+def create_multiqc_section(path, tool_counts, sample_name):
+    """
+    Helper function that generates fusion table.
+
+    Args:
+        tool_counts (dict): (tool: number of fusions)
+        sample_name (str): name of the sample
+        filename (str): name of the configuration
+    Returns:
+        dict: fusions (dict) and tools (list)
+    """
+    print('[MultiQC]: generating bar-plot of found fusions')
+    configuration = {
+        'id': 'fusion_genes',
+        'section_name': 'Fusion genes',
+        'description': 'Number of fusion genes found by various tools',
+        'plot_type': 'bargraph',
+        'pconfig': {
+            'id': 'barplot_config_only',
+            'title': 'Detected fusion genes',
+            'ylab': 'Number of detected fusion genes'
+        },
+        'data': {
+            sample_name: tool_counts
+        }
+    }
+    try:
+        dest = f"{os.path.join(path, 'fusion_genes_mqc.json')}"
+        with open(dest, 'w', encoding='utf-8') as output:
+            output.write(rapidjson.dumps(configuration))
+    except IOError as error:
+        exit(error)
 
 def print_progress_bar(iteration, total, length=50, fill='='):
     """

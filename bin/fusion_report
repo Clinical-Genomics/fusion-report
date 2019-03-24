@@ -10,7 +10,7 @@ from fusion_report.lib.graph import Graph
 from fusion_report.lib.tool_parser import ToolParser
 from fusion_report.core import tool_detection_chart, known_vs_unknown_chart, \
     distribution_chart, create_fusions_table, create_ppi_graph, print_progress_bar, \
-    get_db_fusions, score_fusion
+    get_db_fusions, score_fusion, create_multiqc_section
 
 # Minimum number of tools that have to detect a fusion, used as a filter in Dashboard
 TOOL_DETECTION_CUTOFF = 2
@@ -259,6 +259,7 @@ def generate_report(params):
     report.add_page(index_page)
     parser.save(params.output, 'fusions')
     print(f'The report for `sample` {params.sample} was generated in {params.output}.')
+    create_multiqc_section(params.output, parser.get_tools_count(), params.sample)
 
 def main():
     """Main function for processing command line arguments"""
