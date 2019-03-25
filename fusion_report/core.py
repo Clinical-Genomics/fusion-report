@@ -194,6 +194,42 @@ def create_multiqc_section(path, tool_counts, sample_name):
     except IOError as error:
         exit(error)
 
+def create_fusion_list(path, parser, cutoff):
+    """
+    Helper function that generates file containing list of found fusions and filtered list of
+    fusions. One of these files ise used by FusionInspector to visualize the fusions.
+    Input for FusionInspector expects list of fusions in format `geneA--geneB\\n`.
+
+    Args:
+        path (str)
+        parser (ToolParser)
+        cutoff (int): cutoff for filtering purpose
+
+    Returns:
+        Generates:
+            - fusions_list.txt
+            - fusions_list_filtered.txt
+    """
+    print('[FusionInspector]: generating filtered and unfiltered fusion list')
+    try:
+        # unfiltered fusions list
+        unfiltered = parser.get_unique_fusions()
+        dest = f"{os.path.join(path, 'fusions_list.txt')}"
+        with open(dest, 'w', encoding='utf-8') as output:
+            for fusion in unfiltered:
+                output.write(f'{fusion}\n')
+
+        # filtered fusions list
+        filtered = [
+            fusion for fusion, details in parser.get_fusions() if len(details.tools) >= cutoff
+        ]
+        dest = f"{os.path.join(path, 'fusions_list_filtered.txt')}"
+        with open(dest, 'w', encoding='utf-8') as output:
+            for fusion in filtered:
+                output.write(f'{fusion}\n')
+    except IOError as error:
+        exit(error)
+
 def print_progress_bar(iteration, total, length=50, fill='='):
     """
     Call in a loop to create terminal progress bar.

@@ -10,7 +10,7 @@ from fusion_report.lib.graph import Graph
 from fusion_report.lib.tool_parser import ToolParser
 from fusion_report.core import tool_detection_chart, known_vs_unknown_chart, \
     distribution_chart, create_fusions_table, create_ppi_graph, print_progress_bar, \
-    get_db_fusions, score_fusion, create_multiqc_section
+    get_db_fusions, score_fusion, create_multiqc_section, create_fusion_list
 
 # Minimum number of tools that have to detect a fusion, used as a filter in Dashboard
 TOOL_DETECTION_CUTOFF = 2
@@ -87,14 +87,18 @@ def generate_index(params, parser):
         title='List of detected fusions',
         content='''
             Filters fusions found by at least {tool} tools. If number of chosen tools is less 
-            than {tool} the filter is disabled. The whole list can be found in 
+            than {cutoff} the filter is disabled. The whole list can be found in 
             <code>./Report-{sample}/fusions.json</code>.
-            '''.format(tool=str(params.tool_num), sample=str(params.sample))
+            '''.format(
+                tool=str(params.tool_cutoff),
+                sample=str(params.sample),
+                cutoff=TOOL_DETECTION_CUTOFF
+            )
     )
     fusion_list_section.data = create_fusions_table(
         parser.get_fusions(),
         parser.get_tools(),
-        params
+        params.tool_cutoff
     )
     index_page.add_section(fusion_list_section)
 
@@ -260,6 +264,7 @@ def generate_report(params):
     parser.save(params.output, 'fusions')
     print(f'The report for `sample` {params.sample} was generated in {params.output}.')
     create_multiqc_section(params.output, parser.get_tools_count(), params.sample)
+    create_fusion_list(params.output, parser, params.tool_cutoff)
 
 def main():
     """Main function for processing command line arguments"""
@@ -349,7 +354,7 @@ def main():
         required=False
     )
     optional.add_argument(
-        '-t', '--tool_num',
+        '-t', '--tool_cutoff',
         help='Number of tools required to detect a fusion',
         type=int,
         default=TOOL_DETECTION_CUTOFF
