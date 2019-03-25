@@ -57,6 +57,9 @@ def test_get_fusion(tool_parser):
     print(tool_parser.get_fusion('FGFR3--TACC3'))
     assert isinstance(tool_parser.get_fusion('FGFR3--TACC3'), FusionDetail)
 
+def test_get_unique_fusions(tool_parser):
+    assert len(tool_parser.get_unique_fusions()) == len(tool_parser.get_fusions())
+
 def test_get_fusions(tool_parser):
     assert len(tool_parser.get_fusions()) == 0
 

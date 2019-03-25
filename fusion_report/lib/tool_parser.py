@@ -56,9 +56,13 @@ class ToolParser():
         Method for returning fusions
 
         Returns:
-            dict: (fusion: FusionDetail)
+            dict_items
         """
         return self.__fusions.items()
+
+    def get_unique_fusions(self):
+        """ Return list of unique fusions. """
+        return set(self.__fusions.keys())
 
     def get_tools(self):
         """
