@@ -120,28 +120,40 @@ def create_ppi_graph(data):
 
     return graph_data
 
-def create_fusions_table(fusions, tools, params):
+def create_fusions_table(fusions, tools, cutoff):
     """
     Helper function that generates fusion table.
 
     Args:
-        fusions (dict): (fusion:FusionDetail)
+        fusions (dict_items)
         tools (list): List of specified tools
-        params (ArgumentParser)
+        cutoff (int): Tool detection cutoff
     Returns:
         dict: fusions (dict) and tools (list)
     """
     rows = []
+    filter_flag = len(tools) < cutoff
     for fusion, fusion_details in fusions:
-        # Add only fusions that are detected by at least <cutoff>, default = TOOL_DETECTION_CUTOFF
-        # If # of tools is less than cutoff => ignore
-        if len(tools) >= params.tool_num or len(fusion_details.tools.keys()) < params.tool_num:
+        row = {}
+        # If number of executed fusion detection tools is lower than cutoff, filter is ignored
+        if filter_flag:
             row = {
                 'fusion': fusion,
                 'found_db': fusion_details.dbs,
-                'tools_hits': len(fusion_details.tools.keys()),
+                'tools_hits': len(fusion_details.tools),
                 'score': f'{fusion_details.score:.3}'
             }
+        # Add only fusions that are detected by at least <cutoff>, default = TOOL_DETECTION_CUTOFF
+        if not filter_flag and len(fusion_details.tools) >= cutoff:
+            row = {
+                'fusion': fusion,
+                'found_db': fusion_details.dbs,
+                'tools_hits': len(fusion_details.tools),
+                'score': f'{fusion_details.score:.3}'
+            }
+
+        # Add only if row is not empty
+        if bool(row):
             for tool in tools:
                 row[tool] = 'true' if tool in fusion_details.tools.keys() else 'false'
             rows.append(row)
@@ -153,11 +165,12 @@ def create_multiqc_section(path, tool_counts, sample_name):
     Helper function that generates fusion table.
 
     Args:
+        path (str)
         tool_counts (dict): (tool: number of fusions)
         sample_name (str): name of the sample
-        filename (str): name of the configuration
+
     Returns:
-        dict: fusions (dict) and tools (list)
+        Generates `fusion_genes_mqc.json`
     """
     print('[MultiQC]: generating bar-plot of found fusions')
     configuration = {
