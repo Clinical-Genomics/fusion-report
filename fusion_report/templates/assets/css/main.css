@@ -140,6 +140,10 @@ body {
  * Graphs
  */
 
+.graph {
+  height: 300px;
+}
+
 #ppi_graph {
   height: 500px;
   width: 100%;

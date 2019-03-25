@@ -23,7 +23,7 @@
         </div>
         <div class="row">
             {% for graph_id in sections['dashboard'].graphs.keys() %}
-            <div class="{% if sections['dashboard'].graphs.keys() | length == 1 %} col-md-6 mx-auto {% else %} col-md-4 {% endif %}"
+            <div class="graph {% if sections['dashboard'].graphs.keys() | length == 1 %} col-md-6 mx-auto {% else %} col-md-4 {% endif %}"
                 id="{{ graph_id }}"></div>
             {% endfor %}
         </div>
@@ -93,6 +93,36 @@
         })
     );
     
+    let highchart_legend = {
+        itemStyle: {
+          fontFamily: "Lato",
+          fontWeight: 300,
+          fontSize: '12px'
+        },
+        align: 'center',
+        verticalAlign: 'bottom',
+        y: -0,
+        padding: 0
+    };
+
+    let highchart_plotOptions = {
+        pie: {
+            dataLabels: {
+                enabled: true,
+                distance: -50,
+                style: {
+                    fontWeight: 'bold',
+                    color: 'white'
+                }
+            },
+            startAngle: -90,
+            endAngle: 90,
+            center: ['50%', '90%'],
+            size: '190%',
+            showInLegend: true
+        }
+    };
+
     Highcharts.chart('tool_detection_chart', {
         chart: {
             plotBackgroundColor: null,
@@ -106,34 +136,20 @@
             text: tool_detecton_chart.title.replace(/ /g, '<br>'),
             align: 'center',
             verticalAlign: 'middle',
-            y: 40
+            y: 20
         },
         subtitle: {
             text: tool_detecton_chart.subtitle,
             floating: true,
             align: 'center',
             verticalAlign: 'bottom',
-            y: -80
+            y: -50
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.y}</b>'
         },
-        plotOptions: {
-            pie: {
-                dataLabels: {
-                    enabled: true,
-                    distance: -50,
-                    style: {
-                        fontWeight: 'bold',
-                        color: 'white'
-                    }
-                },
-                startAngle: -90,
-                endAngle: 90,
-                center: ['50%', '75%'],
-                size: '110%'
-            }
-        },
+        plotOptions: highchart_plotOptions,
+        legend: highchart_legend,
         series: [{
             type: 'pie',
             name: 'Count',
@@ -155,35 +171,21 @@
             text: known_vs_unknown_chart.title.replace(/ /g, '<br>'),
             align: 'center',
             verticalAlign: 'middle',
-            y: 40
+            y: 20
         },
         subtitle: {
             text: known_vs_unknown_chart.subtitle,
             floating: true,
             align: 'center',
             verticalAlign: 'bottom',
-            y: -80
+            y: -40
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.y}</b>'
         },
-        plotOptions: {
-            pie: {
-                dataLabels: {
-                    enabled: true,
-                    distance: -50,
-                    style: {
-                        fontWeight: 'bold',
-                        color: 'white'
-                    }
-                },
-                startAngle: -90,
-                endAngle: 90,
-                center: ['50%', '75%'],
-                size: '110%'
-            }
-        },
+        plotOptions: highchart_plotOptions,
         colors: ['#28a745', '#6c757d'],
+        legend: highchart_legend,
         series: [{
             type: 'pie',
             name: 'Count',
@@ -205,35 +207,21 @@
             text: distribution_chart.title.replace(/ /g, '<br>'),
             align: 'center',
             verticalAlign: 'middle',
-            y: 40
+            y: 20
         },
         subtitle: {
             text: distribution_chart.subtitle,
             floating: true,
             align: 'center',
             verticalAlign: 'bottom',
-            y: -80
+            y: -40
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.y}</b>'
         },
-        plotOptions: {
-            pie: {
-                dataLabels: {
-                    enabled: true,
-                    distance: -50,
-                    style: {
-                        fontWeight: 'bold',
-                        color: 'white'
-                    }
-                },
-                startAngle: -90,
-                endAngle: 90,
-                center: ['50%', '75%'],
-                size: '110%'
-            }
-        },
+        plotOptions: highchart_plotOptions,
         colors: distribution_chart.graph.length > 2 ? colorbrewer.Oranges[distribution_chart.graph.length].reverse() : ["#F15C80", "#F7A35C"],
+        legend: highchart_legend,
         series: [{
             type: 'pie',
             name: 'Count',
