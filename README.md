@@ -18,14 +18,23 @@ This python script generates an interactive summary report from fusion detection
 
 ## Installation
 
+### From source
+
 ```bash
+sudo apt-get install sqlite3 wget
 python3 setup.py install
 ```
 
 ## Usage
 
 ```bash
-fusion_report "<SAMPLE NAME>" /path/to/output /path/to/db/ 
+# Download required databases
+# Currently supported databases: FusionGDB, Mitelman and COSMIC
+# COSMIC requires login credentials to download Fusion gene Database
+fusion_report download --cosmic_usr '<username>' --cosmic_passwd '<password>' /path/to/db/
+
+# Run the fusion-report
+fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ 
   --ericscript tests/test_data/ericscript.tsv 
   --starfusion tests/test_data/starfusion.tsv 
   --fusioncatcher tests/test_data/fusioncatcher.txt
@@ -37,6 +46,8 @@ Or get help and list all possible parameters.
 
 ```bash
 fusion_report --help
+fusion_report run --help
+fusion_report download --help
 ```
 
 For more info on how to run the script, please see the [documentation](https://matq007.github.io/fusion-report/).

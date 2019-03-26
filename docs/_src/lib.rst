@@ -4,6 +4,7 @@ Lib
 .. toctree::
 
    lib/db
+   lib/download
    lib/fusion_detail
    lib/graph
    lib/master_page

@@ -7,6 +7,18 @@ Currently the tool supports three different databases:
 - Mitelman
 - COSMIC
 
+You can download the databases running:
+
+.. code-block:: bash
+
+    fusion_report download 
+        --cosmic_usr '<username>'
+        --cosmic_passwd '<password>'
+        /path/to/db
+
+Manual download
+***************
+
 FusionGDB
 ---------
 

@@ -4,12 +4,13 @@ from setuptools import find_packages, setup
 
 VERSION = '1.0'
 PACKAGE_DATA = {
-    '': ['LICENSE', 'README.md'],
     'fusion_report': [
-        'templates/*',
-        'templates/assets/*',
-        'templates/partials/*',
-        '../docs/_src/_static/*'
+        'db/*.sql'
+        'templates/*/*',
+        '../docs/_src/_static/*',
+        '../LICENSE',
+        '../README.md',
+        '../requirements.txt'
     ]
 }
 
@@ -48,5 +49,6 @@ setup(
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Visualization',
     ],
-    package_data=PACKAGE_DATA
+    package_data=PACKAGE_DATA,
+    include_package_data=True
 )

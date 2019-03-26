@@ -8,7 +8,7 @@ Run all fusion detection tools
 
 .. code-block:: bash
 
-    fusion_report "<SAMPLE NAME>" /path/to/output /path/to/db/ 
+    fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ 
         --ericscript tests/test_data/ericscript.tsv 
         --starfusion tests/test_data/starfusion.tsv 
         --fusioncatcher tests/test_data/fusioncatcher.txt
@@ -23,7 +23,7 @@ equal `100 / (number of tools)`.
 
 .. code-block:: bash
 
-    fusion_report "<SAMPLE NAME>" /path/to/output /path/to/db/ 
+    fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ 
         --ericscript tests/test_data/ericscript.tsv 
         --ericscript_weight 30.5
         --fusioncatcher tests/test_data/fusioncatcher.txt
@@ -35,3 +35,5 @@ All parameters and options
 .. code-block:: bash
 
     fusion_report --help
+    fusion_report run --help
+    fusion_report download --help
