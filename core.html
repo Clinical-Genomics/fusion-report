@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Core &mdash; fusion-report 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Lib" href="lib.html" />
+    <link rel="prev" title="Customize report" href="customize_report.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> fusion-report
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Supported tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download_db.html">Download databases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scoring.html">Scoring fusion</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Customize</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="add_tool.html">Add new tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_database.html">Add new database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="customize_report.html">Customize report</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Source code</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lib.html">Lib</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">fusion-report</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Core</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/core.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-fusion_report.core">
+<span id="core"></span><h1>Core<a class="headerlink" href="#module-fusion_report.core" title="Permalink to this headline">¶</a></h1>
+<p>Module contains all helper functions together with all functions
+for generating charts and tables.</p>
+<dl class="function">
+<dt id="fusion_report.core.create_fusion_list">
+<code class="descclassname">fusion_report.core.</code><code class="descname">create_fusion_list</code><span class="sig-paren">(</span><em>path</em>, <em>parser</em>, <em>cutoff</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fusion_report/core.html#create_fusion_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fusion_report.core.create_fusion_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function that generates file containing list of found fusions and filtered list of
+fusions. One of these files ise used by FusionInspector to visualize the fusions.
+Input for FusionInspector expects list of fusions in format <cite>geneA–geneBn</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – </li>
+<li><strong>parser</strong> (<a class="reference internal" href="lib/tool_parser.html#fusion_report.lib.tool_parser.ToolParser" title="fusion_report.lib.tool_parser.ToolParser"><em>ToolParser</em></a>) – </li>
+<li><strong>cutoff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – cutoff for filtering purpose</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
+<li>fusions_list.txt</li>
+<li>fusions_list_filtered.txt</li>
+</ul>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Generates</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fusion_report.core.create_fusions_table">
+<code class="descclassname">fusion_report.core.</code><code class="descname">create_fusions_table</code><span class="sig-paren">(</span><em>fusions</em>, <em>tools</em>, <em>cutoff</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fusion_report/core.html#create_fusions_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fusion_report.core.create_fusions_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function that generates fusion table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fusions</strong> (<em>dict_items</em>) – </li>
+<li><strong>tools</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – List of specified tools</li>
+<li><strong>cutoff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Tool detection cutoff</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fusions (dict) and tools (list)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fusion_report.core.create_multiqc_section">
+<code class="descclassname">fusion_report.core.</code><code class="descname">create_multiqc_section</code><span class="sig-paren">(</span><em>path</em>, <em>tool_counts</em>, <em>sample_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fusion_report/core.html#create_multiqc_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fusion_report.core.create_multiqc_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function that generates fusion table.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – </li>
+<li><strong>tool_counts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – (tool: number of fusions)</li>
+<li><strong>sample_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – name of the sample</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Generates <cite>fusion_genes_mqc.json</cite></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fusion_report.core.create_ppi_graph">
+<code class="descclassname">fusion_report.core.</code><code class="descname">create_ppi_graph</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fusion_report/core.html#create_ppi_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fusion_report.core.create_ppi_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function that generates Network map of Protein-Protein Interactions using Cytoscape.js.
+Additional module: <a class="reference external" href="https://github.com/cytoscape/cytoscape.js-cose-bilkent">https://github.com/cytoscape/cytoscape.js-cose-bilkent</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – SQL result</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Object structure which is defined by the Cytoscape library</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fusion_report.core.distribution_chart">
+<code class="descclassname">fusion_report.core.</code><code class="descname">distribution_chart</code><span class="sig-paren">(</span><em>fusions</em>, <em>tools</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fusion_report/core.html#distribution_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fusion_report.core.distribution_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns distribution of tools that found fusions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fusions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – (fusion:FusionDetail)</li>
+<li><strong>tools</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – List of specified tools</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Distribution of detection per tool, i.e: [‘1 tool’: 10, ‘2 tools’: 4, …]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fusion_report.core.get_db_fusions">
+<code class="descclassname">fusion_report.core.</code><code class="descname">get_db_fusions</code><span class="sig-paren">(</span><em>db</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fusion_report/core.html#get_db_fusions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fusion_report.core.get_db_fusions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for retrieving all fusions from used databases.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>db</strong> (<a class="reference internal" href="lib/db.html#fusion_report.lib.db.Db" title="fusion_report.lib.db.Db"><em>Db</em></a>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(database_name: list of fusions)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fusion_report.core.known_vs_unknown_chart">
+<code class="descclassname">fusion_report.core.</code><code class="descname">known_vs_unknown_chart</code><span class="sig-paren">(</span><em>known</em>, <em>unknown</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fusion_report/core.html#known_vs_unknown_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fusion_report.core.known_vs_unknown_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of number of known  and unknown fusions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>known</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Known fusions</li>
+<li><strong>unknown</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Unknown fusions</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of known and unknown fusions found in local databases, i.e: [‘known’: 10, …]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fusion_report.core.print_progress_bar">
+<code class="descclassname">fusion_report.core.</code><code class="descname">print_progress_bar</code><span class="sig-paren">(</span><em>iteration</em>, <em>total</em>, <em>length=50</em>, <em>fill='='</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fusion_report/core.html#print_progress_bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fusion_report.core.print_progress_bar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call in a loop to create terminal progress bar.
+Taken from: <a class="reference external" href="https://stackoverflow.com/a/34325723">https://stackoverflow.com/a/34325723</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>iteration</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – current iteration</li>
+<li><strong>total</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – total iterations</li>
+<li><strong>length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – character length of progress bar</li>
+<li><strong>fill</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – progress bar fill character</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Progress bar</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fusion_report.core.score_fusion">
+<code class="descclassname">fusion_report.core.</code><code class="descname">score_fusion</code><span class="sig-paren">(</span><em>fusion_detail</em>, <em>params</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fusion_report/core.html#score_fusion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fusion_report.core.score_fusion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom scoring function for individual fusion.
+More information about the scoring function can be found in the documentation
+at <a class="reference external" href="https://github.com/matq007/fusion-report/docs/scoring-fusion">https://github.com/matq007/fusion-report/docs/scoring-fusion</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fusion_detail</strong> (<a class="reference internal" href="lib/fusion_detail.html#fusion_report.lib.fusion_detail.FusionDetail" title="fusion_report.lib.fusion_detail.FusionDetail"><em>FusionDetail</em></a>) – </li>
+<li><strong>params</strong> (<em>ArgumentParser</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Estimate score of how genuine is the fusion.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)">float</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="fusion_report.core.tool_detection_chart">
+<code class="descclassname">fusion_report.core.</code><code class="descname">tool_detection_chart</code><span class="sig-paren">(</span><em>counts</em>, <em>tools</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fusion_report/core.html#tool_detection_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fusion_report.core.tool_detection_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns tuple tool and sum of fusions found by the tool.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>counts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – (tool:#count)</li>
+<li><strong>tools</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – List of specified tools</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">tool: #count, i.e: [‘ericscript’: 5, …]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="lib.html" class="btn btn-neutral float-right" title="Lib" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="customize_report.html" class="btn btn-neutral float-left" title="Customize report" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Martin Proks
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

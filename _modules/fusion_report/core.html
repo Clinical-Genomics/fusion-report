@@ -1,0 +1,531 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>fusion_report.core &mdash; fusion-report 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> fusion-report
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Supported tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../download_db.html">Download databases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scoring.html">Scoring fusion</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Customize</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../add_tool.html">Add new tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../add_database.html">Add new database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../customize_report.html">Customize report</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Source code</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lib.html">Lib</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">fusion-report</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>fusion_report.core</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for fusion_report.core</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;Module contains all helper functions together with all functions</span>
+<span class="sd">for generating charts and tables.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">rapidjson</span>
+
+<div class="viewcode-block" id="tool_detection_chart"><a class="viewcode-back" href="../../core.html#fusion_report.core.tool_detection_chart">[docs]</a><span class="k">def</span> <span class="nf">tool_detection_chart</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">tools</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns tuple tool and sum of fusions found by the tool.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        counts (dict): (tool:#count)</span>
+<span class="sd">        tools (list): List of specified tools</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: tool: #count, i.e: [&#39;ericscript&#39;: 5, ...]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">tool</span><span class="p">),</span> <span class="n">count</span><span class="p">]</span> <span class="k">for</span> <span class="n">tool</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span> <span class="ow">or</span> <span class="n">tool</span> <span class="o">==</span> <span class="s1">&#39;together&#39;</span>
+    <span class="p">]</span></div>
+
+<div class="viewcode-block" id="known_vs_unknown_chart"><a class="viewcode-back" href="../../core.html#fusion_report.core.known_vs_unknown_chart">[docs]</a><span class="k">def</span> <span class="nf">known_vs_unknown_chart</span><span class="p">(</span><span class="n">known</span><span class="p">,</span> <span class="n">unknown</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns list of number of known  and unknown fusions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        known (int): Known fusions</span>
+<span class="sd">        unknown (int): Unknown fusions</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: List of known and unknown fusions found in local databases, i.e: [&#39;known&#39;: 10, ...]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[[</span><span class="s1">&#39;known&#39;</span><span class="p">,</span> <span class="n">known</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;unknown&#39;</span><span class="p">,</span> <span class="n">unknown</span><span class="p">]]</span></div>
+
+<div class="viewcode-block" id="distribution_chart"><a class="viewcode-back" href="../../core.html#fusion_report.core.distribution_chart">[docs]</a><span class="k">def</span> <span class="nf">distribution_chart</span><span class="p">(</span><span class="n">fusions</span><span class="p">,</span> <span class="n">tools</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns distribution of tools that found fusions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fusions (dict): (fusion:FusionDetail)</span>
+<span class="sd">        tools (list): List of specified tools</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Distribution of detection per tool, i.e: [&#39;1 tool&#39;: 10, &#39;2 tools&#39;: 4, ...]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">fusion_details</span> <span class="ow">in</span> <span class="n">fusions</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">fusion_details</span><span class="o">.</span><span class="n">tools</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="p">[[</span><span class="n">f</span><span class="s2">&quot;{index + 1} tool/s&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))]</span></div>
+
+<div class="viewcode-block" id="create_ppi_graph"><a class="viewcode-back" href="../../core.html#fusion_report.core.create_ppi_graph">[docs]</a><span class="k">def</span> <span class="nf">create_ppi_graph</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function that generates Network map of Protein-Protein Interactions using Cytoscape.js.</span>
+<span class="sd">    Additional module: https://github.com/cytoscape/cytoscape.js-cose-bilkent</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (dict): SQL result</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Object structure which is defined by the Cytoscape library</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">graph_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">graph_data</span>
+
+    <span class="n">graph_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;fusion&#39;</span><span class="p">},</span> <span class="s1">&#39;classes&#39;</span><span class="p">:</span> <span class="s1">&#39;core&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;h_gene&#39;</span><span class="p">]},</span> <span class="s1">&#39;classes&#39;</span><span class="p">:</span> <span class="s1">&#39;core&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;t_gene&#39;</span><span class="p">]},</span> <span class="s1">&#39;classes&#39;</span><span class="p">:</span> <span class="s1">&#39;core&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;fusion&#39;</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;h_gene&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;fusion&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;h_gene&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+         <span class="s1">&#39;classes&#39;</span><span class="p">:</span> <span class="s1">&#39;core-connection&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;fusion&#39;</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;t_gene&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;fusion&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;t_gene&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+         <span class="s1">&#39;classes&#39;</span><span class="p">:</span> <span class="s1">&#39;core-connection&#39;</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+
+    <span class="n">left_fusion</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;h_gene_interactions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
+    <span class="n">right_fusion</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;t_gene_interactions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
+    <span class="n">intersect</span> <span class="o">=</span> <span class="n">left_fusion</span> <span class="o">&amp;</span> <span class="n">right_fusion</span>
+    <span class="n">left_fusion</span> <span class="o">-=</span> <span class="n">intersect</span>
+    <span class="n">right_fusion</span> <span class="o">-=</span> <span class="n">intersect</span>
+
+    <span class="c1"># Create nodes related to left gene of the fusion</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">left_fusion</span><span class="p">:</span>
+        <span class="n">graph_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">gene</span><span class="p">}})</span>
+        <span class="n">graph_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">gene</span> <span class="o">+</span> <span class="s1">&#39;--&#39;</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;h_gene&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;h_gene&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">gene</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+
+    <span class="c1"># Create nodes related to right gene of the fusion</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">right_fusion</span><span class="p">:</span>
+        <span class="n">graph_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">gene</span><span class="p">}})</span>
+        <span class="n">graph_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">gene</span> <span class="o">+</span> <span class="s1">&#39;--&#39;</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;t_gene&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;t_gene&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">gene</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+
+    <span class="c1"># Some fusions have common gene that can fusion with both left and right gene.</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">intersect</span><span class="p">):</span>
+        <span class="n">graph_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">gene</span><span class="p">}})</span>
+        <span class="n">graph_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;fusion&#39;</span> <span class="o">+</span> <span class="s1">&#39;--&#39;</span> <span class="o">+</span> <span class="n">gene</span><span class="p">,</span>
+                <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;fusion&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">gene</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">graph_data</span></div>
+
+<div class="viewcode-block" id="create_fusions_table"><a class="viewcode-back" href="../../core.html#fusion_report.core.create_fusions_table">[docs]</a><span class="k">def</span> <span class="nf">create_fusions_table</span><span class="p">(</span><span class="n">fusions</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function that generates fusion table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fusions (dict_items)</span>
+<span class="sd">        tools (list): List of specified tools</span>
+<span class="sd">        cutoff (int): Tool detection cutoff</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: fusions (dict) and tools (list)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">filter_flag</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">cutoff</span>
+    <span class="k">for</span> <span class="n">fusion</span><span class="p">,</span> <span class="n">fusion_details</span> <span class="ow">in</span> <span class="n">fusions</span><span class="p">:</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># If number of executed fusion detection tools is lower than cutoff, filter is ignored</span>
+        <span class="k">if</span> <span class="n">filter_flag</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;fusion&#39;</span><span class="p">:</span> <span class="n">fusion</span><span class="p">,</span>
+                <span class="s1">&#39;found_db&#39;</span><span class="p">:</span> <span class="n">fusion_details</span><span class="o">.</span><span class="n">dbs</span><span class="p">,</span>
+                <span class="s1">&#39;tools_hits&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">fusion_details</span><span class="o">.</span><span class="n">tools</span><span class="p">),</span>
+                <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{fusion_details.score:.3}</span><span class="s1">&#39;</span>
+            <span class="p">}</span>
+        <span class="c1"># Add only fusions that are detected by at least &lt;cutoff&gt;, default = TOOL_DETECTION_CUTOFF</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filter_flag</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">fusion_details</span><span class="o">.</span><span class="n">tools</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">cutoff</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;fusion&#39;</span><span class="p">:</span> <span class="n">fusion</span><span class="p">,</span>
+                <span class="s1">&#39;found_db&#39;</span><span class="p">:</span> <span class="n">fusion_details</span><span class="o">.</span><span class="n">dbs</span><span class="p">,</span>
+                <span class="s1">&#39;tools_hits&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">fusion_details</span><span class="o">.</span><span class="n">tools</span><span class="p">),</span>
+                <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{fusion_details.score:.3}</span><span class="s1">&#39;</span>
+            <span class="p">}</span>
+
+        <span class="c1"># Add only if row is not empty</span>
+        <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">:</span>
+                <span class="n">row</span><span class="p">[</span><span class="n">tool</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span> <span class="k">if</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">fusion_details</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;false&#39;</span>
+            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;fusions&#39;</span><span class="p">:</span> <span class="n">rows</span><span class="p">,</span> <span class="s1">&#39;tools&#39;</span><span class="p">:</span> <span class="n">tools</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="create_multiqc_section"><a class="viewcode-back" href="../../core.html#fusion_report.core.create_multiqc_section">[docs]</a><span class="k">def</span> <span class="nf">create_multiqc_section</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">tool_counts</span><span class="p">,</span> <span class="n">sample_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function that generates fusion table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str)</span>
+<span class="sd">        tool_counts (dict): (tool: number of fusions)</span>
+<span class="sd">        sample_name (str): name of the sample</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Generates `fusion_genes_mqc.json`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[MultiQC]: generating bar-plot of found fusions&#39;</span><span class="p">)</span>
+    <span class="n">configuration</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;fusion_genes&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;section_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Fusion genes&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Number of fusion genes found by various tools&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;plot_type&#39;</span><span class="p">:</span> <span class="s1">&#39;bargraph&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;pconfig&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;barplot_config_only&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Detected fusion genes&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;ylab&#39;</span><span class="p">:</span> <span class="s1">&#39;Number of detected fusion genes&#39;</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">sample_name</span><span class="p">:</span> <span class="n">tool_counts</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{os.path.join(path, &#39;fusion_genes_mqc.json&#39;)}&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rapidjson</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">configuration</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">exit</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="create_fusion_list"><a class="viewcode-back" href="../../core.html#fusion_report.core.create_fusion_list">[docs]</a><span class="k">def</span> <span class="nf">create_fusion_list</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function that generates file containing list of found fusions and filtered list of</span>
+<span class="sd">    fusions. One of these files ise used by FusionInspector to visualize the fusions.</span>
+<span class="sd">    Input for FusionInspector expects list of fusions in format `geneA--geneB\\n`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str)</span>
+<span class="sd">        parser (ToolParser)</span>
+<span class="sd">        cutoff (int): cutoff for filtering purpose</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Generates:</span>
+<span class="sd">            - fusions_list.txt</span>
+<span class="sd">            - fusions_list_filtered.txt</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[FusionInspector]: generating filtered and unfiltered fusion list&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># unfiltered fusions list</span>
+        <span class="n">unfiltered</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_unique_fusions</span><span class="p">()</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{os.path.join(path, &#39;fusions_list.txt&#39;)}&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">fusion</span> <span class="ow">in</span> <span class="n">unfiltered</span><span class="p">:</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{fusion}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># filtered fusions list</span>
+        <span class="n">filtered</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">fusion</span> <span class="k">for</span> <span class="n">fusion</span><span class="p">,</span> <span class="n">details</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_fusions</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">details</span><span class="o">.</span><span class="n">tools</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">cutoff</span>
+        <span class="p">]</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{os.path.join(path, &#39;fusions_list_filtered.txt&#39;)}&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">fusion</span> <span class="ow">in</span> <span class="n">filtered</span><span class="p">:</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{fusion}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">exit</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="print_progress_bar"><a class="viewcode-back" href="../../core.html#fusion_report.core.print_progress_bar">[docs]</a><span class="k">def</span> <span class="nf">print_progress_bar</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;=&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Call in a loop to create terminal progress bar.</span>
+<span class="sd">    Taken from: https://stackoverflow.com/a/34325723</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        iteration (int): current iteration</span>
+<span class="sd">        total (int): total iterations</span>
+<span class="sd">        length (int): character length of progress bar</span>
+<span class="sd">        fill (str): progress bar fill character</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Progress bar</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">percent</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">iteration</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">total</span><span class="p">)))</span>
+    <span class="n">filled_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">length</span> <span class="o">*</span> <span class="n">iteration</span> <span class="o">//</span> <span class="n">total</span><span class="p">)</span>
+    <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">fill</span> <span class="o">*</span> <span class="n">filled_length</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="n">filled_length</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">Progress |</span><span class="si">%s</span><span class="s1">| </span><span class="si">%s%%</span><span class="s1"> Complete&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">progress_bar</span><span class="p">,</span> <span class="n">percent</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># Print New Line on Complete</span>
+    <span class="k">if</span> <span class="n">iteration</span> <span class="o">==</span> <span class="n">total</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="get_db_fusions"><a class="viewcode-back" href="../../core.html#fusion_report.core.get_db_fusions">[docs]</a><span class="k">def</span> <span class="nf">get_db_fusions</span><span class="p">(</span><span class="n">db</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function for retrieving all fusions from used databases.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        db (Db)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: (database_name: list of fusions)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">database</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">db_names</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_db_names</span><span class="p">()</span>
+    <span class="c1"># FusionGDB</span>
+    <span class="k">if</span> <span class="s1">&#39;fusiongdb&#39;</span> <span class="ow">in</span> <span class="n">db_names</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;fusiongdb&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            SELECT DISTINCT (h_gene || &quot;--&quot; || t_gene) as fusion_pair </span>
+<span class="s1">            FROM TCGA_ChiTaRS_combined_fusion_information_on_hg19</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="n">database</span><span class="p">[</span><span class="s1">&#39;FusionGDB&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">fusion</span><span class="p">[</span><span class="s1">&#39;fusion_pair&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">fusion</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
+
+    <span class="c1"># Mitelman</span>
+    <span class="k">if</span> <span class="s1">&#39;mitelman&#39;</span> <span class="ow">in</span> <span class="n">db_names</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;mitelman&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            SELECT DISTINCT GeneShort FROM MolBiolClinAssoc WHERE GeneShort LIKE &quot;%/%&quot;</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="n">database</span><span class="p">[</span><span class="s1">&#39;Mitelman&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">fusion</span><span class="p">[</span><span class="s1">&#39;GeneShort&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">fusion</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
+
+    <span class="c1"># COSMIC</span>
+    <span class="k">if</span> <span class="s1">&#39;cosmic&#39;</span> <span class="ow">in</span> <span class="n">db_names</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;cosmic&#39;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            SELECT DISTINCT translocation_name FROM CosmicFusionExport</span>
+<span class="s1">            WHERE translocation_name != &quot;&quot;</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="n">database</span><span class="p">[</span><span class="s1">&#39;COSMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;--&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[A-Z0-9]+(?=\{)&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;translocation_name&#39;</span><span class="p">]))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span>
+        <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">database</span></div>
+
+<div class="viewcode-block" id="score_fusion"><a class="viewcode-back" href="../../core.html#fusion_report.core.score_fusion">[docs]</a><span class="k">def</span> <span class="nf">score_fusion</span><span class="p">(</span><span class="n">fusion_detail</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Custom scoring function for individual fusion.</span>
+<span class="sd">    More information about the scoring function can be found in the documentation</span>
+<span class="sd">    at https://github.com/matq007/fusion-report/docs/scoring-fusion</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fusion_detail (FusionDetail)</span>
+<span class="sd">        params (ArgumentParser)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Estimate score of how genuine is the fusion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Tools found</span>
+    <span class="n">params_dict</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">tool_score</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">score_explained</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">fusion_detail</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{tool}</span><span class="s1">_weight&#39;</span> <span class="ow">in</span> <span class="n">params_dict</span><span class="p">:</span>
+            <span class="n">tool_score</span> <span class="o">+=</span> <span class="n">params_dict</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{tool}</span><span class="s1">_weight&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">100.0</span>
+            <span class="n">score_explained</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">format</span><span class="p">((</span><span class="n">params_dict</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{tool}</span><span class="s1">_weight&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">),</span> <span class="s1">&#39;.3f&#39;</span><span class="p">))</span>
+
+    <span class="n">fusion_detail</span><span class="o">.</span><span class="n">score_explained</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;0.5 * ({&quot; + &quot;.join(score_explained)})&#39;</span>
+
+    <span class="c1"># Scoring based on DB</span>
+    <span class="n">score_explained</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">db_score</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;fusiongdb&#39;</span><span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span> <span class="s1">&#39;cosmic&#39;</span><span class="p">:</span> <span class="mf">0.40</span><span class="p">,</span> <span class="s1">&#39;mitelman&#39;</span><span class="p">:</span> <span class="mf">0.40</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">db_name</span> <span class="ow">in</span> <span class="n">fusion_detail</span><span class="o">.</span><span class="n">dbs</span><span class="p">:</span>
+        <span class="n">db_score</span> <span class="o">+=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">db_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+        <span class="n">score_explained</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">format</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">db_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()],</span> <span class="s1">&#39;.3f&#39;</span><span class="p">))</span>
+
+    <span class="n">fusion_detail</span><span class="o">.</span><span class="n">score_explained</span> <span class="o">+=</span> <span class="n">f</span><span class="s1">&#39; + 0.5 * ({&quot; + &quot;.join(score_explained)})&#39;</span>
+    <span class="n">total_score</span> <span class="o">=</span> <span class="n">tool_score</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">db_score</span> <span class="o">*</span> <span class="mf">0.5</span>
+    <span class="n">fusion_detail</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%0.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">total_score</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Martin Proks
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
