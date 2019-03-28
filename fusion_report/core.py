@@ -186,7 +186,7 @@ def create_multiqc_section(path, tool_counts, sample_name):
         sample_name (str): name of the sample
 
     Returns:
-        Generates `fusion_genes_mqc.json`
+        Generates `fusions_mqc.json`
     """
     print('[MultiQC]: generating bar-plot of found fusions')
     configuration = {
@@ -204,7 +204,7 @@ def create_multiqc_section(path, tool_counts, sample_name):
         }
     }
     try:
-        dest = f"{os.path.join(path, 'fusion_genes_mqc.json')}"
+        dest = f"{os.path.join(path, 'fusions_mqc.json')}"
         with open(dest, 'w', encoding='utf-8') as output:
             output.write(rapidjson.dumps(configuration))
     except IOError as error:

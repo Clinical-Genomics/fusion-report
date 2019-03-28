@@ -11,4 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Version parameter ([#10](https://github.com/matq007/fusion-report/issues/10))
 
+### Changed
+
+- Renamed `fusion_genes_mqc.json` to `fusions_mqc.json` ([#9](https://github.com/matq007/fusion-report/issues/9))
+
 ## [1.0.0] - 2019-03-26
