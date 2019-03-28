@@ -7,29 +7,15 @@ from fusion_report.lib.page import Page
 from fusion_report.lib.report import Report
 from fusion_report.lib.section import Section
 from fusion_report.lib.graph import Graph
-from fusion_report.lib.tool_parser import ToolParser
 from fusion_report.lib.download import Download
 from fusion_report.core import tool_detection_chart, known_vs_unknown_chart, \
     distribution_chart, create_fusions_table, create_ppi_graph, print_progress_bar, \
-    get_db_fusions, score_fusion, create_multiqc_section, create_fusion_list
+    get_db_fusions, score_fusion, create_multiqc_section, create_fusion_list, parse, __version__
 
 # Minimum number of tools that have to detect a fusion, used as a filter in Dashboard
 TOOL_DETECTION_CUTOFF = 2
 SUPPORTED_TOOLS = ['ericscript', 'starfusion', 'fusioncatcher', 'pizzly', 'squid']
 DEFAULT_TOOL_WEIGHT = float(100/len(SUPPORTED_TOOLS))
-
-def parse(params):
-    """
-    Function calling parser of individual tool.
-
-    Args:
-        params (ArgumentParser):
-    """
-    tools = ToolParser()
-    for tool in SUPPORTED_TOOLS:
-        tools.parse(tool, params.__dict__[tool])
-
-    return tools
 
 def download(params):
     """ Function for downloading all databases. """
@@ -241,7 +227,7 @@ def generate_report(params):
         params (ArgumentParser)
     """
     i = 0
-    parser = parse(params)
+    parser = parse(params, SUPPORTED_TOOLS)
     db = Db(params.db_path)
     fusions = parser.get_fusions()
     db_fusions = get_db_fusions(db)
@@ -272,16 +258,13 @@ def generate_report(params):
     create_multiqc_section(params.output, parser.get_tools_count(), params.sample)
     create_fusion_list(params.output, parser, params.tool_cutoff)
 
-def main():
-    """Main function for processing command line arguments"""
-    parser = argparse.ArgumentParser(
-        description='''
-            Tool for generating friendly UI custom report. 
-            Supported tools are: {0} and {1}.
-        '''.format(', '.join(SUPPORTED_TOOLS[:-1]), SUPPORTED_TOOLS[-1])
-    )
-    # fusion_parser run
-    subparsers = parser.add_subparsers(dest='command')
+def args_add_run(subparsers):
+    """
+    Sets run parameter.
+
+    Args:
+        subparsers (subparsers)
+    """
     run_parser = subparsers.add_parser('run', help='Run application')
     run_mandatory = run_parser.add_argument_group(
         'Mandatory arguments', 'Required arguments to run app.'
@@ -374,7 +357,14 @@ def main():
         type=int,
         default=TOOL_DETECTION_CUTOFF
     )
-    # fusion_parser download
+
+def args_add_download(subparsers):
+    """
+    Sets download parameter.
+
+    Args:
+        subparsers (subparsers)
+    """
     download_parser = subparsers.add_parser('download', help='Download required databases')
     download_parser.add_argument(
         'output',
@@ -399,6 +389,24 @@ def main():
         '--cosmic_token',
         help='COSMIC token',
         type=str
+    )
+
+def main():
+    """Main function for processing command line arguments"""
+    parser = argparse.ArgumentParser(
+        description='''
+            Tool for generating friendly UI custom report. 
+            Supported tools are: {0} and {1}.
+        '''.format(', '.join(SUPPORTED_TOOLS[:-1]), SUPPORTED_TOOLS[-1])
+    )
+    # fusion_parser run
+    subparsers = parser.add_subparsers(dest='command')
+    args_add_run(subparsers)
+    args_add_download(subparsers)
+    parser.add_argument(
+        '--version', '-v',
+        action='version',
+        version=f'fusion-report {__version__}'
     )
 
     # Handle individual commands

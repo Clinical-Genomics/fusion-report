@@ -5,6 +5,22 @@ for generating charts and tables.
 import re
 import os
 import rapidjson
+from fusion_report.lib.tool_parser import ToolParser
+
+__version__ = '1.0.0'
+
+def parse(params, supported_tools):
+    """
+    Function calling parser of individual tool.
+
+    Args:
+        params (ArgumentParser):
+    """
+    tools = ToolParser()
+    for tool in supported_tools:
+        tools.parse(tool, params.__dict__[tool])
+
+    return tools
 
 def tool_detection_chart(counts, tools):
     """Returns tuple tool and sum of fusions found by the tool.

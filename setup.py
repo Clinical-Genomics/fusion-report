@@ -1,8 +1,8 @@
 import os
 import sys
 from setuptools import find_packages, setup
+from fusion_report.core import __version__
 
-VERSION = '1.0'
 PACKAGE_DATA = {
     'fusion_report': [
         'db/*.sql'
@@ -22,7 +22,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='fusion_report',
-    version=VERSION,
+    version=__version__,
     python_requires='>=3.6.*',
     description='Tool for parsing outputs from fusion detection tools.',
     long_description=README,
