@@ -58,7 +58,7 @@
     let columns = [
         {title:"Fusion gene", field:"fusion", formatter:function(cell, formatterParams){
             let fusion = cell.getValue();
-            return cell.getData()['found_db'].indexOf('FusionGDB') > -1 ? `<code><a href="${fusion.replace('--','_')}.html">${fusion}</a></code>` : `<code>${fusion}</code>`
+            return cell.getData()['found_db'].length > 0 ? `<code><a href="${fusion.replace('--','_')}.html">${fusion}</a></code>` : `<code>${fusion}</code>`
         }},
         {title:"Found in DB", field:"found_db", widthGrow:1.4, formatter:foundDBFormatter, formatterParams: {
             'Mitelman': 'secondary',

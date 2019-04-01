@@ -1,0 +1,374 @@
+<!-- Required javascript -->
+{{ include_raw('assets/js/cytoscape-3.2.22.min.js') | safe }}
+{{ include_raw('assets/js/cytoscape-cose-bilkent-4.0.0.min.js') | safe }}
+
+<!-- FUSION VARIANTS -->
+<section class="fusion" id="variations">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
+        <h1 class="h3">{{ sections['variations'].title | safe }}</h1>
+    </div>
+    <p>{{ sections['variations'].content | safe }}</p>
+    {% with table_name='variations_table' %}
+    {% include "partials/table-buttons.html" %}
+    {% endwith %}
+    <div id="variations_table" class="bootstrap tabulator table-striped table-bordered"></div>
+</section>
+<!-- ENSEMBL TRANSCRIPTS  -->
+<section class="fusion" id="transcripts">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
+        <h1 class="h3">{{ sections['transcripts'].title }}</h1>
+    </div>
+    <p>{{ sections['transcripts'].content | safe }}</p>
+    {% with table_name='transcripts_table' %}
+    {% include "partials/table-buttons.html" %}
+    {% endwith %}
+    <div id="transcripts_table" class="bootstrap tabulator table-striped table-bordered"></div>
+</section>
+<!-- PPI GRAPH -->
+<section class="fusion" id="ppi">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
+        <h1 class="h3">{{ sections['ppi'].title | safe }}</h1>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button class="btn btn-secondary"
+                onclick="export_cytoscape_chart('PNG', 'protein-protein-interactions')">Export PNG</button>
+            <button class="btn btn-secondary"
+                onclick="export_cytoscape_chart('JPG', 'protein-protein-interactions')">Export JPG</button>
+        </div>
+    </div>
+    <p>{{ sections['ppi'].content | safe }}</p>
+    <div class="col-md-12" id="ppi_graph">
+        <div id="loading" class="col loading mx-auto"></div>
+    </div>
+</section>
+<!-- TARGETING DRUGS -->
+<section class="fusion" id="targeting_drugs">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
+        <h1 class="h3">{{ sections['targeting_drugs'].title | safe }}</h1>
+    </div>
+    <p>{{ sections['targeting_drugs'].content | safe }}</p>
+    {% with table_name='targeting_drugs_table' %}
+    {% include "partials/table-buttons.html" %}
+    {% endwith %}
+    <div id="targeting_drugs_table" class="bootstrap tabulator table-striped table-bordered"></div>
+</section>
+<!-- RELATED DISEASES -->
+<section class="fusion" id="related_diseases">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
+        <h1 class="h3">{{ sections['related_diseases'].title | safe }}</h1>
+    </div>
+    <p>{{ sections['related_diseases'].content | safe }}</p>
+    {% with table_name='related_diseases_table' %}
+    {% include "partials/table-buttons.html" %}
+    {% endwith %}
+    <div id="related_diseases_table" class="bootstrap tabulator table-striped table-bordered"></div>
+</section>
+
+<!-- Hidden values for Javascript to process -->
+<input type="hidden" name="variations_data" value='{{ sections["variations"].data | tojson | safe }}'>
+<input type="hidden" name="transcripts_data" value='{{ sections["transcripts"].data | tojson | safe }}'>
+<input type="hidden" name="ppi_graph_data" value='{{ sections["ppi"].graphs["ppi_graph"].graph | tojson | safe }}'>
+<input type="hidden" name="targeting_drugs_data" value='{{ sections["targeting_drugs"].data | tojson | safe }}'>
+<input type="hidden" name="related_diseases_data" value='{{ sections["related_diseases"].data | tojson | safe }}'>
+
+<script>
+    var ppi_obj = undefined;
+
+    // variation_table
+    let variations_data = JSON.parse(document.getElementsByName("variations_data")[0].getAttribute("value"));
+    register_table(new Tabulator("#variations_table", {
+        data: variations_data,
+        responsiveLayout: true,
+        layout: "fitColumns",
+        pagination: "local",
+        clipboard: true,
+        paginationSize: 10,
+        columns: [{
+                title: "Source",
+                field: "source1"
+            },
+            {
+                title: "Sample name",
+                field: "sample"
+            },
+            {
+                title: "Left gene",
+                field: "h_gene"
+            },
+            {
+                title: "Left chromosome",
+                field: "h_chr"
+            },
+            {
+                title: "Left breakpoint",
+                field: "h_bp",
+                formatter: break_ncbiFormatter,
+                formatterParams: {
+                    chr: 'h_chr'
+                }
+            },
+            {
+                title: "Left strand",
+                field: "h_strand"
+            },
+            {
+                title: "Right gene",
+                field: "t_gene"
+            },
+            {
+                title: "Right chromosome",
+                field: "t_chr"
+            },
+            {
+                title: "Right breakpoint",
+                field: "t_bp",
+                formatter: break_ncbiFormatter,
+                formatterParams: {
+                    chr: 't_chr'
+                }
+            },
+            {
+                title: "Right strand",
+                field: "t_strand"
+            }
+        ]
+    }));
+
+    // Ensembl transcripts
+    let transcripts_data = JSON.parse(document.getElementsByName("transcripts_data")[0].getAttribute("value"));
+    register_table(new Tabulator("#transcripts_table", {
+        data: transcripts_data,
+        responsiveLayout: true,
+        layout: "fitColumns",
+        pagination: "local",
+        clipboard: true,
+        paginationSize: 10,
+        columns: [{
+                title: "Source",
+                field: "ctype1"
+            },
+            {
+                title: "Type",
+                field: "orf"
+            },
+            {
+                title: "Left gene transcript",
+                field: "h_enst",
+                formatter: linkFormatter,
+                formatterParams: {
+                    url: "https://www.ensembl.org/id",
+                    title: "Open in Ensembl database"
+                }
+            },
+            {
+                title: "Left gene",
+                field: "h_gene"
+            },
+            {
+                title: "Chromosome",
+                field: "h_chr"
+            },
+            {
+                title: "Position",
+                field: "h_bp",
+                formatter: break_ensemblFormatter,
+                formatterParams: {
+                    chr: "h_chr",
+                    transcript: "h_enst"
+                }
+            },
+            {
+                title: "Strand",
+                field: "h_strand"
+            },
+            {
+                title: "Right gene transcript",
+                field: "t_enst",
+                formatter: linkFormatter,
+                formatterParams: {
+                    urlPrefix: "https://www.ensembl.org/id",
+                    title: "Open in Ensembl database"
+                }
+            },
+            {
+                title: "Right gene",
+                field: "t_gene"
+            },
+            {
+                title: "Chromosome",
+                field: "t_chr"
+            },
+            {
+                title: "Position",
+                field: "t_bp",
+                formatter: break_ensemblFormatter,
+                formatterParams: {
+                    chr: "t_chr",
+                    transcript: "t_enst"
+                }
+            },
+            {
+                title: "Strand",
+                field: "t_strand"
+            }
+        ]
+    }));
+
+    // Targeting drug
+    let targeting_drugs_data = JSON.parse(document.getElementsByName("targeting_drugs_data")[0].getAttribute("value"));
+    register_table(new Tabulator("#targeting_drugs_table", {
+        data: targeting_drugs_data,
+        responsiveLayout: true,
+        layout: "fitColumns",
+        pagination: "local",
+        clipboard: true,
+        paginationSize: 10,
+        columns: [{
+                title: "Gene",
+                field: "gene_symbol",
+                formatter: function (cell) {
+                    return `${cell.getValue()} (${cell.getData()['uniprot_acc']})`;
+                }
+            },
+            {
+                title: "Drug Bank ID",
+                field: "drug_name",
+                formatter: function (cell) {
+                    let drug_bank_id = cell.getData()['drug_bank_id'];
+                    return `${cell.getValue()} (<a href="https://www.drugbank.ca/drugs/${drug_bank_id}" target="_blank"  data-toggle="tooltip" data-placement="top" title="View info in DrugBank">${drug_bank_id}</a>)`;
+                }
+            },
+            {
+                title: "Drug status",
+                field: "drug_status",
+                formatter: function (cell) {
+                    return cell.getValue().replace("|", ",");
+                }
+            },
+            {
+                title: "Drug name",
+                field: "drug_name"
+            },
+            {
+                title: "Drug function",
+                field: "drug_action"
+            }
+        ]
+    }));
+
+    // Related diseases
+    let related_diseases_data = JSON.parse(document.getElementsByName("related_diseases_data")[0].getAttribute(
+    "value"));
+    register_table(new Tabulator("#related_diseases_table", {
+        data: related_diseases_data,
+        responsiveLayout: true,
+        layout: "fitColumns",
+        pagination: "local",
+        clipboard: true,
+        paginationSize: 10,
+        columns: [{
+                title: "Gene (Disease ID)",
+                field: "gene",
+                formatter: function (cell) {
+                    let disease_id = cell.getData()['disease_id'];
+                    return `${cell.getValue()} (<a href="https://www.ncbi.nlm.nih.gov/medgen/${disease_id}" target="_blank"  data-toggle="tooltip" data-placement="top" title="Open disease info in NCBI">${disease_id}</a>)`;
+                }
+            },
+            {
+                title: "Disease description",
+                field: "disease_desc"
+            },
+            {
+                title: "Disease probability (%)",
+                field: "disease_prob",
+                formatter: function (cell) {
+                    return `${cell.getValue() * 100}`;
+                }
+            },
+            {
+                title: "Disease publications",
+                field: "disease_pub"
+            },
+            {
+                title: "Disease source",
+                field: "disease_source",
+                formatter: function (cell) {
+                    return cell.getValue().replace(/;/g, ",")
+                }
+            }
+        ]
+    }));
+
+    // PPI Graph
+    let ppi_graph_data = JSON.parse(document.getElementsByName("ppi_graph_data")[0].getAttribute("value"));
+    setTimeout(function () {
+        ppi_obj = cytoscape({
+            container: document.getElementById("ppi_graph"),
+            layout: {
+                name: 'cose-bilkent',
+                animate: false,
+                ready: toggle_view('loading'),
+                nodeDimensionsIncludeLabels: true,
+                fit: true,
+                padding: 10,
+                randomize: true
+            },
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(id)'
+                    }
+                },
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle'
+                    }
+                },
+                {
+                    selector: '.core',
+                    style: {
+                        'background-color': '#007bff'
+                    }
+                },
+                {
+                    selector: '.core-connection',
+                    style: {
+                        'line-color': '#007bff'
+                    }
+                }
+            ],
+            // initial viewport state:
+            zoom: 1,
+            pan: {
+                x: 0,
+                y: 0
+            },
+
+            // interaction options:
+            zoomingEnabled: true,
+            userZoomingEnabled: true,
+            panningEnabled: true,
+            userPanningEnabled: true,
+            autolock: false,
+            autoungrabify: true,
+            autounselectify: true,
+
+            // rendering options:
+            headless: false,
+            styleEnabled: true,
+            hideEdgesOnViewport: false,
+            hideLabelsOnViewport: false,
+            textureOnViewport: false,
+            motionBlur: false,
+            motionBlurOpacity: 0.2,
+            wheelSensitivity: 1,
+            pixelRatio: 'auto',
+            elements: ppi_graph_data,
+        });
+    }, 2000);
+</script>

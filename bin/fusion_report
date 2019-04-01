@@ -8,9 +8,10 @@ from fusion_report.lib.report import Report
 from fusion_report.lib.section import Section
 from fusion_report.lib.graph import Graph
 from fusion_report.lib.download import Download
-from fusion_report.core import tool_detection_chart, known_vs_unknown_chart, \
-    distribution_chart, create_fusions_table, create_ppi_graph, print_progress_bar, \
-    get_db_fusions, score_fusion, create_multiqc_section, create_fusion_list, parse, __version__
+from fusion_report.utils import __version__, print_progress_bar, parse, create_multiqc_section
+from fusion_report.charts import tool_detection_chart, known_vs_unknown_chart, \
+    create_ppi_graph, distribution_chart
+from fusion_report.core import create_fusions_table, get_db_fusions, score_fusion, create_fusion_list
 
 # Minimum number of tools that have to detect a fusion, used as a filter in Dashboard
 TOOL_DETECTION_CUTOFF = 2
@@ -243,7 +244,7 @@ def generate_report(params):
 
         score_fusion(detail, params)
 
-        if 'FusionGDB' in detail.dbs:
+        if detail.dbs:
             fusion_page = generate_fusion_page(params, parser, fusion, db)
             report.add_page(fusion_page)
 
