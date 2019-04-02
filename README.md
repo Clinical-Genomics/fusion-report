@@ -1,5 +1,6 @@
 # ![fusion-report](https://raw.githubusercontent.com/matq007/fusion-report/master/docs/_src/_static/fusion-report.png)
 
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/fusion-report/README.html)
 [![Build Status](https://travis-ci.org/matq007/fusion-report.svg?branch=master)](https://travis-ci.org/matq007/fusion-report)
 [![DOI](https://zenodo.org/badge/173453958.svg)](https://zenodo.org/badge/latestdoi/173453958)
 [![MIT License](https://img.shields.io/github/license/matq007/fusion-report.svg)](https://github.com/matq007/fusion-report/blob/master/LICENSE)
@@ -18,6 +19,12 @@ This python script generates an interactive summary report from fusion detection
 * [Arriba](https://github.com/suhrig/arriba) (coming soon)
 
 ## Installation
+
+### Using Conda
+
+```bash
+conda install -c bioconda fusion-report=1.1.0
+```
 
 ### From source
 

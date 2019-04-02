@@ -13,6 +13,7 @@
    download_db
    usage
    scoring
+   output
 
 .. toctree::
    :maxdepth: 2
@@ -26,5 +27,7 @@
    :maxdepth: 2
    :caption: Source code
 
+   charts
    core
    lib
+   utils
