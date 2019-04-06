@@ -17,9 +17,7 @@ class ToolParser():
             tool (str): Fusion tool name
             file (str): Output filename
         """
-        if not file:
-            print(f"Skipping {tool}, due to missing {file}")
-        else:
+        if self.verify(tool, file):
             # add tool into list of using tools
             self.__tools.append(tool)
             try:
@@ -120,6 +118,20 @@ class ToolParser():
                     output.write(rapidjson.dumps(res))
         except IOError as error:
             exit(error)
+
+    @staticmethod
+    def verify(tool, file):
+        """
+        Method for checking if provided file exists
+
+        Args:
+            tool (str): Name of the tool
+            file (str): Input file name
+        """
+        if file is None:
+            print(f"Skipping {tool}, due to missing {file}")
+
+        return os.path.exists(file) and os.stat(file).st_size > 0
 
     @staticmethod
     def ericscript(col):

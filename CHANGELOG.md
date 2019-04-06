@@ -15,4 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Renamed `fusion_genes_mqc.json` to `fusions_mqc.json` ([#9](https://github.com/matq007/fusion-report/issues/9))
 
+### Fixed
+
+- Check if input file exists and is not empty ([#13](https://github.com/matq007/fusion-report/issues/13))
+
 ## [1.0.0] - 2019-03-26
