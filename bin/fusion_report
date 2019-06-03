@@ -15,7 +15,7 @@ from fusion_report.core import tool_detection_chart, known_vs_unknown_chart, \
 
 # Minimum number of tools that have to detect a fusion, used as a filter in Dashboard
 TOOL_DETECTION_CUTOFF = 2
-SUPPORTED_TOOLS = ['ericscript', 'starfusion', 'fusioncatcher', 'pizzly', 'squid']
+SUPPORTED_TOOLS = ['ericscript', 'starfusion', 'fusioncatcher', 'pizzly', 'squid', 'dragen']
 DEFAULT_TOOL_WEIGHT = float(100/len(SUPPORTED_TOOLS))
 
 def parse(params):
@@ -374,6 +374,29 @@ def main():
         type=int,
         default=TOOL_DETECTION_CUTOFF
     )
+
+
+    ##### ADD Dragen
+
+    # Tool
+    run_tools.add_argument(
+        '--dragen',
+        help='dragen output file',
+        type=str
+    )
+
+    # Weight
+    run_tools.add_argument(
+        '--dragen_weight',
+        help='dragen weight',
+        type=float,
+        default=DEFAULT_TOOL_WEIGHT
+    )
+
+    #########################
+
+
+
     # fusion_parser download
     download_parser = subparsers.add_parser('download', help='Download required databases')
     download_parser.add_argument(
