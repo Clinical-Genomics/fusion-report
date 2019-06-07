@@ -31,13 +31,14 @@ def print_progress_bar(iteration, total, length=50, fill='='):
     Returns:
         str: Progress bar
     """
-    percent = int(100 * (iteration / float(total)))
-    filled_length = int(length * iteration // total)
-    progress_bar = fill * filled_length + '-' * (length - filled_length)
-    print('\rProgress |%s| %s%% Complete' % (progress_bar, percent), end='\r')
-    # Print New Line on Complete
-    if iteration == total:
-        print()
+    if total > 0:
+        percent = int(100 * (iteration / float(total)))
+        filled_length = int(length * iteration // total)
+        progress_bar = fill * filled_length + '-' * (length - filled_length)
+        print('\rProgress |%s| %s%% Complete' % (progress_bar, percent), end='\r')
+        # Print New Line on Complete
+        if iteration == total:
+            print()
 
 def create_multiqc_section(path, tool_counts, sample_name):
     """
