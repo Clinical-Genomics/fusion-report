@@ -80,3 +80,5 @@ CREATE INDEX gene_index ON fgene_disease_associations(gene);
 .import fusion_ppi.txt fusion_ppi
 .import fgene_disease_associations.txt fgene_disease_associations
 .import uniprot_gsymbol.txt uniprot_gsymbol
+
+UPDATE TCGA_ChiTaRS_combined_fusion_ORF_analyzed_gencode_h19v19 set orf = 'Frame-shift' WHERE orf = 'Frame-shit'
