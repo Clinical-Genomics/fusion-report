@@ -1,5 +1,6 @@
 """Module for accessing local database"""
 import os
+import sys
 from pathlib import Path
 import sqlite3
 
@@ -28,9 +29,9 @@ class Db:
                     self.__connections[db_files[0].name] = connection
                     self.__connection = connection
                 else:
-                    exit('Database not found')
+                    sys.exit('Database not found')
         except sqlite3.Error as error:
-            exit(error)
+            sys.exit(error)
 
     def get_db_names(self):
         """Return all filename databases."""
@@ -54,7 +55,7 @@ class Db:
             cur.close()
             return res
         except sqlite3.OperationalError as error:
-            exit(error)
+            sys.exit(error)
 
     @classmethod
     def __dict_factory(cls, cursor, row):
@@ -83,7 +84,7 @@ class Db:
             db_files = [entry for entry in os.scandir(path)
                         if entry.is_file() and Path(entry).suffix == extension]
         else:
-            exit('Defined path doesn\'t exist')
+            sys.exit('Defined database path doesn\'t exist.')
 
         return db_files
 

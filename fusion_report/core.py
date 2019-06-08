@@ -1,5 +1,6 @@
 """Module contains all core functions."""
 import os
+import sys
 import re
 
 def create_fusions_table(fusions, tools, cutoff):
@@ -76,7 +77,7 @@ def create_fusion_list(path, parser, cutoff):
             for fusion in filtered:
                 output.write(f'{fusion}\n')
     except IOError as error:
-        exit(error)
+        sys.exit(error)
 
 def get_db_fusions(db):
     """

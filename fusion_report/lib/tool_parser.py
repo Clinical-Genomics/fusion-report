@@ -1,5 +1,6 @@
 """ Module for tool parser. """
 import os
+import sys
 import rapidjson
 from fusion_report.lib.fusion_detail import FusionDetail
 
@@ -17,7 +18,7 @@ class ToolParser():
             tool (str): Fusion tool name
             file (str): Output filename
         """
-        if self.verify(tool, file):
+        if self.verify(file):
             # add tool into list of using tools
             self.__tools.append(tool)
             try:
@@ -36,7 +37,9 @@ class ToolParser():
 
                         self.__fusions[fusion].add_tool(tool, details)
             except IOError as error:
-                exit(error)
+                sys.exit(error)
+        else:
+            print(f"Skipping {tool}, due to missing {file}")
 
     def get_fusion(self, fusion):
         """
@@ -117,20 +120,16 @@ class ToolParser():
                 with open(dest, 'w', encoding='utf-8') as output:
                     output.write(rapidjson.dumps(res))
         except IOError as error:
-            exit(error)
+            sys.exit(error)
 
     @staticmethod
-    def verify(tool, file):
+    def verify(file):
         """
         Method for checking if provided file exists
 
         Args:
-            tool (str): Name of the tool
             file (str): Input file name
         """
-        if file is None:
-            print(f"Skipping {tool}, due to missing {file}")
-
         return os.path.exists(file) and os.stat(file).st_size > 0
 
     @staticmethod

@@ -26,4 +26,3 @@ def test_select(get_empty_instance):
 def test_scan_folder(get_empty_instance):
     with pytest.raises(SystemExit):
         Db('/path/with/no/existance')
-    assert get_empty_instance.get_db_names() == ['empty']

@@ -1,5 +1,6 @@
 """ Helper class for Downloading all databases. """
 import os
+import sys
 import base64
 import subprocess
 import urllib.request
@@ -34,7 +35,7 @@ class Download:
                 f'{params.cosmic_usr}:{params.cosmic_passwd}'.encode()
             ).decode('utf-8')
         else:
-            exit('COSMIC credentials have not been provided correctly')
+            sys.exit('COSMIC credentials have not been provided correctly')
 
         # Making sure output directory exists
         if not os.path.exists(params.output):
@@ -145,4 +146,4 @@ class Download:
             for command in commands:
                 subprocess.run(command, shell=True)
         except subprocess.CalledProcessError as error:
-            exit(error)
+            sys.exit(error)

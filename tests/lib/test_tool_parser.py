@@ -47,9 +47,10 @@ def test_parse_multiple_tools(tool_parser):
     assert len(fgfr3_tacc3.tools['ericscript']) == 1
     assert len(fgfr3_tacc3.tools['fusioncatcher']) == 2
 
-def test_parse_wrong_file(tool_parser):
-    with pytest.raises(SystemExit):
-        tool_parser.parse('fusioncatcher', 'tests/test_data/fail.txt')
+def test_parse_wrong_file(tool_parser, capsys):
+    tool_parser.parse('fusioncatcher', 'tests/test_data/fail.txt')
+    out, _ = capsys.readouterr()
+    assert out == "Skipping fusioncatcher, due to missing tests/test_data/fail.txt\n"
 
 def test_get_fusion(tool_parser):
     assert tool_parser.get_fusion('unknown') == {}

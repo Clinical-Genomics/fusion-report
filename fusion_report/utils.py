@@ -1,5 +1,6 @@
 """Module contains all utility helper functions."""
 import os
+import sys
 import rapidjson
 from fusion_report.lib.tool_parser import ToolParser
 
@@ -72,4 +73,4 @@ def create_multiqc_section(path, tool_counts, sample_name):
         with open(dest, 'w', encoding='utf-8') as output:
             output.write(rapidjson.dumps(configuration))
     except IOError as error:
-        exit(error)
+        sys.exit(error)
