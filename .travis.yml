@@ -3,13 +3,14 @@ python:
   - "3.6"
 
 install:
-  - pip install pylint
+  - pip install pylint mypy
   - pip install -r requirements.txt
   - python setup.py install
 
 script:
   - pylint fusion_report/
   - pytest
+  - mypy fusion_report/
 
 before_deploy:
   - pip install sphinx sphinx-rtd-theme m2r
