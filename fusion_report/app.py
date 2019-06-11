@@ -1,6 +1,9 @@
 import argparse
 import sys
 from typing import Dict, Any
+from fusion_report.logger import get_logger
+from fusion_report.common.download import Download
+from fusion_report.common.exceptions.download import DownloadException
 
 __version__ = 2.0
 SETTINGS: Dict[str, Any] = {}
@@ -10,6 +13,7 @@ SETTINGS['weight'] = float(100/len(SETTINGS['tools']))
 
 def run() -> None:
     """Main function for processing command line arguments"""
+    log = get_logger(__name__)
     parser = argparse.ArgumentParser(
         description='''Tool for generating friendly UI custom report. '''
     )
@@ -19,7 +23,7 @@ def run() -> None:
         version=f'fusion-report {__version__}'
     )
     # custom commands: run, download
-    subparsers = parser.add_subparsers(dest='command')    
+    subparsers = parser.add_subparsers(dest='command')
     args_run(subparsers)
     args_download(subparsers)
 
@@ -27,7 +31,10 @@ def run() -> None:
     if params.command == 'run':
         print('RUN')
     elif params.command == 'download':
-        print('Download')
+        try:
+            Download(params)
+        except DownloadException as ex:
+            log.exception(ex.args[0])
     else:
         sys.exit(f'Command {params.command} not recognized!')
 

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import sys
 from fusion_report import app
 
 if __name__ == "__main__":
