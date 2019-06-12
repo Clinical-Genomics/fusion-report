@@ -2,22 +2,33 @@ import logging
 import sys
 from logging.handlers import TimedRotatingFileHandler
 
-FORMATTER = logging.Formatter("%(asctime)s — %(name)s — %(levelname)s — %(message)s")
-LOG_FILE = "fusion_report.log"
+class Singleton(type):
+    _instances = {}
 
-def get_console_handler():
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setFormatter(FORMATTER)
-    return console_handler
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
 
-def get_file_handler():
-    file_handler = TimedRotatingFileHandler(LOG_FILE, when='midnight')
-    file_handler.setFormatter(FORMATTER)
-    return file_handler
+class Logger(metaclass=Singleton):
 
-def get_logger(logger_name):
-    logger = logging.getLogger(logger_name)
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(get_file_handler())
-    logger.propagate = False
-    return logger
+    __logger = None
+
+    def __init__(self):
+        self.formatter = logging.Formatter("%(asctime)s — %(name)s — %(levelname)s — %(message)s")
+        self.file = 'fusion_report.log'
+        self.__logger = logging.getLogger('fusion-report')
+
+        console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setFormatter(self.formatter)
+        self.__logger.addHandler(console_handler)
+
+        file_handler = TimedRotatingFileHandler(self.file, when='midnight')
+        file_handler.setFormatter(self.formatter)
+        self.__logger.addHandler(file_handler)
+
+        self.__logger.setLevel(logging.DEBUG)
+        self.__logger.propagate = False
+
+    def get_logger(self):
+        return self.__logger

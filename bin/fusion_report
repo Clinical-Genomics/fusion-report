@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from fusion_report import app
+from fusion_report.app import App
 
 if __name__ == "__main__":
+    app = App()
     app.run()

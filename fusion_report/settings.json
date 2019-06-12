@@ -1,0 +1,74 @@
+{
+    "args": {
+        "run": {
+            "mandatory": [
+                {
+                    "key": "sample",
+                    "help": "Sample name"
+                },
+                {
+                    "key": "output",
+                    "help": "Output directory"
+                },
+                {
+                    "key": "db_path",
+                    "help": "Path to folder where all databases are stored."
+                }
+            ],
+            "tools": [
+                {
+                    "key": "--ericscript",
+                    "help": "EricScript output file"
+                },
+                {
+                    "key": "--fusioncatcher",
+                    "help": "Fusioncatcher output file"
+                },
+                {
+                    "key": "--starfusion",
+                    "help": "STAR-Fusion output file"
+                },
+                {
+                    "key": "--pizzly",
+                    "help": "Pizzly output file"
+                },
+                {
+                    "key": "--squid",
+                    "help": "Squid output file"
+                }
+            ],
+            "optionals": [
+                {
+                    "key": ["-c", "--config"],
+                    "help": "Input config file"
+                },
+                {
+                    "key": ["-t", "--tool_cutoff"],
+                    "help": "Number of tools required to detect a fusion"
+                }
+            ]
+        },
+        "download": {
+            "mandatory": [
+                {
+                    "key": "output",
+                    "help": "Output directory"
+                }
+            ],
+            "cosmic": [
+                {
+                    "key": "--cosmic_usr",
+                    "help": "COSMIC username"
+                },
+                {
+                    "key": "--cosmic_passwd",
+                    "help": "COSMIC password"
+                },
+                {
+                    "key": "--cosmic_token",
+                    "help": "COSMIC token"
+                }
+            ]
+        }
+    }
+}
