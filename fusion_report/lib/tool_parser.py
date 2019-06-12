@@ -228,8 +228,7 @@ class ToolParser():
         }
 
         return fusion, details
-    
-    ############ DRAGEN
+
     @staticmethod
     def dragen(col):
         """
@@ -247,4 +246,3 @@ class ToolParser():
         }
 
         return fusion, details
-    ###################################################
