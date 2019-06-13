@@ -2,10 +2,11 @@ import argparse
 import rapidjson
 import os
 import sys
-from typing import Dict, Any
+from typing import Any, Dict, List
 from fusion_report.logger import Logger
 from fusion_report.args_builder import ArgsBuilder
 from fusion_report.common.download import Download
+from fusion_report.common.fusion_manager import FusionManager
 from fusion_report.common.exceptions.download import DownloadException
 
 __version__ = 1.2
@@ -30,7 +31,7 @@ class App:
         params = self.args.parse()
         if params.command == 'run':
             try:
-                print('Hi')
+                self.__preprocess(vars(params))
             except Exception as ex:
                 self.log.exception(ex)
         elif params.command == 'download':
@@ -41,3 +42,14 @@ class App:
                 sys.exit(ex.args[0])
         else:
             sys.exit(f'Command {params.command} not recognized!')
+
+    def __preprocess(self, params: Dict[str, any]) -> None:
+        supported_tools: List[str] = [
+            tool['key'].replace('--', '') for tool in self.settings['args']['run']['tools']
+        ]
+        manager = FusionManager(supported_tools)
+        for param, value in params.items():
+            if param in supported_tools and value is not None:
+                # param: fusion tool
+                manager.parse(param, value)
+        manager.print()
