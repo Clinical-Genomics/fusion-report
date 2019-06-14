@@ -11,12 +11,12 @@ This python script generates an interactive summary report from fusion detection
 
 ## Supported tools
 
-* [STAR-Fusion](https://github.com/STAR-Fusion/STAR-Fusion)
-* [EricScript](https://sites.google.com/site/bioericscript/)
-* [Pizzly](https://github.com/pmelsted/pizzly)
-* [Squid](https://github.com/Kingsford-Group/squid)
-* [Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
-* [Arriba](https://github.com/suhrig/arriba) (coming soon)
+- [STAR-Fusion](https://github.com/STAR-Fusion/STAR-Fusion)
+- [EricScript](https://sites.google.com/site/bioericscript/)
+- [Pizzly](https://github.com/pmelsted/pizzly)
+- [Squid](https://github.com/Kingsford-Group/squid)
+- [Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
+- [Arriba](https://github.com/suhrig/arriba) (coming soon)
 
 ## Installation
 
