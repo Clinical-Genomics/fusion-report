@@ -16,7 +16,7 @@ from fusion_report.core import create_fusions_table, get_db_fusions, score_fusio
 
 # Minimum number of tools that have to detect a fusion, used as a filter in Dashboard
 TOOL_DETECTION_CUTOFF = 2
-SUPPORTED_TOOLS = ['ericscript', 'starfusion', 'fusioncatcher', 'pizzly', 'squid']
+SUPPORTED_TOOLS = ['ericscript', 'starfusion', 'fusioncatcher', 'pizzly', 'squid', 'dragen']
 DEFAULT_TOOL_WEIGHT = float(100/len(SUPPORTED_TOOLS))
 
 def download(params):
@@ -341,6 +341,17 @@ def args_add_run(subparsers):
     run_tools.add_argument(
         '--squid_weight',
         help='Squid weight',
+        type=float,
+        default=DEFAULT_TOOL_WEIGHT
+    )
+    run_tools.add_argument(
+        '--dragen',
+        help='Dragen output file',
+        type=str
+    )
+    run_tools.add_argument(
+        '--dragen_weight',
+        help='Dragen weight',
         type=float,
         default=DEFAULT_TOOL_WEIGHT
     )
