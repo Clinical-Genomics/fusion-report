@@ -16,6 +16,7 @@ This python script generates an interactive summary report from fusion detection
 * [EricScript](https://sites.google.com/site/bioericscript/)
 * [Pizzly](https://github.com/pmelsted/pizzly)
 * [Squid](https://github.com/Kingsford-Group/squid)
+* [Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
 * [Arriba](https://github.com/suhrig/arriba) (coming soon)
 
 ## Installation
@@ -42,12 +43,13 @@ python3 setup.py install
 fusion_report download --cosmic_usr '<username>' --cosmic_passwd '<password>' /path/to/db/
 
 # Run the fusion-report
-fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ 
-  --ericscript tests/test_data/ericscript.tsv 
-  --starfusion tests/test_data/starfusion.tsv 
+fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/
+  --ericscript tests/test_data/ericscript.tsv
+  --starfusion tests/test_data/starfusion.tsv
   --fusioncatcher tests/test_data/fusioncatcher.txt
-  --squid tests/test_data/squid.txt 
+  --squid tests/test_data/squid.txt
   --pizzly tests/test_data/pizzly.tsv
+  --dragen tests/test_data/dragen.tsv
 ```
 
 Or get help and list all possible parameters.

@@ -239,3 +239,21 @@ class ToolParser():
         }
 
         return fusion, details
+
+    @staticmethod
+    def dragen(col):
+        """
+        Function for parsing output from Dragen.
+
+        Args:
+            col (list): List of columns of a single line
+        Returns:
+            tuple: fusion (str) and details (dict)
+        """
+        fusion = f"{col[0]}"
+        details = {
+            'position': f"{col[2]}#{col[3]}".replace('chr', ''),
+            'score': int(col[1])
+        }
+
+        return fusion, details
