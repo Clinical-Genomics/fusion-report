@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 from fusion_report.common.models.fusion import Fusion
-from fusion_report.logger import Logger
+from fusion_report.common.logger import Logger
 
 class FusionManager:
 

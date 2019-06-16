@@ -1,5 +1,4 @@
-import rapidjson
-from fusion_report.logger import Logger
+from fusion_report.common.logger import Logger
 from typing import Any, Dict, List
 
 class Fusion:
@@ -29,10 +28,10 @@ class Fusion:
         if tool and tool not in self.tools.keys():
             self.tools[tool] = details
         else:
-            Logger().get_logger().warning('Tool: %s already in list or empty', tool)
+            Logger().get_logger().warning('Tool %s already in list or empty', tool)
 
     def add_db(self, database: str) -> None:
         if database and database not in self.dbs:
             self.dbs.append(database)
         else:
-            Logger().get_logger().warning('Database: %s already in list or empty', database)
+            Logger().get_logger().warning('Database %s already in list or empty', database)

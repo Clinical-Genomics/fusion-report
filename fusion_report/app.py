@@ -4,13 +4,14 @@ from time import sleep
 import rapidjson
 from typing import Any, Dict, List
 from fusion_report.helpers import progress_bar
-from fusion_report.logger import Logger
+from fusion_report.common.logger import Logger
 from fusion_report.args_builder import ArgsBuilder
-from fusion_report.common.download import Download
+from fusion_report.common.fusion_manager import FusionManager
+from fusion_report.common.report import Report
+from fusion_report.download import Download
 from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.mitelman import MitelmanDB
 from fusion_report.data.cosmic import CosmicDB
-from fusion_report.common.fusion_manager import FusionManager
 from fusion_report.common.exceptions.app import AppException
 from fusion_report.common.exceptions.db import DbException
 from fusion_report.common.exceptions.download import DownloadException
@@ -37,7 +38,7 @@ class App:
         params = self.args.parse()
         try:
             if params.command == 'run':
-                # generate_report
+                self.__preprocess(vars(params))
                 self.__generate_report(vars(params))
                 # export results
                 # generate multiqc module
@@ -50,21 +51,28 @@ class App:
             self.log.exception(ex)
             sys.exit(ex.args[0])
 
-    def __generate_report(self, params) -> None:
+    def __preprocess(self, params) -> None:
         self.__parse_fusion_outputs(params)
         self.__enrich(params['db_path'])
         self.__score(params)
+
+    def __generate_report(self, params) -> None:
+        report = Report(params['config'], params['output'])
         fusions = self.manager.get_fusions()
         progress_bar(0, len(fusions))
 
-        for i, fusion in enumerate(fusions):
-            print(fusion.name)
-            print(fusion.score)
-            break
+        index_page = report.create_page('index', 'index')
+        index_page.add_module('summary')
+        report.render(index_page)
 
-            # progress bar
-            sleep(0.1)
-            progress_bar(i, len(fusions))
+        # for i, fusion in enumerate(fusions):
+        #     # page = FusionPage()
+        #     # report.add(page)
+        #     break
+
+        #     # progress bar
+        #     sleep(0.1)
+        #     progress_bar(i, len(fusions))
 
     def __parse_fusion_outputs(self, params: Dict[str, any]) -> None:
         for param, value in params.items():
