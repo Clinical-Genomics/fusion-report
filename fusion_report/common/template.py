@@ -7,9 +7,10 @@ class Template():
     """ Class for generating report using Jinja2."""
     def __init__(self, config, output_dir):
         self.j2_env = Environment(
-            loader=FileSystemLoader(
-                os.path.join(os.path.dirname(__file__), '../templates/')
-            ),
+            loader=FileSystemLoader([
+                os.path.join(os.path.dirname(__file__), '../templates/'),
+                os.path.join(os.path.dirname(__file__), '../modules/')
+            ]),
             trim_blocks=True,
             autoescape=True
         )

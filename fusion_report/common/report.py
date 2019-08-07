@@ -38,6 +38,10 @@ class Report(Template):
     def render(self, page, template_variables=''):
         """Helper method rendering page using Jinja template engine."""
         template_variables = page.get_content()
+
+        # load modules
+        template_variables['modules'] = page.get_modules()
+
         # template_variables['menu'] = [
         #     (key, page.get_section(key).title) for key in template_variables['sections'].keys()
         # ]

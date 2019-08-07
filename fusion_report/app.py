@@ -61,7 +61,8 @@ class App:
         fusions = self.manager.get_fusions()
         progress_bar(0, len(fusions))
 
-        index_page = report.create_page('index', 'index')
+        index_variables = {'sample': params['sample']}
+        index_page = report.create_page('index', 'index', index_variables)
         index_page.add_module('summary')
         report.render(index_page)
 

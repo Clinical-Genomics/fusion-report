@@ -1,4 +1,6 @@
 import os
+from fusion_report.common.logger import Logger
+from fusion_report.modules.loader import ModuleLoader
 
 class BasePage:
     """Class defining main MasterPage. Variables are inherited for all created Pages (class Page)"""
@@ -6,10 +8,16 @@ class BasePage:
         self.__title = title
         self.__filename = title.replace('--', '_') + ".html"
         self.__view = f'views/{view}.html'
-        self.__modules = []
+        self.__modules = {}
 
     def add_module(self, name):
-        self.__modules.append(name)
+        if name not in self.__modules:
+            self.__modules[name] = ModuleLoader().exec(name)
+        else:
+            Logger().get_logger().warning(f'Module {name} already loaded')
+
+    def get_modules(self):
+        return self.__modules.items()
 
     def get_title(self):
         """ Method returning title of the page."""
