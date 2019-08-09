@@ -13,7 +13,7 @@ class Fusion:
         return self.name
 
     def get_tools(self) -> Dict[str, Any]:
-        return self.tools.items()
+        return self.tools
 
     def get_databases(self) -> List[str]:
         return self.dbs

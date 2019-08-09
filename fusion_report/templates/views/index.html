@@ -24,7 +24,7 @@
         <div class="row">
         {% include 'partials/sidebar.html' %}
         <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
-            {% for module_name, module_var in modules %}
+            {% for module_name, module_var in modules.items() %}
                 {% include module_var['partial'] %}
             {% endfor %}
         </main>

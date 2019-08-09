@@ -6,3 +6,17 @@
         </div>
     </div>
 </div>
+
+<div class="alert alert-success" role="alert">
+    <p class="mb-0">The pipeline ran successfully and was able to detect
+        <strong>{{ modules.summary.num_detected_fusions }}</strong> fusions
+        for sample <strong>{{ page_variables.sample }}</strong>.
+    </p>
+    <p class="mb-0">We were able to find and describe
+        <strong>{{ page_variables.num_known_fusions }}</strong>
+        fusions from our local database.</p>
+    <p class="mb-0">
+        Tools used during the analysis were
+        {{ modules.summary.tools | map('capitalize') | join(', ') }}.
+    </p>
+</div>

@@ -7,3 +7,5 @@ dist/
 tests/test_data_real
 .mypy_cache/*
 NOTES.md
+.idea
+tests/sss

@@ -41,7 +41,6 @@ class Report(Template):
 
         # load modules
         template_variables['modules'] = page.get_modules()
-
         # template_variables['menu'] = [
         #     (key, page.get_section(key).title) for key in template_variables['sections'].keys()
         # ]

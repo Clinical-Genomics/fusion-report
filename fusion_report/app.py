@@ -61,9 +61,8 @@ class App:
         fusions = self.manager.get_fusions()
         progress_bar(0, len(fusions))
 
-        index_variables = {'sample': params['sample']}
-        index_page = report.create_page('index', 'index', index_variables)
-        index_page.add_module('summary')
+        index_page = report.create_page('index', 'index', {'sample': params['sample']})
+        index_page.add_module('summary', self.manager)
         report.render(index_page)
 
         # for i, fusion in enumerate(fusions):
@@ -109,7 +108,7 @@ class App:
             # tool estimation
             tool_score = 0.0
             tmp_explained = []
-            for tool, _ in fusion.get_tools():
+            for tool, _ in fusion.get_tools().items():
                 tool_score += params[f'{tool.lower()}_weight'] / 100.0
                 tmp_explained.append(format((params[f'{tool}_weight'] / 100.0), '.3f'))
             score_explained = f'0.5 * ({" + ".join(tmp_explained)})'
