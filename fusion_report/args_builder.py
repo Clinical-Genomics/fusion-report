@@ -1,6 +1,7 @@
 import argparse
 
-class ArgsBuilder():
+
+class ArgsBuilder:
 
     def __init__(self, settings):
         self.parser = argparse.ArgumentParser(
@@ -40,10 +41,10 @@ class ArgsBuilder():
         for optional in args['optionals']:
             if len(optional['key']) > 1:
                 run_optional.add_argument(
-                    optional['key'][0], optional['key'][1], help=optional['help']
+                    optional['key'][0], optional['key'][1], default=optional['default'], help=optional['help']
                 )
             else:
-                run_optional.add_argument(optional['key'][0], help=optional['help'])
+                run_optional.add_argument(optional['key'][0], default=optional['default'], help=optional['help'])
 
     def download_args(self, command_parser, args) -> None:
         download_parser = command_parser.add_parser('download', help='Download required databases')

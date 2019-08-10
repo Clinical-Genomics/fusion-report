@@ -1,3 +1,5 @@
+{{ include_raw('assets/js/colorbrewer-1.3.0.min.js') | safe }}
+
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2">Summary</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
@@ -13,10 +15,223 @@
         for sample <strong>{{ page_variables.sample }}</strong>.
     </p>
     <p class="mb-0">We were able to find and describe
-        <strong>{{ page_variables.num_known_fusions }}</strong>
+        <strong>{{ modules.summary.num_known_fusions }}</strong>
         fusions from our local database.</p>
     <p class="mb-0">
         Tools used during the analysis were
         {{ modules.summary.tools | map('capitalize') | join(', ') }}.
     </p>
 </div>
+
+<section class="" id="{{ get_id(modules.summary.menu[0]) }}">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h3">{{ modules.summary.menu[0] }}</h1>
+    </div>
+    <div class="row">
+        <div class="graph col-md-4" id="tool_detection_graph"></div>
+        <div class="graph col-md-4" id="known_vs_unknown_graph"></div>
+        <div class="graph col-md-4" id="distribution_graph"></div>
+    </div>
+</section>
+
+<section class="" id="{{ get_id(modules.summary.menu[1]) }}">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h3">{{ modules.summary.menu[1] }}</h1>
+    </div>
+    <p>Filters fusions found by at least {{ modules.summary.tool_cutoff }} tools. If number of chosen tools is less
+            than {{ modules.summary.tool_cutoff }} the filter is disabled. The whole list can be found in
+            <code>./Report-{{ modules.summary.sample }}/fusions.json</code>.</p>
+    {% with table_name='fusion_table' %}
+        {% include "partials/table-buttons.html" %}
+    {% endwith %}
+    <div id="fusion_table" class="bootstrap tabulator table-striped table-bordered"></div>
+</section>
+
+<!-- Hidden values for Javascript to process -->
+<input type="hidden" name="tool_detection_graph" value='{{ modules.summary.tool_detection_graph | tojson | safe }}'>
+<input type="hidden" name="known_vs_unknown_graph" value='{{ modules.summary.known_vs_unknown_graph | tojson | safe }}'>
+<input type="hidden" name="distribution_graph" value='{{ modules.summary.distribution_graph | tojson | safe }}'>
+<input type="hidden" name="fusion_list" value='{{ modules.summary.fusion_list | tojson | safe }}'>
+
+<script>
+    const tool_detecton_graph = JSON.parse(document.getElementsByName("tool_detection_graph")[0].getAttribute("value"));
+    const known_vs_unknown_graph = JSON.parse(document.getElementsByName("known_vs_unknown_graph")[0].getAttribute("value"));
+    const distribution_graph = JSON.parse(document.getElementsByName("distribution_graph")[0].getAttribute("value"));
+
+    /* Highcharts extra settings */
+    let highcharts_legend = {
+        itemStyle: {
+          fontFamily: "Lato",
+          fontWeight: 300,
+          fontSize: '12px'
+        },
+        align: 'center',
+        verticalAlign: 'bottom',
+        y: -0,
+        padding: 0
+    };
+    let highcharts_plotOptions = {
+        pie: {
+            dataLabels: {
+                enabled: true,
+                distance: -50,
+                style: {
+                    fontWeight: 'bold',
+                    color: 'white'
+                }
+            },
+            startAngle: -90,
+            endAngle: 90,
+            center: ['50%', '90%'],
+            size: '190%',
+            showInLegend: true
+        }
+    };
+
+    Highcharts.chart('tool_detection_graph', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false
+        },
+        credits: {
+            enabled: false
+        },
+        title: {
+            text: 'Tool<br>detection',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 20
+        },
+        subtitle: {
+            text: 'Display number of found fusions per tool.',
+            floating: true,
+            align: 'center',
+            verticalAlign: 'bottom',
+            y: -50
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y}</b>'
+        },
+        plotOptions: highcharts_plotOptions,
+        legend: highcharts_legend,
+        series: [{
+            type: 'pie',
+            name: 'Count',
+            innerSize: '50%',
+            data: tool_detecton_graph
+        }]
+    });
+    Highcharts.chart('known_vs_unknown_graph', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false
+        },
+        credits: {
+            enabled: false
+        },
+        title: {
+            text: 'Known<br>Vs<br>Unknown',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 20
+        },
+        subtitle: {
+            text: 'Shows the ration between found and unknown missing fusions in the local database.',
+            floating: true,
+            align: 'center',
+            verticalAlign: 'bottom',
+            y: -40
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y}</b>'
+        },
+        plotOptions: highcharts_plotOptions,
+        colors: ['#28a745', '#6c757d'],
+        legend: highcharts_legend,
+        series: [{
+            type: 'pie',
+            name: 'Count',
+            innerSize: '50%',
+            data: known_vs_unknown_graph
+        }]
+    });
+    Highcharts.chart('distribution_graph', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false
+        },
+        credits: {
+            enabled: false
+        },
+        title: {
+            text: 'Tool<br>detection<br>distribution',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 20
+        },
+        subtitle: {
+            text: 'Sum of counts detected by different tools.',
+            floating: true,
+            align: 'center',
+            verticalAlign: 'bottom',
+            y: -40
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y}</b>'
+        },
+        plotOptions: highcharts_plotOptions,
+        colors: distribution_graph.length > 2 ? colorbrewer.Oranges[distribution_graph.length].reverse() : ["#F15C80", "#F7A35C"],
+        legend: highcharts_legend,
+        series: [{
+            type: 'pie',
+            name: 'Count',
+            innerSize: '50%',
+            data: distribution_graph.reverse()
+        }]
+    });
+
+    /* Fusion table */
+    const output_filename = "{{ page_variables.sample }}";
+    const fusion_list_data = JSON.parse(document.getElementsByName("fusion_list")[0].getAttribute("value"));
+    console.log(fusion_list_data);
+    let columns = [
+        {title:"Fusion gene", field:"fusion", formatter:function(cell, formatterParams){
+            let fusion = cell.getValue();
+            return cell.getData()['found_db'].length > 0 ? `<code><a href="${fusion.replace('--','_')}.html">${fusion}</a></code>` : `<code>${fusion}</code>`
+        }},
+        {title:"Found in DB", field:"found_db", widthGrow:1.4, formatter:foundDBFormatter, formatterParams: {
+            'Mitelman': 'secondary',
+            'FusionGDB': 'warning',
+            'COSMIC': 'primary'
+        }}
+    ];
+    for (let i in fusion_list_data.tools) {
+        columns.push({
+            title: fusion_list_data.tools[i],
+            field: fusion_list_data.tools[i],
+            align: "center",
+            formatter: "tickCross"
+        })
+    }
+    columns.push(
+        {title:"Tools hits", field:"tools_hits", formatter:progressFormatter, formatterParams: {
+            'delimiter': fusion_list_data.tools.length,
+            'style': 'bg-info'
+        }},
+        {title:"Score", field:"score", formatter:progressFormatter}
+    );
+    register_table(new Tabulator("#fusion_table", {
+            data:fusion_list_data.rows,
+            responsiveLayout:true,
+            layout:"fitColumns",
+            pagination:"local",
+            clipboard: true,
+            paginationSize: 25,
+            initialSort:[{column:"score", dir:"desc"}],
+            columns:columns
+        })
+    );
+</script>

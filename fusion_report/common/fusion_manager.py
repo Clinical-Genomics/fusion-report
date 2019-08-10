@@ -5,7 +5,6 @@ from fusion_report.common.logger import Logger
 class FusionManager:
 
     def __init__(self, settings):
-        self.log = Logger().get_logger()
         self.__running_tools: Set[str] = set()
         self.__fusions: List[Fusion] = []
         self.__supported_tools: List[str] = [
@@ -23,7 +22,7 @@ class FusionManager:
                     self.add(fusion_name, tool, details)
                     # enrich with DB
         else:
-            self.log.warning(
+            Logger().get_logger().warning(
                 'Tool %s is not supported. To integrate the tool please create an issue', tool
             )
 
@@ -54,7 +53,7 @@ class FusionManager:
 
     ################################################################################################
     #  Helpers
-    def __build_factory(self, tool):
+    def __build_factory(self, tool: str):
         module_name: str = f'fusion_report.parsers.{tool.lower()}'
         module = __import__(module_name, fromlist=[tool.capitalize()])
         klass = getattr(module, tool.capitalize())

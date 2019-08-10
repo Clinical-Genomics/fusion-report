@@ -7,7 +7,7 @@ from fusion_report.common.singleton import Singleton
 class CosmicDB(Db, metaclass=Singleton):
 
     def __init__(self, path):
-        self.name = 'Cosmic'
+        self.name = 'COSMIC'
         self.schema = 'Cosmic.sql'
         self.__connection = self.connect(path, 'cosmic.db')
 

@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, Dict, List, Tuple
 from fusion_report.config import Config
 from fusion_report.common.logger import Logger
 from fusion_report.common.page import Page
@@ -35,14 +35,24 @@ class Report(Template):
                 return index
         return -1
 
-    def render(self, page, template_variables=''):
+    def render(self, page: Page, variables=None):
         """Helper method rendering page using Jinja template engine."""
-        template_variables = page.get_content()
+        template_variables: Dict[str, Any] = page.get_content()
 
         # load modules
         template_variables['modules'] = page.get_modules()
-        # template_variables['menu'] = [
-        #     (key, page.get_section(key).title) for key in template_variables['sections'].keys()
-        # ]
+
+        # generate menu
+        template_variables['menu']: List[Tuple[str, str]] = []
+        for _, module in template_variables['modules'].items():
+            for item in module['menu']:
+                template_variables['menu'].append((self.get_id(item), item))
+
+        # template_variables['menu'].append((self.get_id(item), item))
         # print(template_variables)
+
+        # extra variables
+        if variables:
+            template_variables = {**template_variables, **variables}
+
         super().render(page, template_variables)

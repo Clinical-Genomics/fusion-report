@@ -62,7 +62,7 @@ class App:
         progress_bar(0, len(fusions))
 
         index_page = report.create_page('index', 'index', {'sample': params['sample']})
-        index_page.add_module('summary', self.manager)
+        index_page.add_module('summary', self.manager, params={'tool_cutoff': params['tool_cutoff']})
         report.render(index_page)
 
         # for i, fusion in enumerate(fusions):

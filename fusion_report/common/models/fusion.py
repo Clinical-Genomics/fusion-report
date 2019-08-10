@@ -24,6 +24,12 @@ class Fusion:
             'explained': explained
         }
 
+    def get_score(self) -> float:
+        return self.score['score']
+
+    def get_score_explained(self) -> str:
+        return self.score['explained']
+
     def add_tool(self, tool: str, details: Dict[str, Any]) -> None:
         if tool and tool not in self.tools.keys():
             self.tools[tool] = details

@@ -40,11 +40,13 @@
             "optionals": [
                 {
                     "key": ["-c", "--config"],
-                    "help": "Input config file"
+                    "help": "Input config file",
+                    "default": ""
                 },
                 {
                     "key": ["-t", "--tool_cutoff"],
-                    "help": "Number of tools required to detect a fusion"
+                    "help": "Number of tools required to detect a fusion",
+                    "default": 2
                 }
             ]
         },

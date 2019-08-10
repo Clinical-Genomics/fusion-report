@@ -3,7 +3,8 @@ import os
 from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, Markup
 
-class Template():
+
+class Template:
     """ Class for generating report using Jinja2."""
     def __init__(self, config, output_dir):
         self.j2_env = Environment(
@@ -18,6 +19,7 @@ class Template():
         self.output_dir = output_dir
         # Helper fusion for including raw content in Jinja
         self.j2_env.globals['include_raw'] = self.__include_raw
+        self.j2_env.globals['get_id'] = self.get_id
 
         # Making sure output directory exists
         if not os.path.exists(output_dir):
@@ -56,3 +58,7 @@ class Template():
             )
 
         return Markup(self.j2_env.loader.get_source(self.j2_env, filename)[0])
+
+    @staticmethod
+    def get_id(title: str) -> str:
+        return title.lower().replace(' ', '_')

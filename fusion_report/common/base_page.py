@@ -2,6 +2,7 @@ import os
 from typing import Any, Dict
 from fusion_report.common.logger import Logger
 from fusion_report.modules.loader import ModuleLoader
+from fusion_report.common.fusion_manager import FusionManager
 
 
 class BasePage:
@@ -13,24 +14,24 @@ class BasePage:
         self.__view = f'views/{view}.html'
         self.__modules: Dict[str, Any] = {}
 
-    def add_module(self, name, manager=None):
+    def add_module(self, name, manager: FusionManager = None, params=None) -> None:
         if name not in self.__modules:
-            self.__modules[name] = ModuleLoader(manager).exec(name)
+            self.__modules[name] = ModuleLoader(manager, params).exec(name)
         else:
             Logger().get_logger().warning(f'Module {name} already loaded')
 
     def get_modules(self) -> Dict[str, Any]:
         return self.__modules
 
-    def get_title(self):
+    def get_title(self) -> str:
         """ Method returning title of the page."""
         return self.__title
 
-    def get_filename(self):
+    def get_filename(self) -> str:
         """ Method returning name of the page."""
         return self.__filename
 
-    def get_content(self):
+    def get_content(self) -> Dict[str, Any]:
         """Helper method returning all variables. Used for Jinja templating"""
         return {
             'title': self.__title,
