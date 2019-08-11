@@ -8,9 +8,12 @@ from fusion_report.common.fusion_manager import FusionManager
 class BasePage:
     """Class defining main MasterPage. Variables are inherited for all created Pages (class Page)"""
 
-    def __init__(self, title, view):
+    def __init__(self, title, filename, view):
         self.__title = title
-        self.__filename = title.replace('--', '_') + ".html"
+        if filename:
+            self.__filename = filename
+        else:
+            self.__filename = title.replace('--', '_') + ".html"
         self.__view = f'views/{view}.html'
         self.__modules: Dict[str, Any] = {}
 
@@ -31,10 +34,13 @@ class BasePage:
         """ Method returning name of the page."""
         return self.__filename
 
+    def get_view(self) -> str:
+        return self.__view
+
     def get_content(self) -> Dict[str, Any]:
         """Helper method returning all variables. Used for Jinja templating"""
         return {
-            'title': self.__title,
-            'filename': self.__filename,
-            'dynamic_partial': self.__view
+            'title': self.get_title(),
+            'filename': self.get_filename(),
+            'view': self.get_view()
         }

@@ -5,7 +5,8 @@ from os import DirEntry, scandir
 from typing import Any, Dict, List
 from fusion_report.common.exceptions.db import DbException
 
-class Db():
+
+class Db:
 
     def connect(self, path: str, database: str):
         try:
@@ -15,7 +16,8 @@ class Db():
         except sqlite3.DatabaseError as ex:
             raise DbException(ex)
 
-    def select(self, connection, query, query_params=None):
+    @staticmethod
+    def _select(connection, query, query_params=None):
         try:
             with connection as conn:
                 cur = conn.cursor()
@@ -30,7 +32,8 @@ class Db():
             conn.close()
             raise DbException(ex)
 
-    def execute(self, connection, statement):
+    @staticmethod
+    def _execute(connection, statement):
         try:
             with connection as conn:
                 cur = conn.cursor()

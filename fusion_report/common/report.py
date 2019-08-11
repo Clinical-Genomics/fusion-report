@@ -5,6 +5,7 @@ from fusion_report.common.page import Page
 from fusion_report.common.exceptions.report import ReportException
 from fusion_report.common.template import Template
 
+
 class Report(Template):
     """Class containing core functionality for generating report"""
     def __init__(self, config_path, output_dir):
@@ -12,8 +13,8 @@ class Report(Template):
         config = Config().parse(config_path)
         super().__init__(config, output_dir)
 
-    def create_page(self, title: str, view: str, page_variables={}):
-        page = Page(title, view, page_variables)
+    def create_page(self, title: str, filename: str = None, view: str = 'index', page_variables={}):
+        page = Page(title, filename, view, page_variables)
         if self.__index_off(title) != -1:
             Logger().get_logger().info('Page %s already exists, skipping ...', page.get_filename())
             return None
@@ -48,7 +49,6 @@ class Report(Template):
             for item in module['menu']:
                 template_variables['menu'].append((self.get_id(item), item))
 
-        # template_variables['menu'].append((self.get_id(item), item))
         # print(template_variables)
 
         # extra variables

@@ -18,9 +18,12 @@ class CosmicDB(Db, metaclass=Singleton):
         except Exception as ex:
             raise ex
 
+    def select(self, query, query_params=None):
+        return Db()._select(self.__connection, query, query_params)
+
     def get_all_fusions(self) -> List[str]:
         query: str = '''SELECT DISTINCT translocation_name FROM CosmicFusionExport
                         WHERE translocation_name != ""'''
-        res = Db().select(self.__connection, query)
+        res = self.select(query)
 
         return ['--'.join(re.findall(r'[A-Z0-9]+(?=\{)', x['translocation_name'])) for x in res]

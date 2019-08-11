@@ -1,0 +1,75 @@
+<!-- headline -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">{{ modules.fusion_summary.fusion.get_name() }}</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <p class="mb-0">Generated {{ date }}<br><strong>{{ page_variables.sample }}</strong></p>
+        </div>
+    </div>
+</div>
+
+<section id="details">
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" onclick="toggle_card(this, 'card-summary')">Summary</a>
+                </li>
+                {% for tool in modules.fusion_summary.fusion.get_tools().keys() %}
+                <li class="nav-item">
+                    <a class="nav-link" onclick="toggle_card(this, 'card-{{ tool }}')">{{ tool }}</a>
+                </li>
+                {% endfor %}
+                <li class="nav-item">
+                    <a class="nav-link" onclick="toggle_card(this, 'card-raw')">Raw data</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body" id="card-summary">
+            <p class="card-text">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                    viewBox="0 0 512 512" style="fill: #495057; vertical-align: sub;">
+                    <path
+                        d="M256 0c-141.385 0-256 35.817-256 80v64c0 44.183 114.615 80 256 80s256-35.817 256-80v-64c0-44.183-114.615-80-256-80z">
+                    </path>
+                    <path
+                        d="M256 272c-141.385 0-256-35.817-256-80v96c0 44.183 114.615 80 256 80s256-35.817 256-80v-96c0 44.183-114.615 80-256 80z">
+                    </path>
+                    <path
+                        d="M256 416c-141.385 0-256-35.817-256-80v96c0 44.183 114.615 80 256 80s256-35.817 256-80v-96c0 44.183-114.615 80-256 80z">
+                    </path>
+                </svg> Databases:
+                {% for db_name in modules.fusion_summary.fusion.get_databases() %}
+                <span class="badge badge-light">{{ db_name | safe }}</span>
+                {% endfor %}
+            </p>
+            <p class="card-text">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                    viewBox="0 0 512 512" style="fill: #495057; vertical-align: sub;">
+                    <path
+                        d="M470.803 367.354l22.197-47.354h19l-32 192h-480v-37.121l165.773-195.606-165.773-165.773v-113.5h490l22 128h-17.188l-9.36-19.44c-17.659-36.682-30.952-44.56-69.452-44.56h-331l176.528 176.528-148.71 175.472h271.182c58.004 0 73.324-20.789 86.803-48.646z">
+                    </path>
+                </svg> Score: <strong>{{ modules.fusion_summary.fusion.get_score() }}</strong> (<abbr title="attribute"
+                    onclick="toggle_view('score-explained')" style="font-style: italic">explain</abbr>) <br>
+            </p>
+            <p class="card-text" id="score-explained" style="display: none;">
+                <code>Explained score: {{ modules.fusion_summary.fusion.get_score_explained() }}</code>
+            </p>
+        </div>
+        {% for tool, findings in modules.fusion_summary.fusion.get_tools().items() %}
+        <div class="card-body" id="card-{{ tool }}" style="display: none">
+            <p class="card-text">
+                <dl class="row">
+                    {% for key, value in findings.items() %}
+                    <dt class="col-sm-2">{{ key }}</dt>
+                    <dd class="col-sm-10">{{ value }}</dd>
+                    {% endfor %}
+                </dl>
+            </p>
+        </div>
+        {% endfor %}
+        <div class="card-body" id="card-raw" style="display: none">
+            <code>{{ modules.fusion_summary.fusion.get_tools() | safe }}</code>
+        </div>
+    </div>
+</section>

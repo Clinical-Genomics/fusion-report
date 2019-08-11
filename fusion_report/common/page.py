@@ -2,10 +2,11 @@
 from typing import Any, Dict
 from fusion_report.common.base_page import BasePage
 
+
 class Page(BasePage):
     """This class is used to define a custom Page in a report, inherits some defaults from Master"""
-    def __init__(self, title: str, view: str, page_variables: Dict[str, Any]):
-        super().__init__(title, view)
+    def __init__(self, title: str, filename: str, view: str, page_variables: Dict[str, Any]):
+        super().__init__(title, filename, view)
         self.__page_variables = page_variables
 
     def get_content(self):

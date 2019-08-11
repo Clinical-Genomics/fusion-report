@@ -1,5 +1,6 @@
 {{ include_raw('assets/js/colorbrewer-1.3.0.min.js') | safe }}
 
+<!-- headline -->
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
     <h1 class="h2">Summary</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
@@ -11,21 +12,21 @@
 
 <div class="alert alert-success" role="alert">
     <p class="mb-0">The pipeline ran successfully and was able to detect
-        <strong>{{ modules.summary.num_detected_fusions }}</strong> fusions
+        <strong>{{ modules.index_summary.num_detected_fusions }}</strong> fusions
         for sample <strong>{{ page_variables.sample }}</strong>.
     </p>
     <p class="mb-0">We were able to find and describe
-        <strong>{{ modules.summary.num_known_fusions }}</strong>
+        <strong>{{ modules.index_summary.num_known_fusions }}</strong>
         fusions from our local database.</p>
     <p class="mb-0">
         Tools used during the analysis were
-        {{ modules.summary.tools | map('capitalize') | join(', ') }}.
+        {{ modules.index_summary.tools | map('capitalize') | join(', ') }}.
     </p>
 </div>
 
-<section class="" id="{{ get_id(modules.summary.menu[0]) }}">
+<section class="" id="{{ get_id(modules.index_summary.menu[0]) }}">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-        <h1 class="h3">{{ modules.summary.menu[0] }}</h1>
+        <h1 class="h3">{{ modules.index_summary.menu[0] }}</h1>
     </div>
     <div class="row">
         <div class="graph col-md-4" id="tool_detection_graph"></div>
@@ -34,13 +35,13 @@
     </div>
 </section>
 
-<section class="" id="{{ get_id(modules.summary.menu[1]) }}">
+<section class="" id="{{ get_id(modules.index_summary.menu[1]) }}">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-        <h1 class="h3">{{ modules.summary.menu[1] }}</h1>
+        <h1 class="h3">{{ modules.index_summary.menu[1] }}</h1>
     </div>
-    <p>Filters fusions found by at least {{ modules.summary.tool_cutoff }} tools. If number of chosen tools is less
-            than {{ modules.summary.tool_cutoff }} the filter is disabled. The whole list can be found in
-            <code>./Report-{{ modules.summary.sample }}/fusions.json</code>.</p>
+    <p>Filters fusions found by at least {{ modules.index_summary.tool_cutoff }} tools. If number of chosen tools is less
+            than {{ modules.index_summary.tool_cutoff }} the filter is disabled. The whole list can be found in
+            <code>./Report-{{ modules.index_summary.sample }}/fusions.json</code>.</p>
     {% with table_name='fusion_table' %}
         {% include "partials/table-buttons.html" %}
     {% endwith %}
@@ -48,10 +49,10 @@
 </section>
 
 <!-- Hidden values for Javascript to process -->
-<input type="hidden" name="tool_detection_graph" value='{{ modules.summary.tool_detection_graph | tojson | safe }}'>
-<input type="hidden" name="known_vs_unknown_graph" value='{{ modules.summary.known_vs_unknown_graph | tojson | safe }}'>
-<input type="hidden" name="distribution_graph" value='{{ modules.summary.distribution_graph | tojson | safe }}'>
-<input type="hidden" name="fusion_list" value='{{ modules.summary.fusion_list | tojson | safe }}'>
+<input type="hidden" name="tool_detection_graph" value='{{ modules.index_summary.tool_detection_graph | tojson | safe }}'>
+<input type="hidden" name="known_vs_unknown_graph" value='{{ modules.index_summary.known_vs_unknown_graph | tojson | safe }}'>
+<input type="hidden" name="distribution_graph" value='{{ modules.index_summary.distribution_graph | tojson | safe }}'>
+<input type="hidden" name="fusion_list" value='{{ modules.index_summary.fusion_list | tojson | safe }}'>
 
 <script>
     const tool_detecton_graph = JSON.parse(document.getElementsByName("tool_detection_graph")[0].getAttribute("value"));

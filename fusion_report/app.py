@@ -18,6 +18,7 @@ from fusion_report.common.exceptions.download import DownloadException
 
 __version__ = 1.2
 
+
 class App:
 
     def __init__(self):
@@ -26,7 +27,7 @@ class App:
             cwd = os.path.dirname(os.path.abspath(__file__))
             settings_config = os.path.join(cwd, 'settings.json')
             self.settings = rapidjson.loads(open(settings_config, 'r').read())
-            self.settings['weight']: float = float(100/len(self.settings['args']['run']['tools']))
+            self.settings['weight']: float = float(100 / len(self.settings['args']['run']['tools']))
             self.settings['version']: float = __version__
             self.manager = FusionManager(self.settings)
             self.args = ArgsBuilder(self.settings)
@@ -61,18 +62,24 @@ class App:
         fusions = self.manager.get_fusions()
         progress_bar(0, len(fusions))
 
-        index_page = report.create_page('index', 'index', {'sample': params['sample']})
-        index_page.add_module('summary', self.manager, params={'tool_cutoff': params['tool_cutoff']})
+        index_page = report.create_page(title='Summary', filename='index.html', page_variables={'sample': params['sample']})
+        index_page.add_module('index_summary', self.manager, params={'tool_cutoff': params['tool_cutoff']})
         report.render(index_page)
 
-        # for i, fusion in enumerate(fusions):
-        #     # page = FusionPage()
-        #     # report.add(page)
-        #     break
+        for i, fusion in enumerate(fusions):
+            fusion_page = report.create_page(title=fusion.get_name(), page_variables={'sample': params['sample']})
+            fusion_page.add_module('fusion_summary', params={'fusion': fusion})
+            fusion_page.add_module('variations', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
+            fusion_page.add_module('transcripts', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
+            fusion_page.add_module('ppi', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
+            fusion_page.add_module('drugs', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
+            fusion_page.add_module('diseases', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
+            report.render(fusion_page)
 
-        #     # progress bar
-        #     sleep(0.1)
-        #     progress_bar(i, len(fusions))
+            # progress bar
+            sleep(0.1)
+            progress_bar(i, len(fusions))
+            break
 
     def __parse_fusion_outputs(self, params: Dict[str, any]) -> None:
         for param, value in params.items():
@@ -118,7 +125,7 @@ class App:
             tmp_explained = []
             weights = {'fusiongdb': 0.20, 'cosmic': 0.40, 'mitelman': 0.40}
             for db_name in fusion.get_databases():
-                db_score += 1.0 * weights[db_name.lower()]    
+                db_score += 1.0 * weights[db_name.lower()]
                 tmp_explained.append(format(weights[db_name.lower()], '.3f'))
             score_explained += f' + 0.5 * ({" + ".join(tmp_explained)})'
 

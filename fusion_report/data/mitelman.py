@@ -18,8 +18,11 @@ class MitelmanDB(Db, metaclass=Singleton):
         except Exception as ex:
             raise ex
 
+    def select(self, query, query_params=None):
+        return Db()._select(self.__connection, query, query_params)
+
     def get_all_fusions(self) -> List[str]:
         query: str = 'SELECT DISTINCT GeneShort FROM MolBiolClinAssoc WHERE GeneShort LIKE "%/%"'
-        res = Db().select(self.__connection, query)
+        res = self.select(query)
 
         return [fusion['GeneShort'].strip().replace('/', '--') for fusion in res]

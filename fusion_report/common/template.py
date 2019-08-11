@@ -34,7 +34,7 @@ class Template:
             template_variables (dict): additional variables required by templating.
         """
         merged_variables = {**self.j2_variables, **template_variables}
-        output = self.j2_env.get_template(f'views/{page.get_filename()}').render(merged_variables)
+        output = self.j2_env.get_template(page.get_view()).render(merged_variables)
         with open(
                 os.path.join(self.output_dir, page.get_filename()), 'w', encoding='utf-8'
             ) as file_out:
