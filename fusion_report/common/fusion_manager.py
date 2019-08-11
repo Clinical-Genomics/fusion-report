@@ -16,7 +16,7 @@ class FusionManager:
             self.__running_tools.add(tool)
             factory_parser = self.__build_factory(tool)
             with open(file, 'r', encoding='utf-8') as f:
-                next(f) # skip header line
+                next(f)  # skip header line
                 for line in f:
                     fusion_name, details = factory_parser.parse(line)
                     self.add(fusion_name, tool, details)
@@ -28,7 +28,7 @@ class FusionManager:
 
     def add(self, name: str, tool: str, details: Dict[str, Any]) -> None:
         if name and tool:
-            index = self.__index_off('name', name)
+            index = self.__index_off(name)
             if index == -1:
                 fusion = Fusion(name)
                 fusion.add_tool(tool, details)
@@ -59,13 +59,13 @@ class FusionManager:
         klass = getattr(module, tool.capitalize())
         return klass()
 
-    def __index_off(self, key: str, value) -> int:
+    def __index_off(self, value: str) -> int:
         for index, fusion in enumerate(self.__fusions):
-            if getattr(fusion, key) == value:
+            if fusion.get_name() == value:
                 return index
         return -1
 
     def print(self):
         for fusion in self.__fusions:
-            print(f'{fusion.name}: {len(fusion.tools)}')
+            print(f'{fusion.get_name()}: {len(fusion.get_tools())}')
             # print(f'{fusion.name}: {fusion.tools}')
