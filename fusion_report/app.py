@@ -42,10 +42,9 @@ class App:
             if params.command == 'run':
                 self.__preprocess(vars(params))
                 self.__generate_report(vars(params))
-                self.__export_results(vars(params))
-                # export results
+                self.__export_results(params.output, params.export)
                 # generate multiqc module
-                # generate fusion list
+                self.__generate_fusion_list(params.output, params.tool_cutoff)
             elif params.command == 'download':
                 Download(params)
             else:
@@ -64,12 +63,12 @@ class App:
         fusions = self.manager.get_fusions()
         progress_bar(0, len(fusions))
 
-        index_page = report.create_page(title='Summary', filename='index.html', page_variables={'sample': params['sample']})
+        index_page = report.create_page('Summary', filename='index.html', page_variables={'sample': params['sample']})
         index_page.add_module('index_summary', self.manager, params={'tool_cutoff': params['tool_cutoff']})
         report.render(index_page)
 
         for i, fusion in enumerate(fusions):
-            fusion_page = report.create_page(title=fusion.get_name(), page_variables={'sample': params['sample']})
+            fusion_page = report.create_page(fusion.get_name(), page_variables={'sample': params['sample']})
             fusion_page.add_module('fusion_summary', params={'fusion': fusion})
             fusion_page.add_module('variations', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
             fusion_page.add_module('transcripts', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
@@ -99,18 +98,18 @@ class App:
                 if fusion.get_name() in db_list:
                     fusion.add_db(db_name)
 
-    def __export_results(self, params) -> None:
+    def __export_results(self, path: str, extension: str) -> None:
         try:
             filename: str = 'fusions'
             fusions = self.manager.get_fusions()
             results = []
-            dest = f"{os.path.join(params['output'], filename)}.{params['export']}"
-            if params['export'] == 'json':
+            dest = f"{os.path.join(path, filename)}.{extension}"
+            if extension == 'json':
                 with open(dest, 'w', encoding='utf-8') as output:
                     for fusion in fusions:
                         results.append(fusion.json_serialize())
                     output.write(rapidjson.dumps(results))
-            elif params['export'] == 'csv':
+            elif extension == 'csv':
                 with open(dest, "w", encoding='utf-8') as output:
                     csv_writer = csv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                     # header
@@ -134,7 +133,35 @@ class App:
                                 row.append(';'.join(tmp))
                         csv_writer.writerow(row)
             else:
-                Logger().get_logger().error('Export output %s not supported', params.export)
+                Logger().get_logger().error('Export output %s not supported', extension)
+        except IOError as error:
+            sys.exit(error)
+
+    def __generate_fusion_list(self, path: str, cutoff: int):
+        """
+        Helper function that generates file containing list of found fusions and filtered list of
+        fusions. One of these files ise used by FusionInspector to visualize the fusions.
+        Input for FusionInspector expects list of fusions in format `geneA--geneB\\n`.
+
+        Args:
+            path (str)
+            cutoff (int): cutoff for filtering purpose
+        Returns:
+            Generates:
+                - fusions_list.tsv
+                - fusions_list_filtered.tsv
+        """
+        try:
+            # unfiltered list
+            with open(os.path.join(path, 'fusion_list.tsv'), 'w', encoding='utf-8') as output:
+                for fusion in self.manager.get_fusions():
+                    output.write(f'{fusion.get_name()}\n')
+
+            # filtered list
+            with open(os.path.join(path, 'fusion_list_filtered.tsv'), 'w', encoding='utf-8') as output:
+                for fusion in self.manager.get_fusions():
+                    if len(fusion.get_tools()) >= cutoff:
+                        output.write(f'{fusion.get_name()}\n')
         except IOError as error:
             sys.exit(error)
 
