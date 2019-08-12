@@ -42,3 +42,13 @@ class Fusion:
             self.__dbs.append(database)
         else:
             Logger().get_logger().warning('Database %s already in list or empty', database)
+
+    def json_serialize(self):
+        json = {
+            'Fusion': self.get_name(),
+            'Databases': self.get_databases(),
+            'Score': self.get_score(),
+            'Explained score': self.get_score_explained(),
+        }
+        json.update(self.get_tools())
+        return json

@@ -47,6 +47,11 @@
                     "key": ["-t", "--tool_cutoff"],
                     "help": "Number of tools required to detect a fusion",
                     "default": 2
+                },
+                {
+                    "key": ["--export"],
+                    "help": "Export fusions in different formats. Currently supported: json, csv.",
+                    "default": "json"
                 }
             ]
         },

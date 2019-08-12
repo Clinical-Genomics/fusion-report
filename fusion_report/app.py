@@ -1,5 +1,6 @@
 import os
 import sys
+import csv
 from time import sleep
 import rapidjson
 from typing import Any, Dict, List
@@ -41,6 +42,7 @@ class App:
             if params.command == 'run':
                 self.__preprocess(vars(params))
                 self.__generate_report(vars(params))
+                self.__export_results(vars(params))
                 # export results
                 # generate multiqc module
                 # generate fusion list
@@ -79,7 +81,6 @@ class App:
             # progress bar
             sleep(0.1)
             progress_bar(i, len(fusions))
-            break
 
     def __parse_fusion_outputs(self, params: Dict[str, any]) -> None:
         for param, value in params.items():
@@ -97,6 +98,45 @@ class App:
             for db_name, db_list in local_fusions.items():
                 if fusion.get_name() in db_list:
                     fusion.add_db(db_name)
+
+    def __export_results(self, params) -> None:
+        try:
+            filename: str = 'fusions'
+            fusions = self.manager.get_fusions()
+            results = []
+            dest = f"{os.path.join(params['output'], filename)}.{params['export']}"
+            if params['export'] == 'json':
+                with open(dest, 'w', encoding='utf-8') as output:
+                    for fusion in fusions:
+                        results.append(fusion.json_serialize())
+                    output.write(rapidjson.dumps(results))
+            elif params['export'] == 'csv':
+                with open(dest, "w", encoding='utf-8') as output:
+                    csv_writer = csv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                    # header
+                    row = ['Fusion', 'Databases', 'Score', 'Explained score']
+                    [row.append(x) for x in sorted(self.manager.get_running_tools())]
+                    csv_writer.writerow(row)
+                    for fusion in fusions:
+                        row = [
+                            fusion.get_name(),
+                            ','.join(fusion.get_databases()),
+                            fusion.get_score(),
+                            fusion.get_score_explained(),
+                        ]
+                        for tool in sorted(self.manager.get_running_tools()):
+                            if tool not in fusion.get_tools().keys():
+                                row.append('')
+                            else:
+                                tmp = []
+                                for key, value in fusion.get_tools()[tool].items():
+                                    tmp.append(f'{key}: {value}')
+                                row.append(';'.join(tmp))
+                        csv_writer.writerow(row)
+            else:
+                Logger().get_logger().error('Export output %s not supported', params.export)
+        except IOError as error:
+            sys.exit(error)
 
     def __score(self, params: Dict[str, Any]) -> None:
         """Custom scoring function for individual fusion.
