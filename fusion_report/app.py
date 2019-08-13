@@ -9,6 +9,7 @@ from fusion_report.common.logger import Logger
 from fusion_report.args_builder import ArgsBuilder
 from fusion_report.common.fusion_manager import FusionManager
 from fusion_report.common.report import Report
+from fusion_report.common.models.fusion import Fusion
 from fusion_report.download import Download
 from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.mitelman import MitelmanDB
@@ -43,13 +44,15 @@ class App:
                 self.__preprocess(vars(params))
                 self.__generate_report(vars(params))
                 self.__export_results(params.output, params.export)
-                # generate multiqc module
+                self.generate_multiqc(
+                    params.output, self.manager.get_fusions(), params.sample, len(self.manager.get_running_tools())
+                )
                 self.__generate_fusion_list(params.output, params.tool_cutoff)
             elif params.command == 'download':
                 Download(params)
             else:
                 sys.exit(f'Command {params.command} not recognized!')
-        except (AppException, DbException, DownloadException) as ex:
+        except (AppException, DbException, DownloadException, IOError) as ex:
             self.log.exception(ex)
             sys.exit(ex.args[0])
 
@@ -99,43 +102,40 @@ class App:
                     fusion.add_db(db_name)
 
     def __export_results(self, path: str, extension: str) -> None:
-        try:
-            filename: str = 'fusions'
-            fusions = self.manager.get_fusions()
-            results = []
-            dest = f"{os.path.join(path, filename)}.{extension}"
-            if extension == 'json':
-                with open(dest, 'w', encoding='utf-8') as output:
-                    for fusion in fusions:
-                        results.append(fusion.json_serialize())
-                    output.write(rapidjson.dumps(results))
-            elif extension == 'csv':
-                with open(dest, "w", encoding='utf-8') as output:
-                    csv_writer = csv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-                    # header
-                    row = ['Fusion', 'Databases', 'Score', 'Explained score']
-                    [row.append(x) for x in sorted(self.manager.get_running_tools())]
+        filename: str = 'fusions'
+        fusions = self.manager.get_fusions()
+        results = []
+        dest = f"{os.path.join(path, filename)}.{extension}"
+        if extension == 'json':
+            with open(dest, 'w', encoding='utf-8') as output:
+                for fusion in fusions:
+                    results.append(fusion.json_serialize())
+                output.write(rapidjson.dumps(results))
+        elif extension == 'csv':
+            with open(dest, "w", encoding='utf-8') as output:
+                csv_writer = csv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                # header
+                row = ['Fusion', 'Databases', 'Score', 'Explained score']
+                [row.append(x) for x in sorted(self.manager.get_running_tools())]
+                csv_writer.writerow(row)
+                for fusion in fusions:
+                    row = [
+                        fusion.get_name(),
+                        ','.join(fusion.get_databases()),
+                        fusion.get_score(),
+                        fusion.get_score_explained(),
+                    ]
+                    for tool in sorted(self.manager.get_running_tools()):
+                        if tool not in fusion.get_tools().keys():
+                            row.append('')
+                        else:
+                            tmp = []
+                            for key, value in fusion.get_tools()[tool].items():
+                                tmp.append(f'{key}: {value}')
+                            row.append(';'.join(tmp))
                     csv_writer.writerow(row)
-                    for fusion in fusions:
-                        row = [
-                            fusion.get_name(),
-                            ','.join(fusion.get_databases()),
-                            fusion.get_score(),
-                            fusion.get_score_explained(),
-                        ]
-                        for tool in sorted(self.manager.get_running_tools()):
-                            if tool not in fusion.get_tools().keys():
-                                row.append('')
-                            else:
-                                tmp = []
-                                for key, value in fusion.get_tools()[tool].items():
-                                    tmp.append(f'{key}: {value}')
-                                row.append(';'.join(tmp))
-                        csv_writer.writerow(row)
-            else:
-                Logger().get_logger().error('Export output %s not supported', extension)
-        except IOError as error:
-            sys.exit(error)
+        else:
+            Logger().get_logger().error('Export output %s not supported', extension)
 
     def __generate_fusion_list(self, path: str, cutoff: int):
         """
@@ -151,19 +151,16 @@ class App:
                 - fusions_list.tsv
                 - fusions_list_filtered.tsv
         """
-        try:
-            # unfiltered list
-            with open(os.path.join(path, 'fusion_list.tsv'), 'w', encoding='utf-8') as output:
-                for fusion in self.manager.get_fusions():
-                    output.write(f'{fusion.get_name()}\n')
+        # unfiltered list
+        with open(os.path.join(path, 'fusion_list.tsv'), 'w', encoding='utf-8') as output:
+            for fusion in self.manager.get_fusions():
+                output.write(f'{fusion.get_name()}\n')
 
-            # filtered list
-            with open(os.path.join(path, 'fusion_list_filtered.tsv'), 'w', encoding='utf-8') as output:
-                for fusion in self.manager.get_fusions():
-                    if len(fusion.get_tools()) >= cutoff:
-                        output.write(f'{fusion.get_name()}\n')
-        except IOError as error:
-            sys.exit(error)
+        # filtered list
+        with open(os.path.join(path, 'fusion_list_filtered.tsv'), 'w', encoding='utf-8') as output:
+            for fusion in self.manager.get_fusions():
+                if len(fusion.get_tools()) >= cutoff:
+                    output.write(f'{fusion.get_name()}\n')
 
     def __score(self, params: Dict[str, Any]) -> None:
         """Custom scoring function for individual fusion.
@@ -198,3 +195,47 @@ class App:
 
             score = float('%0.3f' % (0.5 * tool_score + 0.5 * db_score))
             fusion.set_score(score, score_explained)
+
+    @staticmethod
+    def generate_multiqc(path: str, fusions: List[Fusion], sample_name: str, running_tools_count: int) -> None:
+        """
+        Helper function that generates fusion table.
+        Args:
+            path (str)
+            fusions (List[Fusion])
+            sample_name (str): name of the sample
+            running_tools_count (int): number of running tools
+
+        Returns:
+            Generates `fusion_genes_mqc.json`
+        """
+
+        counts: Dict[str, int] = {'together': 0}
+        for fusion in fusions:
+            tools = fusion.get_tools()
+            if len(tools) == running_tools_count:
+                counts['together'] += 1
+            for tool in tools:
+                if tool not in counts.keys():
+                    counts[tool] = 1
+                else:
+                    counts[tool] += 1
+
+        configuration = {
+            'id': 'fusion_genes',
+            'section_name': 'Fusion genes',
+            'description': 'Number of fusion genes found by various tools',
+            'plot_type': 'bargraph',
+            'pconfig': {
+                'id': 'barplot_config_only',
+                'title': 'Detected fusion genes',
+                'ylab': 'Number of detected fusion genes'
+            },
+            'data': {
+                sample_name: counts
+            }
+        }
+
+        dest = f"{os.path.join(path, 'fusion_genes_mqc.json')}"
+        with open(dest, 'w', encoding='utf-8') as output:
+            output.write(rapidjson.dumps(configuration))
