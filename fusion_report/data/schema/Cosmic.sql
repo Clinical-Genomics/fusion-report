@@ -15,6 +15,3 @@ CREATE TABLE "CosmicFusionExport" (
     "pubmed" integer NOT NULL,
     "id_study" integer NOT NULL
 );
-
-.separator "\t"
-.import CosmicFusionExport_stripped.tsv CosmicFusionExport

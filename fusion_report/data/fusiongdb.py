@@ -7,19 +7,15 @@ from fusion_report.common.singleton import Singleton
 class FusionGDB(Db, metaclass=Singleton):
 
     def __init__(self, path):
-        self.name = 'FusionGDB'
-        self.schema = 'FusionGDB.sql'
-        self.__connection = self.connect(path, 'fusiongdb.db')
+        super().__init__(path, 'FusionGDB', 'FusionGDB.sql')
 
-    def setup(self):
-        try:
-            with open(self.schema, 'r', encoding='utf-8') as f:
-                self.__connection.execute(f.read())
-        except Exception as ex:
-            raise ex
-
-    def select(self, query, query_params=None):
-        return Db()._select(self.__connection, query, query_params)
+    def setup(self, files: List[str], delimiter: str = '', skip_header=False):
+        super().setup(files, delimiter)
+        # additional customization
+        sql = '''UPDATE TCGA_ChiTaRS_combined_fusion_ORF_analyzed_gencode_h19v19
+                 SET orf = "Frame-shift" WHERE orf = "Frame-shit"
+        '''
+        self.execute(sql)
 
     def get_all_fusions(self) -> List[str]:
         query: str = '''SELECT DISTINCT (h_gene || "--" || t_gene) as fusion_pair 

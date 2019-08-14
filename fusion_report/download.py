@@ -1,13 +1,23 @@
 """ Helper class for Downloading all databases. """
-import os
+import argparse
 import base64
-import subprocess
+import glob
+import gzip
+import os
+import shutil
+import ssl
+import tarfile
 import urllib.request
-from typing import List
-from pathlib import Path
 from multiprocessing import Pool
+from typing import List
+
 import rapidjson
+
 from fusion_report.common.exceptions.download import DownloadException
+from fusion_report.data.cosmic import CosmicDB
+from fusion_report.data.fusiongdb import FusionGDB
+from fusion_report.data.mitelman import MitelmanDB
+
 
 class Download:
     """
@@ -15,12 +25,12 @@ class Download:
     Currently the script is able to download: Mitelman, FusionGDB and COSMIC with provided
     credentials.
     """
-    def __init__(self, params):
-        self.__root_base: str = os.path.dirname(__file__)
-        self.__validate(params)
-        self.__get_all()
 
-    def __validate(self, params) -> None:
+    def __init__(self, params: argparse.Namespace):
+        self.__validate(params)
+        self.__download_all(params)
+
+    def __validate(self, params: argparse.Namespace) -> None:
         """
         Method validating required input. In this case COSMIC credentials.
 
@@ -31,7 +41,7 @@ class Download:
         if (
                 self.__cosmic_token is None
                 and (params.cosmic_usr is not None or params.cosmic_passwd is not None)
-            ):
+        ):
             self.__cosmic_token: str = base64.b64encode(
                 f'{params.cosmic_usr}:{params.cosmic_passwd}'.encode()
             ).decode('utf-8')
@@ -39,107 +49,98 @@ class Download:
             raise DownloadException('COSMIC credentials have not been provided correctly')
 
         # Making sure output directory exists
-        if not Path(params.output).exists():
-            Path(params.output).mkdir(parents=True, exist_ok=True)
+        if not os.path.exists(params.output):
+            os.makedirs(params.output, 0o755)
 
-        self.__params = params
-
-    def __get_all(self) -> None:
+    def __download_all(self, params: argparse.Namespace) -> None:
         """
         Method for downloading all databases in parallel.
         """
-        # Change to update directory
-        os.chdir(self.__params.output)
-        commands: List[List[str]] = [
-            self.__get_fusiongdb(),
-            self.__get_mitelman(),
-            self.__get_cosmic()
-        ]
-        with Pool(len(commands)) as pool:
-            pool.map(self.execute, commands)
+        # change to update directory
+        os.chdir(params.output)
 
-        # cleanup
-        self.execute(['rm *.dat *.tsv *.txt *.tar.gz *.sql'])
+        self.__get_fusiongdb()
+        self.__get_mitelman()
+        self.__get_cosmic()
+        self.__clean()
 
-    def __get_fusiongdb(self) -> List[str]:
-        """
-        Method for download FusionGDB database.
+    @staticmethod
+    def get_large_file(url: str, ignore_ssl: bool = False):
+        ctx = None
+        if ignore_ssl:
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
 
-        Returns:
-            commands (list): List of all required commands for execution
-        """
-        commands: List[str] = []
+        with urllib.request.urlopen(url, context=ctx) as response:
+            file = url.split('/')[-1]
+            print(f'Downloading {file}')
+            # only download if file size doesn't match
+            if not os.path.exists(file) or int(response.getheader('Content-Length')) != os.stat(file).st_size:
+                with open(file, 'wb') as out_file:
+                    shutil.copyfileobj(response, out_file)
+
+    def __get_fusiongdb(self) -> None:
+        """Method for download FusionGDB database."""
+
         hostname: str = 'https://ccsm.uth.edu/FusionGDB/tables'
-        urls: List[str] = [
-            f'{hostname}/TCGA_ChiTaRS_combined_fusion_information_on_hg19.txt',
-            f'{hostname}/TCGA_ChiTaRS_combined_fusion_ORF_analyzed_gencode_h19v19.txt',
-            f'{hostname}/uniprot_gsymbol.txt',
-            f'{hostname}/fusion_uniprot_related_drugs.txt',
-            f'{hostname}/fusion_ppi.txt',
-            f'{hostname}/fgene_disease_associations.txt'
+        files: List[str] = [
+            'TCGA_ChiTaRS_combined_fusion_information_on_hg19.txt',
+            'TCGA_ChiTaRS_combined_fusion_ORF_analyzed_gencode_h19v19.txt',
+            'uniprot_gsymbol.txt',
+            'fusion_uniprot_related_drugs.txt',
+            'fusion_ppi.txt',
+            'fgene_disease_associations.txt'
         ]
 
-        for url in urls:
-            commands.append(f'wget --no-check-certificate {url}')
+        pool = Pool(3)
+        pool.starmap(self.get_large_file, [(f'{hostname}/{x}', True) for x in files])
+        pool.close()
+        pool.join()
+        db = FusionGDB('.')
+        db.setup(files, delimiter='\t', skip_header=True)
 
-        commands.append(
-            f'sqlite3 fusiongdb.db < {os.path.join(self.__root_base, "../db/FusionGDB.sql")}'
-        )
+    def __get_mitelman(self) -> None:
+        """Method for download Mitelman database."""
 
-        return commands
+        file: str = 'mitelman.tar.gz'
+        url: str = f'ftp://ftp1.nci.nih.gov/pub/CGAP/{file}'
+        self.get_large_file(url)
 
-    def __get_mitelman(self) -> List[str]:
-        """
-        Method for download Mitelman database.
+        with tarfile.open(file) as archive:
+            files = archive.getnames()
+            archive.extractall()
 
-        Returns:
-            commands (list): List of all required commands for execution
-        """
-        return [
-            f'wget ftp://ftp1.nci.nih.gov/pub/CGAP/mitelman.tar.gz',
-            f'tar -xvzf mitelman.tar.gz',
-            "for db_file in *.dat; do sed -n '1!p' $db_file > ${db_file%.*}_stripped.dat; done",
-            f'sqlite3 mitelman.db < {os.path.join(self.__root_base, "../db/Mitelman.sql")}'
-        ]
+        db = MitelmanDB('.')
+        db.setup(files, delimiter='\t', skip_header=True, encoding='ISO-8859-1')
 
-    def __get_cosmic(self) -> List[str]:
-        """
-        Method for download COSMIC database.
+    def __get_cosmic(self) -> None:
+        """Method for download COSMIC database."""
 
-        Returns:
-            commands (list): List of all required commands for execution
-        """
-        hostname: str = 'https://cancer.sanger.ac.uk'
-        url: str = f'{hostname}/cosmic/file_download/GRCh38/cosmic/v87/CosmicFusionExport.tsv.gz'
-        req = urllib.request.Request(url)
+        files = []
+        file: str = 'CosmicFusionExport.tsv.gz'
+        url: str = 'https://cancer.sanger.ac.uk/cosmic/file_download/GRCh38/cosmic/v87/'
 
+        # get auth url to download file
+        req = urllib.request.Request(f'{url}{file}')
         req.add_header('Authorization', f'Basic {self.__cosmic_token}')
         req.add_header(
             'User-Agent',
             '''Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko)
             Chrome/41.0.2228.0 Safari/537.3'''
         )
-
         res = urllib.request.urlopen(req)
         auth_url: str = rapidjson.loads(res.read().decode('utf-8'))['url']
+        self.get_large_file(auth_url)
 
-        return [
-            f'wget "{auth_url}" -O CosmicFusionExport.tsv.gz',
-            'gunzip CosmicFusionExport.tsv.gz',
-            "sed -n '1!p' CosmicFusionExport.tsv > CosmicFusionExport_stripped.tsv",
-            f'sqlite3 cosmic.db < {os.path.join(self.__root_base, "../db/Cosmic.sql")}'
-        ]
+        files.append('.'.join(file.split('.')[:-1]))
+        with gzip.open(file, 'rb') as archive, open(files[0], 'wb') as out_file:
+            shutil.copyfileobj(archive, out_file)
+
+        db = CosmicDB('.')
+        db.setup(files, delimiter='\t', skip_header=True)
 
     @staticmethod
-    def execute(commands: List[str]) -> None:
-        """
-        Method for executing a command in shell.
-
-        Args:
-            commands (list): List of commands to execute
-        """
-        try:
-            for command in commands:
-                subprocess.run(command, shell=True)
-        except subprocess.CalledProcessError as ex:
-            raise DownloadException(ex)
+    def __clean():
+        for temp in glob.glob('*[!db]'):
+            os.remove(temp)

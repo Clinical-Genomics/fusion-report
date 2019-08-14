@@ -72,13 +72,3 @@ CREATE TABLE "fgene_disease_associations" (
 	"disease_source" varchar(50) NOT NULL DEFAULT ''
 );
 CREATE INDEX gene_index ON fgene_disease_associations(gene);
-
-.separator "\t"
-.import TCGA_ChiTaRS_combined_fusion_ORF_analyzed_gencode_h19v19.txt TCGA_ChiTaRS_combined_fusion_ORF_analyzed_gencode_h19v19
-.import TCGA_ChiTaRS_combined_fusion_information_on_hg19.txt TCGA_ChiTaRS_combined_fusion_information_on_hg19
-.import fusion_uniprot_related_drugs.txt fusion_uniprot_related_drugs
-.import fusion_ppi.txt fusion_ppi
-.import fgene_disease_associations.txt fgene_disease_associations
-.import uniprot_gsymbol.txt uniprot_gsymbol
-
-UPDATE TCGA_ChiTaRS_combined_fusion_ORF_analyzed_gencode_h19v19 set orf = 'Frame-shift' WHERE orf = 'Frame-shit'

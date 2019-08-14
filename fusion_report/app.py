@@ -92,9 +92,9 @@ class App:
 
     def __enrich(self, path) -> None:
         local_fusions: Dict[str, List[str]] = {
-            FusionGDB(path).name: FusionGDB(path).get_all_fusions(),
-            MitelmanDB(path).name: MitelmanDB(path).get_all_fusions(),
-            CosmicDB(path).name: CosmicDB(path).get_all_fusions()
+            FusionGDB(path).get_name(): FusionGDB(path).get_all_fusions(),
+            MitelmanDB(path).get_name(): MitelmanDB(path).get_all_fusions(),
+            CosmicDB(path).get_name(): CosmicDB(path).get_all_fusions()
         }
         for fusion in self.manager.get_fusions():
             for db_name, db_list in local_fusions.items():

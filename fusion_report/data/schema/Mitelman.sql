@@ -176,21 +176,3 @@ CREATE TABLE RECURRENT_NUM_DATA (
    CHR_ORDER                                          NUMBER
 )
 ;
-
-.separator "\t"
-.import authorreference_stripped.dat AuthorReference
-.import cytogen_stripped.dat Cytogen
-.import cytogeninv_stripped.dat CytogenInv
-.import karyabnorm_stripped.dat KaryAbnorm
-.import karybit_stripped.dat KaryBit
-.import karybreak_stripped.dat KaryBreak
-.import karyclone_stripped.dat KaryClone
-.import koder_stripped.dat Koder
-.import molbiolclinassoc_stripped.dat MolBiolClinAssoc
-.import molclinabnorm_stripped.dat MolClinAbnorm
-.import molclinbreak_stripped.dat MolClinBreak
-.import molclingene_stripped.dat MolClinGene
-.import recurrent_data_stripped.dat RECURRENT_DATA
-.import recurrent_num_data_stripped.dat RECURRENT_NUM_DATA
-.import reference_stripped.dat Reference
-
