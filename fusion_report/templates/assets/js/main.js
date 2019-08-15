@@ -1,10 +1,10 @@
 // Table functions
 
-var tables = {}
-var RANGE = 5;
+let tables = {};
+const RANGE = 5;
 
 function register_table(obj) {
-    let name = obj['element'].getAttribute('id')
+    let name = obj['element'].getAttribute('id');
     if (tables[name] === undefined) {
         tables[name] = obj;
     } else {
@@ -19,18 +19,18 @@ function get_table(name) {
 // Table formatters
 let foundDBFormatter = function(cell, formatterParams) {
     let new_cell = '';
-    let items = cell.getValue()
+    let items = cell.getValue();
     if (items.length === 0) {
         new_cell = '<span class="badge badge-danger">Not found</span>'
     } else {
-        for (let i in items) {
-            new_cell += `<span class="badge badge-${formatterParams[items[i]]}">
-                            <span class="label">${items[i][0]}<span class="d-none d-xl-inline">${items[i].substr(1)}</span></span>
+        items.forEach(function (item) {
+            new_cell += `<span class="badge badge-${formatterParams[item]}">
+                            <span class="label">${item[0]}<span class="d-none d-xl-inline">${item.substr(1)}</span></span>
                         </span>&nbsp;`
-        }
+        });
     }
     return new_cell
-}
+};
 
 let break_ncbiFormatter = function(cell, formatterParams) {
     const row = cell.getData();
@@ -39,39 +39,39 @@ let break_ncbiFormatter = function(cell, formatterParams) {
     const start = position - RANGE;
     const end = position + RANGE;
     const chr = row[formatterParams.chr];
-    const urlParams = `hgTracks?db=${version}&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=${chr}%3A${start}-${end}`
+    const urlParams = `hgTracks?db=${version}&lastVirtModeType=default&lastVirtModeExtraState=&virtModeType=default&virtMode=0&nonVirtPosition=&position=${chr}%3A${start}-${end}`;
     return `<a href="${url}/${urlParams}" target="_blank" data-toggle="tooltip" data-placement="top" title="Open in UCSC browser">${position}</a>`;
-}
+};
 
 let break_ensemblFormatter = function(cell, formatterParams) {
     const row = cell.getData();
-    const url = 'https://www.ensembl.org'
+    const url = 'https://www.ensembl.org';
     let position = parseInt(cell.getValue());
     const start = position - RANGE;
     const end = position + RANGE;
     const transcript = row[formatterParams.transcript];
     const chr = row[formatterParams.chr];
-    const urlParams = `Homo_sapiens/Location/View?db=core;r=${chr}:${start}-${end};t=${transcript}`
+    const urlParams = `Homo_sapiens/Location/View?db=core;r=${chr}:${start}-${end};t=${transcript}`;
     return `<a href="${url}/${urlParams}" target="_blank" data-toggle="tooltip" data-placement="top" title="Open in Ensembl genome browser">${position}</a>`;
-}
+};
 
 let progressFormatter = function(cell, formatterParams) {
     let value = cell.getValue();
-    let progress_value = ('delimiter' in formatterParams ? value / formatterParams.delimiter : value) * 100
-    let style = 'style' in formatterParams ? formatterParams.style : 'bg-primary'
+    let progress_value = ('delimiter' in formatterParams ? value / formatterParams.delimiter : value) * 100;
+    let style = 'style' in formatterParams ? formatterParams.style : 'bg-primary';
     return `<div class="progress">
                 <div class="progress-bar ${style}" role="progressbar" style="width: ${progress_value}%;" 
                     aria-valuenow="${progress_value}" aria-valuemin="0" aria-valuemax="100">
                     ${value}
                 </div>
             </div>`
-}
+};
 
 let linkFormatter = function(cell, formatterParams) {
     let value = cell.getValue();
     let target = formatterParams.target ? formatterParams.target : "_blank";
     return `<a href="${formatterParams.url}/${value}" target="${target}" data-toggle="tooltip" data-placement="top" title="${formatterParams.title}">${value}</a>`;
-}
+};
 
 // Table function buttons
 function copy_table(name) {
@@ -85,13 +85,13 @@ function export_to(name, type) {
 }
 
 function match_any(data, value) {
-    match = false;
+    let match = false;
     if (Object.keys(value).length > 1) {
-        for (let key in data) {
-            if (String(data[key]).toLowerCase().indexOf(value.toLowerCase()) > -1) {
+        Object.values(data).forEach(function(item) {
+            if (String(item).toLowerCase().indexOf(value.toLowerCase()) > -1) {
                 match = true
             }
-        }
+        });
         return match;
     }
     return true;
@@ -111,14 +111,14 @@ function filter_by(name, field, obj) {
 
 // Helpers
 function toggle_view(id) {
-    var item = document.getElementById(id);
-    item.style.display = item.style.display == "none" ? "block" : "none";
+    let item = document.getElementById(id);
+    item.style.display = item.style.display === "none" ? "block" : "none";
 }
 
 function toggle_card(current_link, id) {
-    prev_active = document.getElementsByClassName('card-header')[0].querySelector('.active');
-    prev_active.className = 'nav-link'
-    current_link.className = 'nav-link active'
+    let prev_active = document.getElementsByClassName('card-header')[0].querySelector('.active');
+    prev_active.className = 'nav-link';
+    current_link.className = 'nav-link active';
     
     let all_cards = document.getElementsByClassName('card-body');
     Array.from(all_cards).map(function(card) {
@@ -134,7 +134,7 @@ function export_cytoscape_chart(type, filename) {
         fetch(image)
         .then(res => res.blob())
         .then(blob => {
-            var download = document.createElement('a');
+            let download = document.createElement('a');
             download.href = URL.createObjectURL(blob);
             download.download = `${filename}.${type.toLowerCase()}`;
             download.click();

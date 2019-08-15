@@ -197,9 +197,8 @@
     /* Fusion table */
     const output_filename = "{{ page_variables.sample }}";
     const fusion_list_data = JSON.parse(document.getElementsByName("fusion_list")[0].getAttribute("value"));
-    console.log(fusion_list_data);
     let columns = [
-        {title:"Fusion gene", field:"fusion", formatter:function(cell, formatterParams){
+        {title:"Fusion gene", field:"fusion", formatter:function(cell){
             let fusion = cell.getValue();
             return cell.getData()['found_db'].length > 0 ? `<code><a href="${fusion.replace('--','_')}.html">${fusion}</a></code>` : `<code>${fusion}</code>`
         }},
@@ -209,17 +208,17 @@
             'COSMIC': 'primary'
         }}
     ];
-    for (let i in fusion_list_data.tools) {
-        columns.push({
-            title: fusion_list_data.tools[i],
-            field: fusion_list_data.tools[i],
+    fusion_list_data['tools'].forEach(function(tool) {
+       columns.push({
+            title: tool,
+            field: tool,
             align: "center",
             formatter: "tickCross"
         })
-    }
+    });
     columns.push(
         {title:"Tools hits", field:"tools_hits", formatter:progressFormatter, formatterParams: {
-            'delimiter': fusion_list_data.tools.length,
+            'delimiter': fusion_list_data['tools'].length,
             'style': 'bg-info'
         }},
         {title:"Score", field:"score", formatter:progressFormatter}

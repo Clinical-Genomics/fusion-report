@@ -1,4 +1,3 @@
-import os
 from typing import Any, Dict
 from fusion_report.common.logger import Logger
 from fusion_report.modules.loader import ModuleLoader

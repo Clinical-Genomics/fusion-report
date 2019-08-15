@@ -1,5 +1,6 @@
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
+
 class Squid(AbstractFusionTool):
 
     def parse(self, line, delimiter='\t'):
@@ -12,7 +13,7 @@ class Squid(AbstractFusionTool):
         right_breakpoint = f"{col[3]}:{col[4]}-{col[5]}:{col[9]}".replace('chr', '')
         details = {
             'position': f"{left_breakpoint}#{right_breakpoint}" if col[8] == '+'
-                        else f"{right_breakpoint}#{left_breakpoint}",
+            else f"{right_breakpoint}#{left_breakpoint}",
             'score': int(col[7])
         }
         return fusion, details

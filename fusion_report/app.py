@@ -45,7 +45,8 @@ class App:
                 self.__generate_report(vars(params))
                 self.__export_results(params.output, params.export)
                 self.generate_multiqc(
-                    params.output, self.manager.get_fusions(), params.sample, len(self.manager.get_running_tools())
+                    params.output, self.manager.get_fusions(),
+                    params.sample, len(self.manager.get_running_tools())
                 )
                 self.__generate_fusion_list(params.output, params.tool_cutoff)
             elif params.command == 'download':
@@ -66,18 +67,34 @@ class App:
         fusions = self.manager.get_fusions()
         progress_bar(0, len(fusions))
 
-        index_page = report.create_page('Summary', filename='index.html', page_variables={'sample': params['sample']})
-        index_page.add_module('index_summary', self.manager, params={'tool_cutoff': params['tool_cutoff']})
+        index_page = report.create_page(
+            'Summary', filename='index.html', page_variables={'sample': params['sample']}
+        )
+        index_page.add_module(
+            'index_summary', self.manager, params={'tool_cutoff': params['tool_cutoff']}
+        )
         report.render(index_page)
 
         for i, fusion in enumerate(fusions):
-            fusion_page = report.create_page(fusion.get_name(), page_variables={'sample': params['sample']})
+            fusion_page = report.create_page(
+                fusion.get_name(), page_variables={'sample': params['sample']}
+            )
             fusion_page.add_module('fusion_summary', params={'fusion': fusion})
-            fusion_page.add_module('variations', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
-            fusion_page.add_module('transcripts', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
-            fusion_page.add_module('ppi', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
-            fusion_page.add_module('drugs', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
-            fusion_page.add_module('diseases', params={'fusion': fusion.get_name(), 'db_path': params['db_path']})
+            fusion_page.add_module(
+                'variations', params={'fusion': fusion.get_name(), 'db_path': params['db_path']}
+            )
+            fusion_page.add_module(
+                'transcripts', params={'fusion': fusion.get_name(), 'db_path': params['db_path']}
+            )
+            fusion_page.add_module(
+                'ppi', params={'fusion': fusion.get_name(), 'db_path': params['db_path']}
+            )
+            fusion_page.add_module(
+                'drugs', params={'fusion': fusion.get_name(), 'db_path': params['db_path']}
+            )
+            fusion_page.add_module(
+                'diseases', params={'fusion': fusion.get_name(), 'db_path': params['db_path']}
+            )
             report.render(fusion_page)
 
             # progress bar
@@ -113,7 +130,9 @@ class App:
                 output.write(rapidjson.dumps(results))
         elif extension == 'csv':
             with open(dest, "w", encoding='utf-8') as output:
-                csv_writer = csv.writer(output, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer = csv.writer(
+                    output, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL
+                )
                 # header
                 row = ['Fusion', 'Databases', 'Score', 'Explained score']
                 [row.append(x) for x in sorted(self.manager.get_running_tools())]
@@ -167,14 +186,12 @@ class App:
         More information about the scoring function can be found in the documentation
         at https://github.com/matq007/fusion-report/docs/scoring-fusion
         Args:
-            fusion_detail (FusionDetail)
             params (ArgumentParser)
         Returns:
             float: Estimate score of how genuine is the fusion.
         """
 
         for fusion in self.manager.get_fusions():
-            score_explained: str = ''
 
             # tool estimation
             tool_score = 0.0
@@ -197,7 +214,8 @@ class App:
             fusion.set_score(score, score_explained)
 
     @staticmethod
-    def generate_multiqc(path: str, fusions: List[Fusion], sample_name: str, running_tools_count: int) -> None:
+    def generate_multiqc(path: str, fusions: List[Fusion],
+                         sample_name: str, running_tools_count: int) -> None:
         """
         Helper function that generates fusion table.
         Args:

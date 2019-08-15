@@ -1,5 +1,6 @@
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
+
 class Pizzly(AbstractFusionTool):
 
     def parse(self, line, delimiter='\t'):

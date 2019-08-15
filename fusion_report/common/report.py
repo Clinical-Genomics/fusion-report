@@ -13,7 +13,10 @@ class Report(Template):
         config = Config().parse(config_path)
         super().__init__(config, output_dir)
 
-    def create_page(self, title: str, filename: str = None, view: str = 'index', page_variables={}):
+    def create_page(self, title: str, filename: str = None,
+                    view: str = 'index', page_variables=None):
+        if page_variables is None:
+            page_variables = {}
         page = Page(title, filename, view, page_variables)
         if self.__index_off(title) != -1:
             Logger().get_logger().info('Page %s already exists, skipping ...', page.get_filename())

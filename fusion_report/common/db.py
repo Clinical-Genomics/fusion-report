@@ -22,24 +22,26 @@ class Db:
 
     def setup(self, files: List[str], delimiter: str = '', skip_header=False, encoding='utf-8'):
         try:
-            with open(self.get_schema(), 'r', encoding='utf-8') as f:
-                self.__connection.executescript(f.read().lower())
+            with open(self.get_schema(), 'r', encoding='utf-8') as schema:
+                self.__connection.executescript(schema.read().lower())
 
             for file in files:
                 if not file.endswith('.sql'):
-                    with open(file, 'r', encoding=encoding) as f:
+                    with open(file, 'r', encoding=encoding) as resource:
                         rows: List[List[str]] = []
                         tmp_max: int = 0
-                        table: str = file.split('.')[0]
+                        table: str = file.split('.')[0].lower()
                         if skip_header:
-                            next(f)
-                        for line in f:
+                            next(resource)
+                        for line in resource:
                             tmp_line = line.split(delimiter)
                             if len(tmp_line) > tmp_max:
                                 tmp_max = len(tmp_line)
                             rows.append(tmp_line)
-                        values = ','.join(['?' for i in range(0, tmp_max)])
-                        self.__connection.executemany(f'INSERT INTO {table} VALUES ({values})', rows)
+                        values = ','.join(['?' for _ in range(0, tmp_max)])
+                        self.__connection.executemany(
+                            f'INSERT INTO {table} VALUES ({values})', rows
+                        )
                         self.__connection.commit()
         except Exception as ex:
             raise ex

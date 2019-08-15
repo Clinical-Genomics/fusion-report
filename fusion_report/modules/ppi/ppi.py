@@ -16,8 +16,9 @@ class CustomModule(BaseModule):
 
     def build_graph(self):
         """
-            Helper function that generates Network map of Protein-Protein Interactions using Cytoscape.js.
-            Additional module: https://github.com/cytoscape/cytoscape.js-cose-bilkent
+            Helper function that generates Network map of Protein-Protein Interactions
+            using Cytoscape.js. Additional module
+            https://github.com/cytoscape/cytoscape.js-cose-bilkent
 
             Returns:
                 list: Object structure which is defined by the Cytoscape library

@@ -4,6 +4,7 @@ from colorlog import ColoredFormatter
 from fusion_report.common.singleton import Singleton
 from logging.handlers import TimedRotatingFileHandler
 
+
 class Logger(metaclass=Singleton):
 
     __logger = None
@@ -12,7 +13,8 @@ class Logger(metaclass=Singleton):
         self.__logger = logging.getLogger('fusion-report')
 
         console_handler = logging.StreamHandler(sys.stdout)
-        formatter = '%(asctime)s %(log_color)s%(levelname)s%(reset)s | %(log_color)s%(message)s%(reset)s'
+        formatter = \
+            '%(asctime)s %(log_color)s%(levelname)s%(reset)s | %(log_color)s%(message)s%(reset)s'
         console_handler.setFormatter(ColoredFormatter(formatter))
         self.__logger.addHandler(console_handler)
 

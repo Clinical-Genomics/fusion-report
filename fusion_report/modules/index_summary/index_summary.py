@@ -41,7 +41,8 @@ class CustomModule(BaseModule):
         """Returns distribution of tools that found fusions.
 
         Returns:
-            list: Distribution of detection per tool, i.e: ['0 tools': 15, '1 tool': 10, '2 tools': 4, ...]
+            list: Distribution of detection per tool
+                  i.e: ['0 tools': 15, '1 tool': 10, '2 tools': 4, ...]
         """
         counts = [0] * (len(self.manager.get_running_tools()) + 1)
         for fusion in self.manager.get_fusions():
@@ -69,7 +70,8 @@ class CustomModule(BaseModule):
                     'tools_hits': len(fusion.get_tools()),
                     'score': f'{fusion.get_score():.3}'
                 }
-            # Add only fusions that are detected by at least <cutoff>, default = TOOL_DETECTION_CUTOFF
+            # Add only fusions that are detected by at least <cutoff>
+            # default = TOOL_DETECTION_CUTOFF
             if not filter_flag and len(fusion.get_tools()) >= self.params['tool_cutoff']:
                 row = {
                     'fusion': fusion.get_name(),

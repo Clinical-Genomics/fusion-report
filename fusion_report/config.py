@@ -2,13 +2,15 @@
 import os
 import base64
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any, Dict, List
 from yaml import safe_load, YAMLError
 from fusion_report.common.logger import Logger
 from fusion_report.common.exceptions.config import ConfigException
 
+
 class Config:
     """Class for adjusting report"""
+
     def __init__(self):
         self.current_path = os.path.dirname(os.path.abspath(__file__))
         self.report_title = 'nfcore/rnafusion summary report'
@@ -23,7 +25,7 @@ class Config:
         self.institution = {}
         self.date_format: str = '%d/%m/%Y'
         self.date = datetime.now().strftime(self.date_format)
-        self.assets: Dict[str, str] = {}
+        self.assets: Dict[str, List[str]] = {}
 
     def parse(self, path) -> Dict[str, Any]:
         """

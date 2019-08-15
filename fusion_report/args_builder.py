@@ -16,7 +16,8 @@ class ArgsBuilder:
         self.run_args(command_parser, settings['args']['run'], settings['weight'])
         self.download_args(command_parser, settings['args']['download'])
 
-    def run_args(self, command_parser, args, weight) -> None:
+    @staticmethod
+    def run_args(command_parser, args, weight) -> None:
         run_parser = command_parser.add_parser('run', help='Run application')
         # mandatory
         run_mandatory = run_parser.add_argument_group(
@@ -41,12 +42,16 @@ class ArgsBuilder:
         for optional in args['optionals']:
             if len(optional['key']) > 1:
                 run_optional.add_argument(
-                    optional['key'][0], optional['key'][1], default=optional['default'], help=optional['help']
+                    optional['key'][0], optional['key'][1],
+                    default=optional['default'], help=optional['help']
                 )
             else:
-                run_optional.add_argument(optional['key'][0], default=optional['default'], help=optional['help'])
+                run_optional.add_argument(
+                    optional['key'][0], default=optional['default'], help=optional['help']
+                )
 
-    def download_args(self, command_parser, args) -> None:
+    @staticmethod
+    def download_args(command_parser, args) -> None:
         download_parser = command_parser.add_parser('download', help='Download required databases')
         for mandatory in args['mandatory']:
             download_parser.add_argument(mandatory['key'], help=mandatory['help'], type=str)

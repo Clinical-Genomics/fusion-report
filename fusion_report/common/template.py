@@ -6,6 +6,7 @@ from jinja2 import Environment, FileSystemLoader, Markup
 
 class Template:
     """ Class for generating report using Jinja2."""
+
     def __init__(self, config, output_dir):
         self.j2_env = Environment(
             loader=FileSystemLoader([
@@ -37,7 +38,7 @@ class Template:
         output = self.j2_env.get_template(page.get_view()).render(merged_variables)
         with open(
                 os.path.join(self.output_dir, page.get_filename()), 'w', encoding='utf-8'
-            ) as file_out:
+        ) as file_out:
             file_out.write(output)
 
     def __include_raw(self, filename):

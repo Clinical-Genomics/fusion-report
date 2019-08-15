@@ -2,6 +2,7 @@ from typing import Any, Dict, List, Set
 from fusion_report.common.models.fusion import Fusion
 from fusion_report.common.logger import Logger
 
+
 class FusionManager:
 
     def __init__(self, settings):
@@ -53,7 +54,8 @@ class FusionManager:
 
     ################################################################################################
     #  Helpers
-    def __build_factory(self, tool: str):
+    @classmethod
+    def __build_factory(cls, tool: str):
         module_name: str = f'fusion_report.parsers.{tool.lower()}'
         module = __import__(module_name, fromlist=[tool.capitalize()])
         klass = getattr(module, tool.capitalize())

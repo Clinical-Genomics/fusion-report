@@ -8,7 +8,8 @@ import shutil
 import ssl
 import tarfile
 import urllib.request
-from multiprocessing import Pool
+import time
+from multiprocessing import Pool, Process
 from typing import List
 
 import rapidjson
@@ -17,6 +18,7 @@ from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.data.cosmic import CosmicDB
 from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.mitelman import MitelmanDB
+from fusion_report.common.logger import Logger
 
 
 class Download:
@@ -59,26 +61,40 @@ class Download:
         # change to update directory
         os.chdir(params.output)
 
-        self.__get_fusiongdb()
-        self.__get_mitelman()
-        self.__get_cosmic()
+        processes = [
+            Process(target=self.__get_fusiongdb),
+            Process(target=self.__get_mitelman),
+            Process(target=self.__get_cosmic)
+        ]
+
+        for process in processes:
+            process.start()
+
+        for process in processes:
+            process.join()
+
+        print('Cleaning up the mess')
         self.__clean()
 
     @staticmethod
-    def get_large_file(url: str, ignore_ssl: bool = False):
+    def get_large_file(url: str, ignore_ssl: bool = False) -> None:
         ctx = None
         if ignore_ssl:
             ctx = ssl.create_default_context()
             ctx.check_hostname = False
             ctx.verify_mode = ssl.CERT_NONE
 
-        with urllib.request.urlopen(url, context=ctx) as response:
-            file = url.split('/')[-1]
-            print(f'Downloading {file}')
-            # only download if file size doesn't match
-            if not os.path.exists(file) or int(response.getheader('Content-Length')) != os.stat(file).st_size:
-                with open(file, 'wb') as out_file:
-                    shutil.copyfileobj(response, out_file)
+        if url.startswith('https') or url.startswith('ftp'):
+            with urllib.request.urlopen(url, context=ctx) as response:
+                file = url.split('/')[-1].split('?')[0]
+                print(f'Downloading {file}')
+                # only download if file size doesn't match
+                if not os.path.exists(file) or \
+                   int(response.getheader('Content-Length')) != os.stat(file).st_size:
+                    with open(file, 'wb') as out_file:
+                        shutil.copyfileobj(response, out_file)
+        else:
+            Logger().get_logger().error('Downloading resources supports only HTTPS or FTP')
 
     def __get_fusiongdb(self) -> None:
         """Method for download FusionGDB database."""
@@ -93,7 +109,7 @@ class Download:
             'fgene_disease_associations.txt'
         ]
 
-        pool = Pool(3)
+        pool = Pool(4)
         pool.starmap(self.get_large_file, [(f'{hostname}/{x}', True) for x in files])
         pool.close()
         pool.join()

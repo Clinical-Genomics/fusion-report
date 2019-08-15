@@ -1,6 +1,7 @@
 from fusion_report.common.fusion_manager import FusionManager
 from fusion_report.common.logger import Logger
 
+
 class ModuleLoader:
 
     def __init__(self, manager=None, params=None):
@@ -15,7 +16,8 @@ class ModuleLoader:
         except AttributeError as ex:
             Logger().get_logger().exception(ex)
 
-    def __build_factory(self, name: str, manager: FusionManager, params=None):
+    @classmethod
+    def __build_factory(cls, name: str, manager: FusionManager, params=None):
         module_name: str = f'fusion_report.modules.{name}.{name}'
         module = __import__(module_name, fromlist=['CustomModule'])
         klass = getattr(module, 'CustomModule')

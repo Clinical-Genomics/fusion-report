@@ -1,4 +1,3 @@
-import os
 import re
 from typing import List
 from fusion_report.common.db import Db
@@ -11,8 +10,8 @@ class CosmicDB(Db, metaclass=Singleton):
         super().__init__(path, 'COSMIC', 'Cosmic.sql')
 
     def get_all_fusions(self) -> List[str]:
-        query: str = '''SELECT DISTINCT translocation_name FROM CosmicFusionExport
+        query: str = '''SELECT DISTINCT translocation_name FROM cosmicfusionexport
                         WHERE translocation_name != ""'''
         res = self.select(query)
 
-        return ['--'.join(re.findall(r'[A-Z0-9]+(?=\{)', x['translocation_name'])) for x in res]
+        return ['--'.join(re.findall(r'[A-Z0-9]+(?={)', x['translocation_name'])) for x in res]
