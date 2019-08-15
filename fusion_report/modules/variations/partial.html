@@ -17,7 +17,7 @@
 
 <script>
     let variations_data = JSON.parse(document.getElementsByName("variations")[0].getAttribute("value"));
-    register_table(new Tabulator("#variations_table", {
+    registerTable(new Tabulator("#variations_table", {
         data: variations_data,
         responsiveLayout: true,
         layout: "fitColumns",
@@ -43,7 +43,7 @@
             {
                 title: "Left breakpoint",
                 field: "h_bp",
-                formatter: break_ncbiFormatter,
+                formatter: breakNcbiFormatter,
                 formatterParams: {
                     chr: 'h_chr'
                 }
@@ -63,7 +63,7 @@
             {
                 title: "Right breakpoint",
                 field: "t_bp",
-                formatter: break_ncbiFormatter,
+                formatter: breakNcbiFormatter,
                 formatterParams: {
                     chr: 't_chr'
                 }

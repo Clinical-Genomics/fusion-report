@@ -1,11 +1,13 @@
 """Module for Report Configuration"""
-import os
 import base64
+import os
 from datetime import datetime
 from typing import Any, Dict, List
+
 from yaml import safe_load, YAMLError
-from fusion_report.common.logger import Logger
+
 from fusion_report.common.exceptions.config import ConfigException
+from fusion_report.common.logger import Logger
 
 
 class Config:

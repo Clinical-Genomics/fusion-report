@@ -8,17 +8,16 @@ import shutil
 import ssl
 import tarfile
 import urllib.request
-import time
 from multiprocessing import Pool, Process
 from typing import List
 
 import rapidjson
 
 from fusion_report.common.exceptions.download import DownloadException
+from fusion_report.common.logger import Logger
 from fusion_report.data.cosmic import CosmicDB
 from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.mitelman import MitelmanDB
-from fusion_report.common.logger import Logger
 
 
 class Download:

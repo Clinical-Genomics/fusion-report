@@ -1,9 +1,10 @@
 from typing import Any, Dict, List, Tuple
-from fusion_report.config import Config
+
+from fusion_report.common.exceptions.report import ReportException
 from fusion_report.common.logger import Logger
 from fusion_report.common.page import Page
-from fusion_report.common.exceptions.report import ReportException
 from fusion_report.common.template import Template
+from fusion_report.config import Config
 
 
 class Report(Template):
@@ -51,8 +52,6 @@ class Report(Template):
         for _, module in template_variables['modules'].items():
             for item in module['menu']:
                 template_variables['menu'].append((self.get_id(item), item))
-
-        # print(template_variables)
 
         # extra variables
         if variables:

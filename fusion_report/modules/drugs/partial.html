@@ -15,7 +15,7 @@
 
 <script>
     let targeting_drugs_data = JSON.parse(document.getElementsByName("drugs")[0].getAttribute("value"));
-    register_table(new Tabulator("#targeting_drugs_table", {
+    registerTable(new Tabulator("#targeting_drugs_table", {
         data: targeting_drugs_data,
         responsiveLayout: true,
         layout: "fitColumns",

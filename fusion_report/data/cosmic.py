@@ -1,5 +1,6 @@
 import re
 from typing import List
+
 from fusion_report.common.db import Db
 from fusion_report.common.singleton import Singleton
 

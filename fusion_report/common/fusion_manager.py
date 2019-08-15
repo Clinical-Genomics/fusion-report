@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Set
-from fusion_report.common.models.fusion import Fusion
+
 from fusion_report.common.logger import Logger
+from fusion_report.common.models.fusion import Fusion
 
 
 class FusionManager:
@@ -16,9 +17,9 @@ class FusionManager:
         if tool in self.__supported_tools:
             self.__running_tools.add(tool)
             factory_parser = self.__build_factory(tool)
-            with open(file, 'r', encoding='utf-8') as f:
-                next(f)  # skip header line
-                for line in f:
+            with open(file, 'r', encoding='utf-8') as fusion_output:
+                next(fusion_output)  # skip header line
+                for line in fusion_output:
                     fusion_name, details = factory_parser.parse(line)
                     self.add(fusion_name, tool, details)
                     # enrich with DB
@@ -48,9 +49,7 @@ class FusionManager:
         return self.__fusions
 
     def get_known_fusions(self) -> List[Fusion]:
-        known: List[Fusion] = []
-        [known.append(fusion) for fusion in self.__fusions if fusion.get_databases()]
-        return known
+        return [fusion for fusion in self.__fusions if fusion.get_databases()]
 
     ################################################################################################
     #  Helpers

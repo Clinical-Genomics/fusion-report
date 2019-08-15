@@ -16,7 +16,7 @@
 <script>
     let related_diseases_data = JSON.parse(document.getElementsByName("diseases")[0].getAttribute(
     "value"));
-    register_table(new Tabulator("#related_diseases_table", {
+    registerTable(new Tabulator("#related_diseases_table", {
         data: related_diseases_data,
         responsiveLayout: true,
         layout: "fitColumns",

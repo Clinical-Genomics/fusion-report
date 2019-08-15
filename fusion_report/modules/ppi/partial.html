@@ -7,9 +7,9 @@
         <h1 class="h3">{{ modules.ppi.menu[0] }}</h1>
         <div class="btn-group" role="group" aria-label="Basic example">
             <button class="btn btn-secondary"
-                onclick="export_cytoscape_chart('PNG', 'protein-protein-interactions')">Export PNG</button>
+                onclick="exportCytoscapeChart('PNG', 'protein-protein-interactions')">Export PNG</button>
             <button class="btn btn-secondary"
-                onclick="export_cytoscape_chart('JPG', 'protein-protein-interactions')">Export JPG</button>
+                onclick="exportCytoscapeChart('JPG', 'protein-protein-interactions')">Export JPG</button>
         </div>
     </div>
     <p>
@@ -24,15 +24,15 @@
 <input type="hidden" name="ppi" value='{{ modules.ppi.data | tojson | safe }}'>
 
 <script>
-    let ppi_obj = undefined;
+    var ppiObject = undefined;
     let ppi_graph_data = JSON.parse(document.getElementsByName("ppi")[0].getAttribute("value"));
     setTimeout(function () {
-        ppi_obj = cytoscape({
+        ppiObject = cytoscape({
             container: document.getElementById("ppi_graph"),
             layout: {
                 name: 'cose-bilkent',
                 animate: false,
-                ready: toggle_view('loading'),
+                ready: toggleView('loading'),
                 nodeDimensionsIncludeLabels: true,
                 fit: true,
                 padding: 10,

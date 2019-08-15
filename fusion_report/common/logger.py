@@ -1,8 +1,10 @@
 import logging
 import sys
-from colorlog import ColoredFormatter
-from fusion_report.common.singleton import Singleton
 from logging.handlers import TimedRotatingFileHandler
+
+from colorlog import ColoredFormatter
+
+from fusion_report.common.singleton import Singleton
 
 
 class Logger(metaclass=Singleton):

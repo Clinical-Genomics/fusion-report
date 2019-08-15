@@ -1,4 +1,5 @@
 from typing import List
+
 from fusion_report.common.db import Db
 from fusion_report.common.singleton import Singleton
 
@@ -12,8 +13,7 @@ class FusionGDB(Db, metaclass=Singleton):
         super().setup(files, delimiter)
         # additional customization
         sql = '''UPDATE tcga_chitars_combined_fusion_orf_analyzed_gencode_h19v19
-                 SET orf = "Frame-shift" WHERE orf = "Frame-shit"
-        '''
+                 SET orf = "Frame-shift" WHERE orf = "Frame-shit"'''
         self.execute(sql)
 
     def get_all_fusions(self) -> List[str]:

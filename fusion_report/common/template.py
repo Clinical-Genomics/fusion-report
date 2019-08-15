@@ -1,7 +1,10 @@
 """ Template module """
 import os
 from pathlib import Path
+
 from jinja2 import Environment, FileSystemLoader, Markup
+
+from fusion_report.common.page import Page
 
 
 class Template:
@@ -26,18 +29,18 @@ class Template:
         if not os.path.exists(output_dir):
             os.mkdir(output_dir)
 
-    def render(self, page, template_variables):
+    def render(self, page: Page, variables=None):
         """
         Method for rendering page in the report.
 
         Args:
             page (Page):
-            template_variables (dict): additional variables required by templating.
+            variables (dict): additional variables required by templating.
         """
-        merged_variables = {**self.j2_variables, **template_variables}
+        merged_variables = {**self.j2_variables, **variables}
         output = self.j2_env.get_template(page.get_view()).render(merged_variables)
         with open(
-                os.path.join(self.output_dir, page.get_filename()), 'w', encoding='utf-8'
+            os.path.join(self.output_dir, page.get_filename()), 'w', encoding='utf-8'
         ) as file_out:
             file_out.write(output)
 

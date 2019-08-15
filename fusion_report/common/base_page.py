@@ -1,7 +1,8 @@
 from typing import Any, Dict
+
+from fusion_report.common.fusion_manager import FusionManager
 from fusion_report.common.logger import Logger
 from fusion_report.modules.loader import ModuleLoader
-from fusion_report.common.fusion_manager import FusionManager
 
 
 class BasePage:

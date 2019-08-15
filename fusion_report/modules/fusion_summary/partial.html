@@ -13,15 +13,15 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" onclick="toggle_card(this, 'card-summary')">Summary</a>
+                    <a class="nav-link active" onclick="toggleCard(this, 'card-summary')">Summary</a>
                 </li>
                 {% for tool in modules.fusion_summary.fusion.get_tools().keys() %}
                 <li class="nav-item">
-                    <a class="nav-link" onclick="toggle_card(this, 'card-{{ tool }}')">{{ tool }}</a>
+                    <a class="nav-link" onclick="toggleCard(this, 'card-{{ tool }}')">{{ tool }}</a>
                 </li>
                 {% endfor %}
                 <li class="nav-item">
-                    <a class="nav-link" onclick="toggle_card(this, 'card-raw')">Raw data</a>
+                    <a class="nav-link" onclick="toggleCard(this, 'card-raw')">Raw data</a>
                 </li>
             </ul>
         </div>
@@ -50,7 +50,7 @@
                         d="M470.803 367.354l22.197-47.354h19l-32 192h-480v-37.121l165.773-195.606-165.773-165.773v-113.5h490l22 128h-17.188l-9.36-19.44c-17.659-36.682-30.952-44.56-69.452-44.56h-331l176.528 176.528-148.71 175.472h271.182c58.004 0 73.324-20.789 86.803-48.646z">
                     </path>
                 </svg> Score: <strong>{{ modules.fusion_summary.fusion.get_score() }}</strong> (<abbr title="attribute"
-                    onclick="toggle_view('score-explained')" style="font-style: italic">explain</abbr>) <br>
+                    onclick="toggleView('score-explained')" style="font-style: italic">explain</abbr>) <br>
             </p>
             <p class="card-text" id="score-explained" style="display: none;">
                 <code>Explained score: {{ modules.fusion_summary.fusion.get_score_explained() }}</code>

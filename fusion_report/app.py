@@ -1,22 +1,24 @@
+import csv
 import os
 import sys
-import csv
 from time import sleep
-import rapidjson
 from typing import Any, Dict, List
-from fusion_report.helpers import progress_bar
-from fusion_report.common.logger import Logger
+
+import rapidjson
+
 from fusion_report.args_builder import ArgsBuilder
-from fusion_report.common.fusion_manager import FusionManager
-from fusion_report.common.report import Report
-from fusion_report.common.models.fusion import Fusion
-from fusion_report.download import Download
-from fusion_report.data.fusiongdb import FusionGDB
-from fusion_report.data.mitelman import MitelmanDB
-from fusion_report.data.cosmic import CosmicDB
 from fusion_report.common.exceptions.app import AppException
 from fusion_report.common.exceptions.db import DbException
 from fusion_report.common.exceptions.download import DownloadException
+from fusion_report.common.fusion_manager import FusionManager
+from fusion_report.common.logger import Logger
+from fusion_report.common.models.fusion import Fusion
+from fusion_report.common.report import Report
+from fusion_report.data.cosmic import CosmicDB
+from fusion_report.data.fusiongdb import FusionGDB
+from fusion_report.data.mitelman import MitelmanDB
+from fusion_report.download import Download
+from fusion_report.helpers import progress_bar
 
 __version__ = 1.2
 
@@ -119,13 +121,11 @@ class App:
                     fusion.add_db(db_name)
 
     def __export_results(self, path: str, extension: str) -> None:
-        filename: str = 'fusions'
-        fusions = self.manager.get_fusions()
         results = []
-        dest = f"{os.path.join(path, filename)}.{extension}"
+        dest = f"{os.path.join(path, 'fusions')}.{extension}"
         if extension == 'json':
             with open(dest, 'w', encoding='utf-8') as output:
-                for fusion in fusions:
+                for fusion in self.manager.get_fusions():
                     results.append(fusion.json_serialize())
                 output.write(rapidjson.dumps(results))
         elif extension == 'csv':
@@ -135,9 +135,9 @@ class App:
                 )
                 # header
                 row = ['Fusion', 'Databases', 'Score', 'Explained score']
-                [row.append(x) for x in sorted(self.manager.get_running_tools())]
+                row.extend([x for x in sorted(self.manager.get_running_tools())])
                 csv_writer.writerow(row)
-                for fusion in fusions:
+                for fusion in self.manager.get_fusions():
                     row = [
                         fusion.get_name(),
                         ','.join(fusion.get_databases()),
@@ -148,10 +148,9 @@ class App:
                         if tool not in fusion.get_tools().keys():
                             row.append('')
                         else:
-                            tmp = []
-                            for key, value in fusion.get_tools()[tool].items():
-                                tmp.append(f'{key}: {value}')
-                            row.append(';'.join(tmp))
+                            ';'.join([
+                                f'{key}: {value}' for key, value in fusion.get_tools()[tool].items()
+                            ])
                     csv_writer.writerow(row)
         else:
             Logger().get_logger().error('Export output %s not supported', extension)

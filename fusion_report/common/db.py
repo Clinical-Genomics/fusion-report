@@ -1,6 +1,7 @@
 import os
 import sqlite3
 from typing import List
+
 from fusion_report.common.exceptions.db import DbException
 
 
@@ -28,19 +29,15 @@ class Db:
             for file in files:
                 if not file.endswith('.sql'):
                     with open(file, 'r', encoding=encoding) as resource:
-                        rows: List[List[str]] = []
-                        tmp_max: int = 0
-                        table: str = file.split('.')[0].lower()
                         if skip_header:
                             next(resource)
+                        rows: List[List[str]] = []
                         for line in resource:
-                            tmp_line = line.split(delimiter)
-                            if len(tmp_line) > tmp_max:
-                                tmp_max = len(tmp_line)
-                            rows.append(tmp_line)
-                        values = ','.join(['?' for _ in range(0, tmp_max)])
+                            rows.append(line.split(delimiter))
                         self.__connection.executemany(
-                            f'INSERT INTO {table} VALUES ({values})', rows
+                            f'''INSERT INTO {file.split('.')[0].lower()}
+                                VALUES ({','.join(['?' for _ in range(0, len(max(rows)))])})''',
+                            rows
                         )
                         self.__connection.commit()
         except Exception as ex:

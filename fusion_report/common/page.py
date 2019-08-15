@@ -1,5 +1,6 @@
 """Module for Page"""
 from typing import Any, Dict
+
 from fusion_report.common.base_page import BasePage
 
 
