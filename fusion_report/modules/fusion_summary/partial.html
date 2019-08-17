@@ -15,7 +15,7 @@
                 <li class="nav-item">
                     <a class="nav-link active" onclick="toggleCard(this, 'card-summary')">Summary</a>
                 </li>
-                {% for tool in modules.fusion_summary.fusion.get_tools().keys() %}
+                {% for tool in modules.fusion_summary.fusion.get_tools().keys() | sort %}
                 <li class="nav-item">
                     <a class="nav-link" onclick="toggleCard(this, 'card-{{ tool }}')">{{ tool }}</a>
                 </li>
