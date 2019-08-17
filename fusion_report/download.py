@@ -1,5 +1,5 @@
-""" Helper class for Downloading all databases. """
-import argparse
+""" Download module """
+from argparse import Namespace
 import base64
 import glob
 import gzip
@@ -21,23 +21,20 @@ from fusion_report.data.mitelman import MitelmanDB
 
 
 class Download:
-    """
-    Class designed for downloading any type of required database.
+    """Class designed for downloading any type of required database.
     Currently the script is able to download: Mitelman, FusionGDB and COSMIC with provided
     credentials.
+
+    Attributes:
+        __cosmic_token: Auth token for downloading COSMIC database
     """
 
-    def __init__(self, params: argparse.Namespace):
+    def __init__(self, params: Namespace):
         self.__validate(params)
         self.__download_all(params)
 
-    def __validate(self, params: argparse.Namespace) -> None:
-        """
-        Method validating required input. In this case COSMIC credentials.
-
-        Args:
-            params (argparse.Namespace)
-        """
+    def __validate(self, params: Namespace) -> None:
+        """Method validating required input. In this case COSMIC credentials."""
         self.__cosmic_token: str = params.cosmic_token
         if (
                 self.__cosmic_token is None
@@ -49,14 +46,12 @@ class Download:
         else:
             raise DownloadException('COSMIC credentials have not been provided correctly')
 
-        # Making sure output directory exists
+        # making sure output directory exists
         if not os.path.exists(params.output):
             os.makedirs(params.output, 0o755)
 
-    def __download_all(self, params: argparse.Namespace) -> None:
-        """
-        Method for downloading all databases in parallel.
-        """
+    def __download_all(self, params: Namespace) -> None:
+        """Parallel downloading of all databases."""
         # change to update directory
         os.chdir(params.output)
 
@@ -77,6 +72,7 @@ class Download:
 
     @staticmethod
     def get_large_file(url: str, ignore_ssl: bool = False) -> None:
+        """Method for downloading a large file."""
         ctx = None
         if ignore_ssl:
             ctx = ssl.create_default_context()
@@ -157,5 +153,6 @@ class Download:
 
     @staticmethod
     def __clean():
+        """Remove all files except *db."""
         for temp in glob.glob('*[!db]'):
             os.remove(temp)

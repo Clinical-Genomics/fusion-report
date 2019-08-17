@@ -5,7 +5,7 @@
     <h1 class="h2">Summary</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group mr-2">
-            <p class="mb-0">Generated {{ date }}<br><strong>{{ page_variables.sample }}</strong></p>
+            <p class="mb-0">Generated {{ date }}<br><strong>{{ sample }}</strong></p>
         </div>
     </div>
 </div>
@@ -13,7 +13,7 @@
 <div class="alert alert-success" role="alert">
     <p class="mb-0">The pipeline ran successfully and was able to detect
         <strong>{{ modules.index_summary.num_detected_fusions }}</strong> fusions
-        for sample <strong>{{ page_variables.sample }}</strong>.
+        for sample <strong>{{ sample }}</strong>.
     </p>
     <p class="mb-0">We were able to find and describe
         <strong>{{ modules.index_summary.num_known_fusions }}</strong>
@@ -195,7 +195,7 @@
     });
 
     /* Fusion table */
-    const output_filename = "{{ page_variables.sample }}";
+    const output_filename = "{{ sample }}";
     const fusion_list_data = JSON.parse(document.getElementsByName("fusion_list")[0].getAttribute("value"));
     let columns = [
         {title:"Fusion gene", field:"fusion", formatter:function(cell){

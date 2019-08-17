@@ -1,3 +1,4 @@
+"""Related drug module"""
 from typing import Any, Dict
 
 from fusion_report.data.fusiongdb import FusionGDB
@@ -5,8 +6,11 @@ from fusion_report.modules.base_module import BaseModule
 
 
 class CustomModule(BaseModule):
+    """Related drug section in fusion page."""
 
     def get_data(self) -> Dict[str, Any]:
+        """Gathers necessary data."""
+
         return FusionGDB(self.params['db_path']).select(
             '''
             SELECT gene_symbol, drug_status, drug_bank_id, drug_name, drug_action,
@@ -19,6 +23,7 @@ class CustomModule(BaseModule):
         )
 
     def load(self) -> Dict[str, Any]:
+        """Return module variables."""
         return {
             'data': self.get_data(),
             'menu': ['Targeting drugs']

@@ -1,6 +1,6 @@
-<section class="fusion" id="{{ get_id(modules.variations.menu[0]) }}">
+<section class="fusion" id="{{ get_id(modules['fusiongdb.variations'].menu[0]) }}">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
-        <h1 class="h3">{{ modules.variations.menu[0] }}</h1>
+        <h1 class="h3">{{ modules['fusiongdb.variations'].menu[0] }}</h1>
     </div>
     <p>
         Fusion gene information taken from three different sources ChiTars (NAR, 2018), tumorfusions (NAR, 2018)
@@ -13,7 +13,7 @@
     <div id="variations_table" class="bootstrap tabulator table-striped table-bordered"></div>
 </section>
 
-<input type="hidden" name="variations" value='{{ modules.variations.data | tojson | safe }}'>
+<input type="hidden" name="variations" value='{{ modules["fusiongdb.variations"].data | tojson | safe }}'>
 
 <script>
     let variations_data = JSON.parse(document.getElementsByName("variations")[0].getAttribute("value"));

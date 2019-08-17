@@ -1,7 +1,9 @@
+"""Squid module"""
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
 
 class Squid(AbstractFusionTool):
+    """Squid tool parser."""
 
     def parse(self, line, delimiter='\t'):
         col = line.strip().split(delimiter)

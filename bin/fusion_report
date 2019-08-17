@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
+import sys
 from fusion_report.app import App
+from fusion_report.common.exceptions.app import AppException
+from fusion_report.common.logger import Logger
 
 if __name__ == "__main__":
-    app = App()
-    app.run()
+    try:
+        app = App()
+        app.build_args()
+        app.run()
+    except AppException as ex:
+        Logger().get_logger().exception(ex)
+        sys.exit(ex.args[0])

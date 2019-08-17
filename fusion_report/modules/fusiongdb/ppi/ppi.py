@@ -1,3 +1,4 @@
+"""Protein-Protein interaction module"""
 from typing import Any, Dict, List
 
 from fusion_report.data.fusiongdb import FusionGDB
@@ -5,8 +6,11 @@ from fusion_report.modules.base_module import BaseModule
 
 
 class CustomModule(BaseModule):
+    """Protein-Protein interaction section in fusion page."""
 
     def get_data(self) -> List[Any]:
+        """Gathers necessary data."""
+
         return FusionGDB(self.params['db_path']).select(
             '''
             SELECT DISTINCT h_gene, h_gene_interactions, t_gene, t_gene_interactions
@@ -16,14 +20,12 @@ class CustomModule(BaseModule):
         )
 
     def build_graph(self):
-        """
-            Helper function that generates Network map of Protein-Protein Interactions
-            using Cytoscape.js. Additional module
-            https://github.com/cytoscape/cytoscape.js-cose-bilkent
+        """Helper function that generates Network map of Protein-Protein Interactions using
+        Cytoscape.js. Additional module https://github.com/cytoscape/cytoscape.js-cose-bilkent.
 
-            Returns:
-                list: Object structure which is defined by the Cytoscape library
-            """
+        Returns:
+            List structure which is defined by the Cytoscape library
+        """
         data = self.get_data()
         if not data:
             return []
@@ -90,6 +92,8 @@ class CustomModule(BaseModule):
         return graph_data
 
     def load(self) -> Dict[str, Any]:
+        """Return module variables."""
+
         return {
             'data': self.build_graph(),
             'menu': ['Chimeric Protein-Protein interactions']

@@ -1,7 +1,9 @@
+"""FusionCatcher module"""
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
 
 class Fusioncatcher(AbstractFusionTool):
+    """FusionCatcher tool parser."""
 
     def parse(self, line, delimiter='\t'):
         col = line.strip().split(delimiter)

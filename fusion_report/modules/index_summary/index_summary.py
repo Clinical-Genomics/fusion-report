@@ -9,7 +9,7 @@ class CustomModule(BaseModule):
         """Returns list of number of known  and unknown fusions.
 
         Returns:
-        list: List of known and unknown fusions found in local databases, i.e: ['known': 10, ...]
+            List of known and unknown fusions found in local databases, i.e: ['known': 10, ...]
         """
         all_fusions: int = len(self.manager.get_fusions())
         known_fusions: int = len(self.manager.get_known_fusions())
@@ -22,7 +22,7 @@ class CustomModule(BaseModule):
         """Returns tuple tool and sum of fusions found by the tool.
 
         Returns:
-            list: tool: #count, i.e: ['ericscript': 5, ...]
+            List of tool counts, i.e: ['ericscript': 5, ...]
         """
         running_tools = sorted(self.manager.get_running_tools())
         counts: Dict[str, int] = dict.fromkeys(running_tools, 0)
@@ -42,8 +42,7 @@ class CustomModule(BaseModule):
         """Returns distribution of tools that found fusions.
 
         Returns:
-            list: Distribution of detection per tool
-                  i.e: ['0 tools': 15, '1 tool': 10, '2 tools': 4, ...]
+            Distribution of detection per tool i.e: ['0 tools': 15, '1 tool': 10, '2 tools': 4, ...]
         """
         counts = [0] * (len(self.manager.get_running_tools()) + 1)
         for fusion in self.manager.get_fusions():
@@ -52,11 +51,12 @@ class CustomModule(BaseModule):
         return [[f"{index} tool/s", counts[index]] for index in range(len(counts))]
 
     def create_fusions_table(self) -> Dict[str, Any]:
-        """
-        Helper function that generates fusion table.
+        """Helper function that generates fusion table.
 
         Returns:
-            dict: fusions (dict) and tools (list)
+            Dictionary of:
+            rows: each row contains fusion information
+            tools: list of executed fusion detection tools
         """
         rows = []
         tools = self.manager.get_running_tools()
@@ -93,6 +93,8 @@ class CustomModule(BaseModule):
         }
 
     def load(self) -> Dict[str, Any]:
+        """Return module variables."""
+
         return {
             'tools': self.manager.get_running_tools(),
             'num_detected_fusions': len(self.manager.get_fusions()),

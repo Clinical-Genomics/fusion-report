@@ -1,3 +1,4 @@
+""" Application logger """
 import logging
 import sys
 from logging.handlers import TimedRotatingFileHandler
@@ -8,10 +9,14 @@ from fusion_report.common.singleton import Singleton
 
 
 class Logger(metaclass=Singleton):
+    """Wrapper around logging.
 
+    Attributes:
+        __logger: Logger instance
+    """
     __logger = None
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__logger = logging.getLogger('fusion-report')
 
         console_handler = logging.StreamHandler(sys.stdout)
@@ -30,5 +35,6 @@ class Logger(metaclass=Singleton):
         self.__logger.setLevel(logging.DEBUG)
         self.__logger.propagate = False
 
-    def get_logger(self):
+    def get_logger(self) -> logging.Logger:
+        """Returns logger instance"""
         return self.__logger

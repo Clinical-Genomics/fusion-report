@@ -1,6 +1,6 @@
-<section class="fusion" id="{{ get_id(modules.diseases.menu[0]) }}">
+<section class="fusion" id="{{ get_id(modules['fusiongdb.diseases'].menu[0]) }}">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
-        <h1 class="h3">{{ modules.diseases.menu[0]}}</h1>
+        <h1 class="h3">{{ modules['fusiongdb.diseases'].menu[0]}}</h1>
     </div>
     <p>
         Diseases associated with fusion partners (DisGeNet 4.0) with <code>P > 20.01</code>.
@@ -11,7 +11,7 @@
     <div id="related_diseases_table" class="bootstrap tabulator table-striped table-bordered"></div>
 </section>
 
-<input type="hidden" name="diseases" value='{{ modules.diseases.data | tojson | safe }}'>
+<input type="hidden" name="diseases" value='{{ modules["fusiongdb.diseases"].data | tojson | safe }}'>
 
 <script>
     let related_diseases_data = JSON.parse(document.getElementsByName("diseases")[0].getAttribute(

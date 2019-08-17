@@ -2,9 +2,9 @@
 {{ include_raw('assets/js/cytoscape-3.2.22.min.js') | safe }}
 {{ include_raw('assets/js/cytoscape-cose-bilkent-4.0.0.min.js') | safe }}
 
-<section class="fusion" id="{{ get_id(modules.ppi.menu[0]) }}">
+<section class="fusion" id="{{ get_id(modules['fusiongdb.ppi'].menu[0]) }}">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
-        <h1 class="h3">{{ modules.ppi.menu[0] }}</h1>
+        <h1 class="h3">{{ modules['fusiongdb.ppi'].menu[0] }}</h1>
         <div class="btn-group" role="group" aria-label="Basic example">
             <button class="btn btn-secondary"
                 onclick="exportCytoscapeChart('PNG', 'protein-protein-interactions')">Export PNG</button>
@@ -21,7 +21,7 @@
     </div>
 </section>
 
-<input type="hidden" name="ppi" value='{{ modules.ppi.data | tojson | safe }}'>
+<input type="hidden" name="ppi" value='{{ modules["fusiongdb.ppi"].data | tojson | safe }}'>
 
 <script>
     var ppiObject = undefined;

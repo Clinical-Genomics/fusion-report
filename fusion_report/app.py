@@ -1,10 +1,13 @@
+"""Main app module"""
 import csv
 import os
 import sys
-from time import sleep
+import time
+from argparse import Namespace
 from typing import Any, Dict, List
 
 import rapidjson
+from tqdm import tqdm
 
 from fusion_report.args_builder import ArgsBuilder
 from fusion_report.common.exceptions.app import AppException
@@ -18,37 +21,44 @@ from fusion_report.data.cosmic import CosmicDB
 from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.mitelman import MitelmanDB
 from fusion_report.download import Download
-from fusion_report.helpers import progress_bar
 
-__version__ = 1.2
+__version__ = 2.0
 
 
 class App:
+    """The class implements core methods.
 
-    def __init__(self):
-        self.log = Logger().get_logger()
+    Attributes:
+        __manager: Fusion manager
+        ___args: Parsed settings
+    """
+
+    def __init__(self) -> None:
         try:
-            cwd = os.path.dirname(os.path.abspath(__file__))
-            settings_config = os.path.join(cwd, 'settings.json')
-            self.settings = rapidjson.loads(open(settings_config, 'r').read())
-            self.settings['weight']: float = float(100 / len(self.settings['args']['run']['tools']))
-            self.settings['version']: float = __version__
-            self.manager = FusionManager(self.settings)
-            self.args = ArgsBuilder(self.settings)
+            self.__args = ArgsBuilder(__version__)
+            self.__manager = FusionManager(self.__args.get_supported_tools())
         except IOError as ex:
-            self.log.exception(ex.args[0])
-            sys.exit(ex.args[0])
+            raise AppException(ex)
+
+    def build_args(self):
+        """Builds command-line arguments."""
+        self.__args.build()
 
     def run(self):
-        params = self.args.parse()
+        """Parse parameters and execute commands.
+
+        Raises:
+            AppException
+        """
+        params = self.__args.parse()
         try:
             if params.command == 'run':
-                self.__preprocess(vars(params))
-                self.__generate_report(vars(params))
+                self.__preprocess(params)
+                self.__generate_report(params)
                 self.__export_results(params.output, params.export)
                 self.generate_multiqc(
-                    params.output, self.manager.get_fusions(),
-                    params.sample, len(self.manager.get_running_tools())
+                    params.output, self.__manager.get_fusions(),
+                    params.sample, len(self.__manager.get_running_tools())
                 )
                 self.__generate_fusion_list(params.output, params.tool_cutoff)
             elif params.command == 'download':
@@ -56,76 +66,87 @@ class App:
             else:
                 sys.exit(f'Command {params.command} not recognized!')
         except (AppException, DbException, DownloadException, IOError) as ex:
-            self.log.exception(ex)
-            sys.exit(ex.args[0])
+            raise AppException(ex)
 
-    def __preprocess(self, params) -> None:
-        self.__parse_fusion_outputs(params)
-        self.__enrich(params['db_path'])
-        self.__score(params)
+    def __preprocess(self, params: Namespace) -> None:
+        """Parse, enrich and score fusion."""
+        self.__parse_fusion_outputs(vars(params))
+        self.__enrich(params.db_path)
+        self.__score(vars(params))
 
-    def __generate_report(self, params) -> None:
-        report = Report(params['config'], params['output'])
-        fusions = self.manager.get_fusions()
-        progress_bar(0, len(fusions))
+    def __generate_report(self, params: Namespace) -> None:
+        """Generate fusion report with all pages."""
+        report = Report(params.config, params.output)
+        fusions = self.__manager.get_fusions()
 
         index_page = report.create_page(
-            'Summary', filename='index.html', page_variables={'sample': params['sample']}
+            'Summary', filename='index.html', page_variables={'sample': params.sample}
         )
         index_page.add_module(
-            'index_summary', self.manager, params={'tool_cutoff': params['tool_cutoff']}
+            'index_summary', self.__manager, params={'tool_cutoff': params.tool_cutoff}
         )
         report.render(index_page)
 
-        for i, fusion in enumerate(fusions):
-            fusion_page = report.create_page(
-                fusion.get_name(), page_variables={'sample': params['sample']}
-            )
-            fusion_page.add_module('fusion_summary', params={'fusion': fusion})
-            fusion_page.add_module(
-                'variations', params={'fusion': fusion.get_name(), 'db_path': params['db_path']}
-            )
-            fusion_page.add_module(
-                'transcripts', params={'fusion': fusion.get_name(), 'db_path': params['db_path']}
-            )
-            fusion_page.add_module(
-                'ppi', params={'fusion': fusion.get_name(), 'db_path': params['db_path']}
-            )
-            fusion_page.add_module(
-                'drugs', params={'fusion': fusion.get_name(), 'db_path': params['db_path']}
-            )
-            fusion_page.add_module(
-                'diseases', params={'fusion': fusion.get_name(), 'db_path': params['db_path']}
-            )
-            report.render(fusion_page)
+        with tqdm(total=len(fusions)) as pbar:
+            for i, fusion in enumerate(fusions):
+                fusion_page = report.create_page(
+                    fusion.get_name(), page_variables={'sample': params.sample}
+                )
+                fusion_page.add_module('fusion_summary', params={'fusion': fusion})
+                fusion_page.add_module(
+                    'fusiongdb.variations',
+                    params={'fusion': fusion.get_name(), 'db_path': params.db_path}
+                )
+                fusion_page.add_module(
+                    'fusiongdb.transcripts',
+                    params={'fusion': fusion.get_name(), 'db_path': params.db_path}
+                )
+                fusion_page.add_module(
+                    'fusiongdb.ppi',
+                    params={'fusion': fusion.get_name(), 'db_path': params.db_path}
+                )
+                fusion_page.add_module(
+                    'fusiongdb.drugs',
+                    params={'fusion': fusion.get_name(), 'db_path': params.db_path}
+                )
+                fusion_page.add_module(
+                    'fusiongdb.diseases',
+                    params={'fusion': fusion.get_name(), 'db_path': params.db_path}
+                )
+                report.render(fusion_page)
+                pbar.set_description(f'Processing {fusion.get_name()}')
+                time.sleep(0.1)
+                pbar.update(1)
 
-            # progress bar
-            sleep(0.1)
-            progress_bar(i, len(fusions))
-
-    def __parse_fusion_outputs(self, params: Dict[str, any]) -> None:
+    def __parse_fusion_outputs(self, params: Dict[str, Any]) -> None:
+        """Executes parsing for each provided fusion detection tool."""
         for param, value in params.items():
-            if param in self.manager.get_supported_tools() and value:
+            if param in self.__manager.get_supported_tools() and value:
                 # param: fusion tool
-                self.manager.parse(param, value)
+                # value: fusion tool output
+                self.__manager.parse(param, value)
 
-    def __enrich(self, path) -> None:
+    def __enrich(self, path: str) -> None:
+        """Enrich fusion with all relevant information from local databases."""
         local_fusions: Dict[str, List[str]] = {
             FusionGDB(path).get_name(): FusionGDB(path).get_all_fusions(),
             MitelmanDB(path).get_name(): MitelmanDB(path).get_all_fusions(),
             CosmicDB(path).get_name(): CosmicDB(path).get_all_fusions()
         }
-        for fusion in self.manager.get_fusions():
+        for fusion in self.__manager.get_fusions():
             for db_name, db_list in local_fusions.items():
                 if fusion.get_name() in db_list:
                     fusion.add_db(db_name)
 
     def __export_results(self, path: str, extension: str) -> None:
+        """Export results.
+        Currently supporting file types: JSON and CSV
+        """
         results = []
         dest = f"{os.path.join(path, 'fusions')}.{extension}"
         if extension == 'json':
             with open(dest, 'w', encoding='utf-8') as output:
-                for fusion in self.manager.get_fusions():
+                for fusion in self.__manager.get_fusions():
                     results.append(fusion.json_serialize())
                 output.write(rapidjson.dumps(results))
         elif extension == 'csv':
@@ -135,16 +156,16 @@ class App:
                 )
                 # header
                 row = ['Fusion', 'Databases', 'Score', 'Explained score']
-                row.extend([x for x in sorted(self.manager.get_running_tools())])
+                row.extend([x for x in sorted(self.__manager.get_running_tools())])
                 csv_writer.writerow(row)
-                for fusion in self.manager.get_fusions():
+                for fusion in self.__manager.get_fusions():
                     row = [
                         fusion.get_name(),
                         ','.join(fusion.get_databases()),
                         fusion.get_score(),
                         fusion.get_score_explained(),
                     ]
-                    for tool in sorted(self.manager.get_running_tools()):
+                    for tool in sorted(self.__manager.get_running_tools()):
                         if tool not in fusion.get_tools().keys():
                             row.append('')
                         else:
@@ -159,24 +180,20 @@ class App:
         """
         Helper function that generates file containing list of found fusions and filtered list of
         fusions. One of these files ise used by FusionInspector to visualize the fusions.
-        Input for FusionInspector expects list of fusions in format `geneA--geneB\\n`.
+        Input for FusionInspector expects list of fusions in format `geneA--geneB\n`.
 
-        Args:
-            path (str)
-            cutoff (int): cutoff for filtering purpose
         Returns:
-            Generates:
-                - fusions_list.tsv
-                - fusions_list_filtered.tsv
+            - fusions_list.tsv
+            - fusions_list_filtered.tsv
         """
         # unfiltered list
         with open(os.path.join(path, 'fusion_list.tsv'), 'w', encoding='utf-8') as output:
-            for fusion in self.manager.get_fusions():
+            for fusion in self.__manager.get_fusions():
                 output.write(f'{fusion.get_name()}\n')
 
         # filtered list
         with open(os.path.join(path, 'fusion_list_filtered.tsv'), 'w', encoding='utf-8') as output:
-            for fusion in self.manager.get_fusions():
+            for fusion in self.__manager.get_fusions():
                 if len(fusion.get_tools()) >= cutoff:
                     output.write(f'{fusion.get_name()}\n')
 
@@ -184,13 +201,9 @@ class App:
         """Custom scoring function for individual fusion.
         More information about the scoring function can be found in the documentation
         at https://github.com/matq007/fusion-report/docs/scoring-fusion
-        Args:
-            params (ArgumentParser)
-        Returns:
-            float: Estimate score of how genuine is the fusion.
         """
 
-        for fusion in self.manager.get_fusions():
+        for fusion in self.__manager.get_fusions():
 
             # tool estimation
             tool_score = 0.0
@@ -215,17 +228,7 @@ class App:
     @staticmethod
     def generate_multiqc(path: str, fusions: List[Fusion],
                          sample_name: str, running_tools_count: int) -> None:
-        """
-        Helper function that generates fusion table.
-        Args:
-            path (str)
-            fusions (List[Fusion])
-            sample_name (str): name of the sample
-            running_tools_count (int): number of running tools
-
-        Returns:
-            Generates `fusion_genes_mqc.json`
-        """
+        """Helper function that generates MultiQC Fusion section (`fusion_genes_mqc.json`)."""
 
         counts: Dict[str, int] = {'together': 0}
         for fusion in fusions:

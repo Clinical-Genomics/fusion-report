@@ -1,4 +1,8 @@
+"""Singleton"""
+
+
 class Singleton(type):
+    """Implementation of Singleton design pattern"""
     _instances = {}
 
     def __call__(cls, *args, **kwargs):

@@ -1,20 +1,23 @@
-"""Module for Page"""
+"""Page class"""
 from typing import Any, Dict
 
 from fusion_report.common.base_page import BasePage
 
 
 class Page(BasePage):
-    """This class is used to define a custom Page in a report, inherits some defaults from Master"""
-    def __init__(self, title: str, filename: str, view: str, page_variables: Dict[str, Any]):
-        super().__init__(title, filename, view)
-        self.__page_variables = page_variables
+    """Page implementation. The report is build from a list of pages.
 
-    def get_content(self):
-        """Helper method returning all variables. Used for Jinja templating."""
-        master_content = super().get_content()
-        page_content = {
-            'page_variables': self.__page_variables,
-            'sections': []
-        }
-        return {**master_content, **page_content}
+    Attributes:
+        __page_variables: extra variables to be displayed on the page
+    """
+    def __init__(self, title: str, view: str,
+                 filename: str = None, page_variables: Dict[str, Any] = None) -> None:
+        self.__page_variables = {} if not page_variables else page_variables
+        super().__init__(title, view, filename)
+
+    def get_content(self) -> Dict[str, Any]:
+        """Helper serialization method for templating engine."""
+        master_content: Dict[str, Any] = super().get_content()
+        page_variables = {**master_content, **self.__page_variables}
+
+        return page_variables

@@ -1,24 +1,46 @@
+"""Command-line argument wrapper"""
 import argparse
+import os
+from argparse import Namespace
 
+import rapidjson
 
 class ArgsBuilder:
+    """Command-line argument builder.
 
-    def __init__(self, settings):
-        self.parser = argparse.ArgumentParser(
+    Attributes:
+        __parser: ArgumentParser object
+        __command_parser: Command argument
+    """
+
+    def __init__(self, version: float):
+        cwd = os.path.dirname(os.path.abspath(__file__))
+        configuration = os.path.join(cwd, 'arguments.json')
+        self.__arguments = rapidjson.loads(open(configuration, 'r').read())
+        self.__arguments['weight']: float = float(100 / len(self.get_supported_tools()))
+        self.__parser = argparse.ArgumentParser(
             description='''Tool for generating friendly UI custom report.'''
         )
-        self.parser.add_argument(
+        self.__parser.add_argument(
             '--version', '-v',
             action='version',
-            version=f'fusion-report {settings["version"]}'
+            version=f'fusion-report {version}'
         )
-        command_parser = self.parser.add_subparsers(dest='command')
-        self.run_args(command_parser, settings['args']['run'], settings['weight'])
-        self.download_args(command_parser, settings['args']['download'])
+        self.__command_parser = None
 
-    @staticmethod
-    def run_args(command_parser, args, weight) -> None:
-        run_parser = command_parser.add_parser('run', help='Run application')
+    def get_supported_tools(self):
+        """Return all supported fusion detection tools."""
+        return [tool['key'].replace('--', '') for tool in self.__arguments['args']['run']['tools']]
+
+    def build(self) -> None:
+        """Build command-line arguments."""
+        self.__command_parser = self.__parser.add_subparsers(dest='command')
+        self.run_args(self.__arguments['args']['run'], self.__arguments['weight'])
+        self.download_args(self.__arguments['args']['download'])
+
+    def run_args(self, args, weight) -> None:
+        """Build run command-line arguments."""
+        run_parser = self.__command_parser.add_parser('run', help='Run application')
         # mandatory
         run_mandatory = run_parser.add_argument_group(
             'Mandatory arguments', 'Required arguments to run app.'
@@ -50,9 +72,10 @@ class ArgsBuilder:
                     optional['key'][0], default=optional['default'], help=optional['help']
                 )
 
-    @staticmethod
-    def download_args(command_parser, args) -> None:
-        download_parser = command_parser.add_parser('download', help='Download required databases')
+    def download_args(self, args) -> None:
+        """Build download command-line arguments."""
+        download_parser = self.__command_parser.add_parser('download',
+                                                         help='Download required databases')
         for mandatory in args['mandatory']:
             download_parser.add_argument(mandatory['key'], help=mandatory['help'], type=str)
         # COSMIC
@@ -63,5 +86,6 @@ class ArgsBuilder:
         for cosmic in args['cosmic']:
             download_cosmic.add_argument(cosmic['key'], help=cosmic['help'], type=str)
 
-    def parse(self):
-        return self.parser.parse_args()
+    def parse(self) -> Namespace:
+        """Parse arguments."""
+        return self.__parser.parse_args()

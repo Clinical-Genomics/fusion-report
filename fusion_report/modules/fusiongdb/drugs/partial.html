@@ -1,6 +1,6 @@
-<section class="fusion" id="{{ get_id(modules.drugs.menu[0]) }}">
+<section class="fusion" id="{{ get_id(modules['fusiongdb.drugs'].menu[0]) }}">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
-        <h1 class="h3">{{ modules.drugs.menu[0] }}</h1>
+        <h1 class="h3">{{ modules['fusiongdb.drugs'].menu[0] }}</h1>
     </div>
     <p>
         Drugs targeting genes involved in this fusion gene (DrugBank Version 5.1.0 2018-04-02).
@@ -11,7 +11,7 @@
     <div id="targeting_drugs_table" class="bootstrap tabulator table-striped table-bordered"></div>
 </section>
 
-<input type="hidden" name="drugs" value='{{ modules.drugs.data | tojson | safe }}'>
+<input type="hidden" name="drugs" value='{{ modules["fusiongdb.drugs"].data | tojson | safe }}'>
 
 <script>
     let targeting_drugs_data = JSON.parse(document.getElementsByName("drugs")[0].getAttribute("value"));
