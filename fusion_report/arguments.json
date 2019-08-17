@@ -35,6 +35,10 @@
                 {
                     "key": "--squid",
                     "help": "Squid output file"
+                },
+                {
+                    "key": "--dragen",
+                    "help": "Illumina Dragen Bio-IT Platform"
                 }
             ],
             "optionals": [

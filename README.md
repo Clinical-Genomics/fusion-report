@@ -17,6 +17,7 @@ This python script generates an interactive summary report from fusion detection
 * [Pizzly](https://github.com/pmelsted/pizzly)
 * [Squid](https://github.com/Kingsford-Group/squid)
 * [Arriba](https://github.com/suhrig/arriba) (coming soon)
+* [Illumina Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
 
 ## Installation
 
@@ -48,6 +49,7 @@ fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/
   --fusioncatcher tests/test_data/fusioncatcher.txt
   --squid tests/test_data/squid.txt 
   --pizzly tests/test_data/pizzly.tsv
+  --dragen tests/test_data/dragen.tsv
 ```
 
 Or get help and list all possible parameters.
