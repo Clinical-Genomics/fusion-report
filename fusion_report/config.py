@@ -72,7 +72,7 @@ class Config:
     def __set_title(self, config: Dict[str, Any]) -> None:
         """Helper function for setting a custom title."""
         if config['report_title'] is not None:
-            self.report_title = config['report_title'].strip()
+            self.__report_title = config['report_title'].strip()
 
     def __set_institution(self, config: Dict[str, Any]) -> None:
         """Helper function for adding an institution."""
@@ -81,8 +81,9 @@ class Config:
                 self.__institution['name'] = config['institution']['name']
 
             if 'img' in config['institution'] and os.path.exists(config['institution']['img']):
+                image = os.path.join(self.__current_path, config['institution']['img'])
                 self.__institution['img'] = base64.b64encode(
-                    open(os.path.join(self.__current_path, config['institution']['img']), 'rb').read()
+                    open(image, 'rb').read()
                 ).decode('utf-8')
 
             if 'url' in config['institution']:
@@ -91,8 +92,7 @@ class Config:
     def __set_date_format(self, config) -> None:
         """Helper function for setting a custom date format."""
         if config['date_format'] is not None:
-            self.date_format = config['date_format']
-            self.date = datetime.now().strftime(self.date_format)
+            self.__date = datetime.now().strftime(config['date_format'])
 
     def __set_assets(self, config) -> None:
         """Helper function for adding custom CSS or Javascript."""

@@ -1,5 +1,4 @@
 """ Download module """
-from argparse import Namespace
 import base64
 import glob
 import gzip
@@ -8,6 +7,7 @@ import shutil
 import ssl
 import tarfile
 import urllib.request
+from argparse import Namespace
 from multiprocessing import Pool, Process
 from typing import List
 

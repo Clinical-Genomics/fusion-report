@@ -14,7 +14,7 @@ class CosmicDB(Db, metaclass=Singleton):
 
     def get_all_fusions(self) -> List[str]:
         """Returns all fusions from database."""
-        query: str = '''SELECT DISTINCT translocation_name 
+        query: str = '''SELECT DISTINCT translocation_name
                         FROM cosmicfusionexport
                         WHERE translocation_name != ""'''
         res = self.select(query)

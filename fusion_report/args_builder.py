@@ -1,9 +1,9 @@
 """Command-line argument wrapper"""
-import argparse
 import os
-from argparse import Namespace
+from argparse import ArgumentParser, Namespace
 
 import rapidjson
+
 
 class ArgsBuilder:
     """Command-line argument builder.
@@ -18,7 +18,7 @@ class ArgsBuilder:
         configuration = os.path.join(cwd, 'arguments.json')
         self.__arguments = rapidjson.loads(open(configuration, 'r').read())
         self.__arguments['weight']: float = float(100 / len(self.get_supported_tools()))
-        self.__parser = argparse.ArgumentParser(
+        self.__parser = ArgumentParser(
             description='''Tool for generating friendly UI custom report.'''
         )
         self.__parser.add_argument(
@@ -75,7 +75,7 @@ class ArgsBuilder:
     def download_args(self, args) -> None:
         """Build download command-line arguments."""
         download_parser = self.__command_parser.add_parser('download',
-                                                         help='Download required databases')
+                                                           help='Download required databases')
         for mandatory in args['mandatory']:
             download_parser.add_argument(mandatory['key'], help=mandatory['help'], type=str)
         # COSMIC

@@ -88,7 +88,7 @@ class App:
         report.render(index_page)
 
         with tqdm(total=len(fusions)) as pbar:
-            for i, fusion in enumerate(fusions):
+            for fusion in fusions:
                 fusion_page = report.create_page(
                     fusion.get_name(), page_variables={'sample': params.sample}
                 )
