@@ -4,7 +4,8 @@
 [![Build Status](https://travis-ci.org/matq007/fusion-report.svg?branch=master)](https://travis-ci.org/matq007/fusion-report)
 [![DOI](https://zenodo.org/badge/173453958.svg)](https://zenodo.org/badge/latestdoi/173453958)
 [![MIT License](https://img.shields.io/github/license/matq007/fusion-report.svg)](https://github.com/matq007/fusion-report/blob/master/LICENSE)
-[![Slack Status](https://img.shields.io/badge/slack-Join%20%20slack%20channel-brightgreen)](https://nf-co.re/join/slack)
+[![Slack Status](https://img.shields.io/badge/slack-join-brightgreen)](https://nf-co.re/join/slack)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/932dff8661394cc28448af7b22748bb5)](https://app.codacy.com/app/mproksik/fusion-report?utm_source=github.com&utm_medium=referral&utm_content=matq007/fusion-report&utm_campaign=Badge_Grade_Dashboard)
 
 This python script generates an interactive summary report from fusion detection tools. Fusion-report is part of a bigger project [nf-core/rnafusion](https://github.com/nf-core/rnafusion) which is designed to detect and report fusion genes from RNA-seq data.
 
@@ -17,7 +18,7 @@ This python script generates an interactive summary report from fusion detection
 * [Pizzly](https://github.com/pmelsted/pizzly)
 * [Squid](https://github.com/Kingsford-Group/squid)
 * [Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
-* [Arriba](https://github.com/suhrig/arriba) (coming soon)
+* [Arriba](https://github.com/suhrig/arriba)
 * [Illumina Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
 
 ## Installation
@@ -45,6 +46,7 @@ fusion_report download --cosmic_usr '<username>' --cosmic_passwd '<password>' /p
 
 # Run the fusion-report
 fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/
+  --arriba tests/test_data/arriba.tsv
   --ericscript tests/test_data/ericscript.tsv
   --starfusion tests/test_data/starfusion.tsv
   --fusioncatcher tests/test_data/fusioncatcher.txt
