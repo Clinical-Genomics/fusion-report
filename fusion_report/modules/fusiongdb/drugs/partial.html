@@ -1,0 +1,57 @@
+<section class="fusion" id="{{ get_id(modules['fusiongdb.drugs'].menu[0]) }}">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 fusion-heading">
+        <h1 class="h3">{{ modules['fusiongdb.drugs'].menu[0] }}</h1>
+    </div>
+    <p>
+        Drugs targeting genes involved in this fusion gene (DrugBank Version 5.1.0 2018-04-02).
+    </p>
+    {% with table_name='targeting_drugs_table' %}
+    {% include "partials/table-buttons.html" %}
+    {% endwith %}
+    <div id="targeting_drugs_table" class="bootstrap tabulator table-striped table-bordered"></div>
+</section>
+
+<input type="hidden" name="drugs" value='{{ modules["fusiongdb.drugs"].data | tojson | safe }}'>
+
+<script>
+    let targeting_drugs_data = JSON.parse(document.getElementsByName("drugs")[0].getAttribute("value"));
+    registerTable(new Tabulator("#targeting_drugs_table", {
+        data: targeting_drugs_data,
+        responsiveLayout: true,
+        layout: "fitColumns",
+        pagination: "local",
+        clipboard: true,
+        paginationSize: 10,
+        columns: [{
+                title: "Gene",
+                field: "gene_symbol",
+                formatter: function (cell) {
+                    return `${cell.getValue()} (${cell.getData()['uniprot_acc']})`;
+                }
+            },
+            {
+                title: "Drug Bank ID",
+                field: "drug_name",
+                formatter: function (cell) {
+                    let drug_bank_id = cell.getData()['drug_bank_id'];
+                    return `${cell.getValue()} (<a href="https://www.drugbank.ca/drugs/${drug_bank_id}" target="_blank"  data-toggle="tooltip" data-placement="top" title="View info in DrugBank">${drug_bank_id}</a>)`;
+                }
+            },
+            {
+                title: "Drug status",
+                field: "drug_status",
+                formatter: function (cell) {
+                    return cell.getValue().replace("|", ",");
+                }
+            },
+            {
+                title: "Drug name",
+                field: "drug_name"
+            },
+            {
+                title: "Drug function",
+                field: "drug_action"
+            }
+        ]
+    }));
+</script>

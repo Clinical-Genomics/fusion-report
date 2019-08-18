@@ -1,7 +1,12 @@
 .vscode
-db/*.db
+db/**/*.db
 build/
 dist/
 *.egg-info
 *__pycache__*
 tests/test_data_real
+.mypy_cache/*
+NOTES.md
+.idea
+tests/sss
+*.log
