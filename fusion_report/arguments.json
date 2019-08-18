@@ -38,7 +38,11 @@
                 },
                 {
                     "key": "--dragen",
-                    "help": "Illumina Dragen Bio-IT Platform"
+                    "help": "Illumina Dragen Bio-IT Platform output file"
+                },
+                {
+                    "key": "--arriba",
+                    "help": "Arriba output file"
                 }
             ],
             "optionals": [
