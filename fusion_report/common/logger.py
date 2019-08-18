@@ -42,10 +42,10 @@ class Logger(metaclass=Singleton):
         self.__logger.addHandler(self.get_critical_handler(self.__filename))
         self.__logger.error(msg, *args)
 
-    def exception(self, msg, *args, exc_info=True, **kwargs) -> None:
-        """Exception logger."""
+    def fatal(self, msg, *args, **kwargs):
+        """Fatal logger."""
         self.__logger.addHandler(self.get_critical_handler(self.__filename))
-        self.__logger.exception(msg, *args, exc_info, **kwargs)
+        self.__logger.fatal(msg, *args, **kwargs)
 
     def info(self, msg: str, *args) -> None:
         """Info logger."""

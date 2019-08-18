@@ -10,5 +10,5 @@ if __name__ == "__main__":
         app.build_args()
         app.run()
     except AppException as ex:
-        Logger(__name__).exception(ex)
+        Logger(__name__).fatal(ex, exc_info=True)
         sys.exit(ex.args[0])
