@@ -56,14 +56,14 @@ class Fusion:
         if tool and tool not in self.__tools.keys():
             self.__tools[tool] = details
         else:
-            Logger().get_logger().warning('Tool %s already in list or empty', tool)
+            Logger(__name__).debug('Tool %s already in list or empty', tool)
 
     def add_db(self, database: str) -> None:
         """Add new database to the list."""
         if database and database not in self.__dbs:
             self.__dbs.append(database)
         else:
-            Logger().get_logger().warning('Database %s already in list or empty', database)
+            Logger(__name__).debug('Database %s already in list or empty', database)
 
     def json_serialize(self) -> Dict[str, Any]:
         """Helper serialization method for templating engine."""

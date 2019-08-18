@@ -89,7 +89,7 @@ class Download:
                     with open(file, 'wb') as out_file:
                         shutil.copyfileobj(response, out_file)
         else:
-            Logger().get_logger().error('Downloading resources supports only HTTPS or FTP')
+            Logger(__name__).error('Downloading resources supports only HTTPS or FTP')
 
     def __get_fusiongdb(self) -> None:
         """Method for download FusionGDB database."""

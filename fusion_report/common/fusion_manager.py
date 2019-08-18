@@ -38,7 +38,7 @@ class FusionManager:
             except IOError as ex:
                 raise AppException(ex)
         else:
-            Logger().get_logger().warning(
+            Logger(__name__).error(
                 'Tool %s is not supported. To integrate the tool please create an issue', tool
             )
 

@@ -53,6 +53,7 @@ class App:
         params = self.__args.parse()
         try:
             if params.command == 'run':
+                Logger(__name__).info('Running application...')
                 self.__preprocess(params)
                 self.__generate_report(params)
                 self.__export_results(params.output, params.export)
@@ -62,6 +63,7 @@ class App:
                 )
                 self.__generate_fusion_list(params.output, params.tool_cutoff)
             elif params.command == 'download':
+                Logger(__name__).info('Downloading resources...')
                 Download(params)
             else:
                 sys.exit(f'Command {params.command} not recognized!')
@@ -174,7 +176,7 @@ class App:
                             ])
                     csv_writer.writerow(row)
         else:
-            Logger().get_logger().error('Export output %s not supported', extension)
+            Logger(__name__).error('Export output %s not supported', extension)
 
     def __generate_fusion_list(self, path: str, cutoff: int):
         """

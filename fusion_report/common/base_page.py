@@ -29,7 +29,7 @@ class BasePage:
         if name not in self.__modules:
             self.__modules[name] = ModuleLoader(manager, params).exec(name)
         else:
-            Logger().get_logger().warning('Module %s already loaded', name)
+            Logger(__name__).warning('Module %s already loaded', name)
 
     def get_modules(self) -> Dict[str, Any]:
         """Return modules and their properties."""

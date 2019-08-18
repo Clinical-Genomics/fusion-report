@@ -1,5 +1,4 @@
 """Database wrapper"""
-
 import os
 import sqlite3
 from typing import List
@@ -11,7 +10,6 @@ class Db:
     """The class implements core methods.
 
     Attributes:
-        __path: Path to databases
         __name: Database name
         __schema: Schema defining database structure (sql file)
         __database: Database file *.db
