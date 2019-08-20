@@ -1,13 +1,12 @@
-import os
-import sys
 from setuptools import find_packages, setup
-from fusion_report.utils import __version__
+
+from fusion_report.app import __version__
 
 PACKAGE_DATA = {
     'fusion_report': [
-        'db/*.sql'
+        'db/schema/*.sql'
         'templates/*/*',
-        '../docs/_src/_static/*',
+        '../docs/img/_static/*',
         '../LICENSE',
         '../README.md',
         '../requirements.txt'
