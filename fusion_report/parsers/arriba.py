@@ -1,14 +1,15 @@
 """Arriba module"""
+from typing import Any, Dict, List, Tuple
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
 
 class Arriba(AbstractFusionTool):
     """Arriba tool parser."""
 
-    def parse(self, line, delimiter='\t'):
-        col = line.strip().split(delimiter)
-        fusion = f"{col[0]}--{col[1]}"
-        details = {
+    def parse(self, line, delimiter='\t') -> Tuple[str, Dict[str, Any]]:
+        col: List[str] = line.strip().split(delimiter)
+        fusion: str = f"{col[0]}--{col[1]}"
+        details: Dict[str, Any] = {
             'position': f"{col[4]}#{col[5]}",
             'reading-frame': f'{col[21]}',
             'type': f'{col[8]}',
