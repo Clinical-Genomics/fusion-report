@@ -40,7 +40,7 @@ class Download:
                 self.__cosmic_token is None
                 and (params.cosmic_usr is not None or params.cosmic_passwd is not None)
         ):
-            self.__cosmic_token: str = base64.b64encode(
+            self.__cosmic_token = base64.b64encode(
                 f'{params.cosmic_usr}:{params.cosmic_passwd}'.encode()
             ).decode('utf-8')
         else:

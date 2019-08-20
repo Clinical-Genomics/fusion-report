@@ -10,6 +10,7 @@ install:
 script:
   - flake8 fusion_report/
   - mypy fusion_report/
+  - fusion_report --help
 
 deploy:
   - provider: pages
