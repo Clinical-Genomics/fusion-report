@@ -1,6 +1,7 @@
 """Command-line argument wrapper"""
 import os
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentParser, Namespace, _SubParsersAction
+from typing import Any, Dict
 
 import rapidjson
 
@@ -16,8 +17,8 @@ class ArgsBuilder:
     def __init__(self, version: float):
         cwd = os.path.dirname(os.path.abspath(__file__))
         configuration = os.path.join(cwd, 'arguments.json')
-        self.__arguments = rapidjson.loads(open(configuration, 'r').read())
-        self.__arguments['weight']: float = float(100 / len(self.get_supported_tools()))
+        self.__arguments: Dict[str, Any] = rapidjson.loads(open(configuration, 'r').read())
+        self.__arguments['weight'] = float(100 / len(self.get_supported_tools()))
         self.__parser = ArgumentParser(
             description='''Tool for generating friendly UI custom report.'''
         )
@@ -26,7 +27,7 @@ class ArgsBuilder:
             action='version',
             version=f'fusion-report {version}'
         )
-        self.__command_parser = None
+        self.__command_parser: _SubParsersAction = self.__parser.add_subparsers(dest='command')
 
     def get_supported_tools(self):
         """Return all supported fusion detection tools."""
@@ -34,7 +35,6 @@ class ArgsBuilder:
 
     def build(self) -> None:
         """Build command-line arguments."""
-        self.__command_parser = self.__parser.add_subparsers(dest='command')
         self.run_args(self.__arguments['args']['run'], self.__arguments['weight'])
         self.download_args(self.__arguments['args']['download'])
 

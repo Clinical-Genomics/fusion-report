@@ -85,7 +85,7 @@ class Download:
                 print(f'Downloading {file}')
                 # only download if file size doesn't match
                 if not os.path.exists(file) or \
-                   int(response.getheader('Content-Length')) != os.stat(file).st_size:
+                   (response.info()['Content-Length'] or 0) != os.stat(file).st_size:
                     with open(file, 'wb') as out_file:
                         shutil.copyfileobj(response, out_file)
         else:

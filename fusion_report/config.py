@@ -26,10 +26,10 @@ class Config:
         self.__report_title: str = 'nfcore/rnafusion summary report'
         self.__logos: Dict[str, str] = {
             'main': base64.b64encode(open(
-                os.path.join(self.__current_path, '../docs/_src/_static/fusion-report.png'), 'rb'
+                os.path.join(self.__current_path, '../docs/img/fusion-report.png'), 'rb'
             ).read()).decode('utf-8'),
             'rnafusion': base64.b64encode(open(
-                os.path.join(self.__current_path, '../docs/_src/_static/rnafusion_logo.png'), 'rb'
+                os.path.join(self.__current_path, '../docs/img/rnafusion_logo.png'), 'rb'
             ).read()).decode('utf-8')
         }
         self.__institution: Dict[str, Any] = {}
