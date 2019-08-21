@@ -12,15 +12,15 @@ class Logger(metaclass=Singleton):
     """Wrapper around logging.
 
     Attributes:
-        __logger: Logger instance
-        __filename: Logger file name
+        logger: Logger instance
+        filename: Logger file name
     """
-    __logger = None
+    logger = None
 
     def __init__(self, name: str) -> None:
-        self.__logger = logging.getLogger(name)
-        self.__filename = 'fusion_report.log'
-        self.__logger.setLevel(logging.INFO)
+        self.logger = logging.getLogger(name)
+        self.filename = 'fusion_report.log'
+        self.logger.setLevel(logging.INFO)
 
     @staticmethod
     def get_logger() -> logging:
@@ -29,33 +29,33 @@ class Logger(metaclass=Singleton):
 
     def critical(self, msg: str, *args) -> None:
         """Critical logger."""
-        self.__logger.addHandler(self.get_critical_handler(self.__filename))
-        self.__logger.critical(msg, *args)
+        self.logger.addHandler(self.get_critical_handler(self.filename))
+        self.logger.critical(msg, *args)
 
     def debug(self, msg: str, *args) -> None:
         """Debug logger."""
-        self.__logger.addHandler(self.get_debug_handler())
-        self.__logger.debug(msg, *args)
+        self.logger.addHandler(self.get_debug_handler())
+        self.logger.debug(msg, *args)
 
     def error(self, msg: str, *args) -> None:
         """Error logger."""
-        self.__logger.addHandler(self.get_critical_handler(self.__filename))
-        self.__logger.error(msg, *args)
+        self.logger.addHandler(self.get_critical_handler(self.filename))
+        self.logger.error(msg, *args)
 
     def fatal(self, msg, *args, **kwargs):
         """Fatal logger."""
-        self.__logger.addHandler(self.get_critical_handler(self.__filename))
-        self.__logger.fatal(msg, *args, **kwargs)
+        self.logger.addHandler(self.get_critical_handler(self.filename))
+        self.logger.fatal(msg, *args, **kwargs)
 
     def info(self, msg: str, *args) -> None:
         """Info logger."""
-        self.__logger.addHandler(self.get_info_handler())
-        self.__logger.info(msg, *args)
+        self.logger.addHandler(self.get_info_handler())
+        self.logger.info(msg, *args)
 
     def warning(self, msg: str, *args) -> None:
         """Warning logger."""
-        self.__logger.addHandler(self.get_critical_handler(self.__filename))
-        self.__logger.warning(msg, *args)
+        self.logger.addHandler(self.get_critical_handler(self.filename))
+        self.logger.warning(msg, *args)
 
     @staticmethod
     def get_critical_handler(filename: str) -> TimedRotatingFileHandler:

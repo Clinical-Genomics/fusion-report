@@ -10,16 +10,16 @@ class Db:
     """The class implements core methods.
 
     Attributes:
-        __name: Database name
-        __schema: Schema defining database structure (sql file)
-        __database: Database file *.db
-        __connection: Established connection to the database
+        name: Database name
+        schema: Schema defining database structure (sql file)
+        database: Database file *.db
+        connection: Established connection to the database
     """
     def __init__(self, path: str, name: str, schema: str) -> None:
-        self.__name: str = name
-        self.__schema: str = schema
-        self.__database: str = f'{name.lower()}.db'
-        self.__connection = self.connect(path, self.__database)
+        self.name: str = name
+        self._schema: str = schema
+        self.database: str = f'{name.lower()}.db'
+        self.connection = self.connect(path, self.database)
 
     def connect(self, path: str, database: str):
         """Method for establishing connection to the database.
@@ -54,8 +54,8 @@ class Db:
         """
         try:
             # build database schema
-            with open(self.get_schema(), 'r', encoding='utf-8') as schema:
-                self.__connection.executescript(schema.read().lower())
+            with open(self.schema, 'r', encoding='utf-8') as schema:
+                self.connection.executescript(schema.read().lower())
 
             # import all data files
             for file in files:
@@ -66,12 +66,12 @@ class Db:
                         rows: List[List[str]] = []
                         for line in resource:
                             rows.append(line.split(delimiter))
-                        self.__connection.executemany(
+                        self.connection.executemany(
                             f'''INSERT INTO {file.split('.')[0].lower()}
                                 VALUES ({','.join(['?' for _ in range(0, len(max(rows)))])})''',
                             rows
                         )
-                        self.__connection.commit()
+                        self.connection.commit()
         except (IOError, sqlite3.Error) as ex:
             raise DbException(ex)
 
@@ -82,7 +82,7 @@ class Db:
             DbException
         """
         try:
-            with self.__connection as conn:
+            with self.connection as conn:
                 cur = conn.cursor()
                 if not params:
                     cur.execute(query)
@@ -101,27 +101,20 @@ class Db:
             DbException
         """
         try:
-            with self.__connection as conn:
+            with self.connection as conn:
                 cur = conn.cursor()
                 if not params:
                     cur.execute(query)
                 else:
                     cur.execute(query, params)
-                self.__connection.commit()
+                self.connection.commit()
         except sqlite3.Error as ex:
             raise DbException(ex)
 
-    def get_name(self):
-        """Returns database name."""
-        return self.__name
-
-    def get_schema(self):
+    @property
+    def schema(self):
         """Returns database schema."""
-        return f'{os.path.join(os.path.dirname(__file__))}/../data/schema/{self.__schema}'
-
-    def get_database(self):
-        """Returns database file."""
-        return self.__database
+        return f'{os.path.join(os.path.dirname(__file__))}/../data/schema/{self._schema}'
 
     @classmethod
     def __dict_factory(cls, cursor, row):

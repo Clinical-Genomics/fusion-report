@@ -13,12 +13,12 @@ class Template:
     """The class implements core methods.
 
     Attributes:
-        __j2_env: Jinja2 Environment
-        __j2_variables: Extra variables from configuration
-        __output_dir: Output directory where the files will be generated
+        j2_env: Jinja2 Environment
+        j2_variables: Extra variables from configuration
+        output_dir: Output directory where the files will be generated
     """
     def __init__(self, config_path: str, output_dir: str) -> None:
-        self.__j2_env = Environment(
+        self.j2_env = Environment(
             loader=FileSystemLoader([
                 os.path.join(os.path.dirname(__file__), '../templates/'),
                 os.path.join(os.path.dirname(__file__), '../modules/')
@@ -26,12 +26,12 @@ class Template:
             trim_blocks=True,
             autoescape=True
         )
-        self.__j2_variables: Dict[str, Any] = Config().parse(config_path)
-        self.__output_dir: str = output_dir
+        self.j2_variables: Config = Config().parse(config_path)
+        self.output_dir: str = output_dir
 
         # helper functions which can be used inside partial templates
-        self.__j2_env.globals['include_raw'] = self.__include_raw
-        self.__j2_env.globals['get_id'] = self.get_id
+        self.j2_env.globals['include_raw'] = self.include_raw
+        self.j2_env.globals['get_id'] = self.get_id
 
         # Making sure output directory exists
         if not os.path.exists(output_dir):
@@ -39,31 +39,31 @@ class Template:
 
     def render(self, page: Page, extra_variables: Dict[str, Any] = None) -> None:
         """Renders page"""
-        merged_variables = {**self.__j2_variables, **extra_variables}
-        view = self.__j2_env.get_template(page.get_view()).render(merged_variables)
+        merged_variables = {**self.j2_variables.json_serialize(), **extra_variables}
+        view = self.j2_env.get_template(page.view).render(merged_variables)
         with open(
-            os.path.join(self.__output_dir, page.get_filename()), 'w', encoding='utf-8'
+            os.path.join(self.output_dir, page.filename), 'w', encoding='utf-8'
         ) as file_out:
             file_out.write(view)
 
-    def __include_raw(self, filename: str) -> Markup:
+    def include_raw(self, filename: str) -> Markup:
         """Helper fusion for including raw content in Jinja2, mostly used to include custom
         or vendor javascript and custom css"""
         file_extension = Path(filename).suffix
         if file_extension == '.css':
             return Markup(
                 '<style type="text/css">{css}</style>'.format(
-                    css=self.__j2_env.loader.get_source(self.__j2_env, filename)[0]
+                    css=self.j2_env.loader.get_source(self.j2_env, filename)[0]
                 )
             )
         if file_extension == '.js':
             return Markup(
                 '<script>{js}</script>'.format(
-                    js=self.__j2_env.loader.get_source(self.__j2_env, filename)[0]
+                    js=self.j2_env.loader.get_source(self.j2_env, filename)[0]
                 )
             )
 
-        return Markup(self.__j2_env.loader.get_source(self.__j2_env, filename)[0])
+        return Markup(self.j2_env.loader.get_source(self.j2_env, filename)[0])
 
     @staticmethod
     def get_id(title: str) -> str:

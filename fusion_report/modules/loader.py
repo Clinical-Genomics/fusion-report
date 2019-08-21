@@ -27,8 +27,8 @@ class ModuleLoader:
         except AttributeError as ex:
             raise ModuleException(ex)
 
-    @classmethod
-    def __build_factory(cls, name: str, manager: FusionManager, params=None):
+    @staticmethod
+    def __build_factory(name: str, manager: FusionManager, params=None):
         """Helper factory builder. Loads the correct module.
 
         Returns:

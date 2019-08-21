@@ -26,21 +26,21 @@ class Download:
     credentials.
 
     Attributes:
-        __cosmic_token: Auth token for downloading COSMIC database
+        cosmic_token: Auth token for downloading COSMIC database
     """
 
     def __init__(self, params: Namespace):
-        self.__validate(params)
-        self.__download_all(params)
+        self.validate(params)
+        self.download_all(params)
 
-    def __validate(self, params: Namespace) -> None:
+    def validate(self, params: Namespace) -> None:
         """Method validating required input. In this case COSMIC credentials."""
-        self.__cosmic_token: str = params.cosmic_token
+        self.cosmic_token: str = params.cosmic_token
         if (
-                self.__cosmic_token is None
+                self.cosmic_token is None
                 and (params.cosmic_usr is not None or params.cosmic_passwd is not None)
         ):
-            self.__cosmic_token = base64.b64encode(
+            self.cosmic_token = base64.b64encode(
                 f'{params.cosmic_usr}:{params.cosmic_passwd}'.encode()
             ).decode('utf-8')
         else:
@@ -50,15 +50,15 @@ class Download:
         if not os.path.exists(params.output):
             os.makedirs(params.output, 0o755)
 
-    def __download_all(self, params: Namespace) -> None:
+    def download_all(self, params: Namespace) -> None:
         """Parallel downloading of all databases."""
         # change to update directory
         os.chdir(params.output)
 
         processes = [
-            Process(target=self.__get_fusiongdb),
-            Process(target=self.__get_mitelman),
-            Process(target=self.__get_cosmic)
+            Process(target=self.get_fusiongdb),
+            Process(target=self.get_mitelman),
+            Process(target=self.get_cosmic)
         ]
 
         for process in processes:
@@ -67,8 +67,8 @@ class Download:
         for process in processes:
             process.join()
 
-        print('Cleaning up the mess')
-        self.__clean()
+        Logger(__name__).info('Cleaning up the mess')
+        self.clean()
 
     @staticmethod
     def get_large_file(url: str, ignore_ssl: bool = False) -> None:
@@ -82,7 +82,7 @@ class Download:
         if url.startswith('https') or url.startswith('ftp'):
             with urllib.request.urlopen(url, context=ctx) as response:
                 file = url.split('/')[-1].split('?')[0]
-                print(f'Downloading {file}')
+                Logger(__name__).info('Downloading %s', file)
                 # only download if file size doesn't match
                 if not os.path.exists(file) or \
                    (response.info()['Content-Length'] or 0) != os.stat(file).st_size:
@@ -91,7 +91,7 @@ class Download:
         else:
             Logger(__name__).error('Downloading resources supports only HTTPS or FTP')
 
-    def __get_fusiongdb(self) -> None:
+    def get_fusiongdb(self) -> None:
         """Method for download FusionGDB database."""
 
         hostname: str = 'https://ccsm.uth.edu/FusionGDB/tables'
@@ -111,7 +111,7 @@ class Download:
         db = FusionGDB('.')
         db.setup(files, delimiter='\t', skip_header=True)
 
-    def __get_mitelman(self) -> None:
+    def get_mitelman(self) -> None:
         """Method for download Mitelman database."""
 
         file: str = 'mitelman.tar.gz'
@@ -125,7 +125,7 @@ class Download:
         db = MitelmanDB('.')
         db.setup(files, delimiter='\t', skip_header=True, encoding='ISO-8859-1')
 
-    def __get_cosmic(self) -> None:
+    def get_cosmic(self) -> None:
         """Method for download COSMIC database."""
 
         files = []
@@ -134,7 +134,7 @@ class Download:
 
         # get auth url to download file
         req = urllib.request.Request(f'{url}{file}')
-        req.add_header('Authorization', f'Basic {self.__cosmic_token}')
+        req.add_header('Authorization', f'Basic {self.cosmic_token}')
         req.add_header(
             'User-Agent',
             '''Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko)
@@ -152,7 +152,7 @@ class Download:
         db.setup(files, delimiter='\t', skip_header=True)
 
     @staticmethod
-    def __clean():
+    def clean():
         """Remove all files except *db."""
         for temp in glob.glob('*[!db]'):
             os.remove(temp)

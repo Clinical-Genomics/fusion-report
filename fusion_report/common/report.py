@@ -10,10 +10,10 @@ class Report(Template):
     """Report is the base container containing all types of pages.
 
     Attributes:
-        __pages: List of pages
+        pages: List of pages
     """
     def __init__(self, config_path: str, output_dir: str) -> None:
-        self.__pages: List[Page] = []
+        self.pages: List[Page] = []
         super().__init__(config_path, output_dir)
 
     def create_page(self, title: str, view: str = 'index',
@@ -30,10 +30,10 @@ class Report(Template):
             page_variables = {}
 
         page = Page(title, view, filename, page_variables)
-        if self.__index_off(filename) != -1:
-            raise ReportException(f'Page {page.get_filename()} already exists!')
+        if self.index_by(filename) != -1:
+            raise ReportException(f'Page {page.filename} already exists!')
 
-        self.__pages.append(page)
+        self.pages.append(page)
         return page
 
     def get_page(self, filename: str) -> Page:
@@ -45,18 +45,18 @@ class Report(Template):
         Raises:
             ReportException
         """
-        index = self.__index_off(filename)
+        index = self.index_by(filename)
         if index == -1:
             raise ReportException(f'Page {filename} not found')
 
-        return self.__pages[index]
+        return self.pages[index]
 
     def render(self, page: Page, extra_variables: Dict[str, Any] = None):
         """Method for rendering page using templating engine."""
         template_variables: Dict[str, Any] = page.get_content()
 
         # load modules
-        template_variables['modules'] = page.get_modules()
+        template_variables['modules'] = page.modules
 
         # generate menu (html_id, menu item)
         template_variables['menu']: List[Tuple[str, str]] = []
@@ -69,15 +69,15 @@ class Report(Template):
 
         super().render(page, template_variables)
 
-    def __index_off(self, value: str) -> int:
+    def index_by(self, value: str) -> int:
         """Find page based on its filename.
 
         Return:
             >= 0: page exists
             -1: page doesn't exist
         """
-        for index, page in enumerate(self.__pages):
-            if page.get_filename() == value:
+        for index, page in enumerate(self.pages):
+            if page.filename == value:
                 return index
 
         return -1

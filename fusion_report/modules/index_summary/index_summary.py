@@ -11,7 +11,7 @@ class CustomModule(BaseModule):
         Returns:
             List of known and unknown fusions found in local databases, i.e: ['known': 10, ...]
         """
-        all_fusions: int = len(self.manager.get_fusions())
+        all_fusions: int = len(self.manager.fusions)
         known_fusions: int = len(self.manager.get_known_fusions())
         return [
             ['known', known_fusions],
@@ -24,12 +24,12 @@ class CustomModule(BaseModule):
         Returns:
             List of tool counts, i.e: ['ericscript': 5, ...]
         """
-        running_tools = sorted(self.manager.get_running_tools())
+        running_tools = sorted(self.manager.running_tools)
         counts: Dict[str, int] = dict.fromkeys(running_tools, 0)
         counts['together']: int = 0
         running_tools_count: int = len(running_tools)
-        for fusion in self.manager.get_fusions():
-            fusion_tools = fusion.get_tools().keys()
+        for fusion in self.manager.fusions:
+            fusion_tools = fusion.tools.keys()
             for tool in fusion_tools:
                 counts[tool] += 1
             # intersection
@@ -44,9 +44,9 @@ class CustomModule(BaseModule):
         Returns:
             Distribution of detection per tool i.e: ['0 tools': 15, '1 tool': 10, '2 tools': 4, ...]
         """
-        counts = [0] * (len(self.manager.get_running_tools()) + 1)
-        for fusion in self.manager.get_fusions():
-            counts[len(fusion.get_tools().keys())] += 1
+        counts = [0] * (len(self.manager.running_tools) + 1)
+        for fusion in self.manager.fusions:
+            counts[len(fusion.tools.keys())] += 1
 
         return [[f"{index} tool/s", counts[index]] for index in range(len(counts))]
 
@@ -59,32 +59,32 @@ class CustomModule(BaseModule):
             tools: list of executed fusion detection tools
         """
         rows = []
-        tools = self.manager.get_running_tools()
+        tools = self.manager.running_tools
         filter_flag = len(tools) < self.params['tool_cutoff']
-        for fusion in self.manager.get_fusions():
+        for fusion in self.manager.fusions:
             row = {}
             # If number of executed fusion detection tools is lower than cutoff, filter is ignored
             if filter_flag:
                 row = {
-                    'fusion': fusion.get_name(),
-                    'found_db': fusion.get_databases(),
-                    'tools_hits': len(fusion.get_tools()),
-                    'score': f'{fusion.get_score():.3}'
+                    'fusion': fusion.name,
+                    'found_db': fusion.dbs,
+                    'tools_hits': len(fusion.tools),
+                    'score': f'{fusion.score:.3}'
                 }
             # Add only fusions that are detected by at least <cutoff>
             # default = TOOL_DETECTION_CUTOFF
-            if not filter_flag and len(fusion.get_tools()) >= self.params['tool_cutoff']:
+            if not filter_flag and len(fusion.tools) >= self.params['tool_cutoff']:
                 row = {
-                    'fusion': fusion.get_name(),
-                    'found_db': fusion.get_databases(),
-                    'tools_hits': len(fusion.get_tools()),
-                    'score': f'{fusion.get_score():.3}'
+                    'fusion': fusion.name,
+                    'found_db': fusion.dbs,
+                    'tools_hits': len(fusion.tools),
+                    'score': f'{fusion.score:.3}'
                 }
 
             # Add only if row is not empty
             if bool(row):
                 for tool in tools:
-                    row[tool] = 'true' if tool in sorted(fusion.get_tools()) else 'false'
+                    row[tool] = 'true' if tool in sorted(fusion.tools) else 'false'
                 rows.append(row)
 
         return {
@@ -96,8 +96,8 @@ class CustomModule(BaseModule):
         """Return module variables."""
 
         return {
-            'tools': self.manager.get_running_tools(),
-            'num_detected_fusions': len(self.manager.get_fusions()),
+            'tools': self.manager.running_tools,
+            'num_detected_fusions': len(self.manager.fusions),
             'num_known_fusions': len(self.manager.get_known_fusions()),
             'tool_detection_graph': self.tool_detection(),
             'known_vs_unknown_graph': self.known_vs_unknown(),

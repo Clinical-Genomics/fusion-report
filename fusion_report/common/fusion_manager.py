@@ -11,14 +11,14 @@ class FusionManager:
        individual parsed fusion.
 
     Attributes:
-        __running_tools: List of executed fusion detection tools
-        __fusions: List of parsed fusions
-        __supported_tools: List of all supported fusion detection tools
+        running_tools: List of executed fusion detection tools
+        fusions: List of parsed fusions
+        supported_tools: List of all supported fusion detection tools
     """
     def __init__(self, supported_tools: List[str]) -> None:
-        self.__running_tools: Set[str] = set()
-        self.__fusions: List[Fusion] = []
-        self.__supported_tools: List[str] = supported_tools
+        self.running_tools: Set[str] = set()
+        self.fusions: List[Fusion] = []
+        self.supported_tools: List[str] = supported_tools
 
     def parse(self, tool: str, file: str) -> None:
         """Loads a parser for specific tool by its name and stored the results.
@@ -26,8 +26,8 @@ class FusionManager:
         Raises:
             AppException
         """
-        if tool in self.__supported_tools:
-            self.__running_tools.add(tool)
+        if tool in self.supported_tools:
+            self.running_tools.add(tool)
             factory_parser = self.__build_factory(tool)
             try:
                 with open(file, 'r', encoding='utf-8') as fusion_output:
@@ -45,35 +45,23 @@ class FusionManager:
     def add(self, fusion_name: str, tool: str, details: Dict[str, Any]) -> None:
         """Insert of append new parsed information to specific fusion."""
         if fusion_name and tool:
-            index = self.__index_off(fusion_name)
+            index = self.index_by(fusion_name)
             if index == -1:
                 fusion = Fusion(fusion_name)
                 fusion.add_tool(tool, details)
-                self.__fusions.append(fusion)
+                self.fusions.append(fusion)
             else:
-                fusion = self.__fusions[index]
+                fusion = self.fusions[index]
                 fusion.add_tool(tool, details)
-
-    def get_supported_tools(self) -> List[str]:
-        """Returns list of all implemented fusion detection tools."""
-        return self.__supported_tools
-
-    def get_running_tools(self) -> Set[str]:
-        """Returns list of executed fusion detection tools."""
-        return self.__running_tools
-
-    def get_fusions(self) -> List[Fusion]:
-        """Returns list of all detected fusions."""
-        return self.__fusions
 
     def get_known_fusions(self) -> List[Fusion]:
         """Returns list of all fusions found in local databases."""
-        return [fusion for fusion in self.__fusions if fusion.get_databases()]
+        return [fusion for fusion in self.fusions if fusion.dbs]
 
     ################################################################################################
     #  Helpers
-    @classmethod
-    def __build_factory(cls, tool: str):
+    @staticmethod
+    def __build_factory(tool: str):
         """Factory builder loads custom fusion detection tool parser based on its name. It then
         returns an instance of desired parser.
 
@@ -91,14 +79,14 @@ class FusionManager:
         except AttributeError as ex:
             raise AppException(ex)
 
-    def __index_off(self, value: str) -> int:
+    def index_by(self, value: str) -> int:
         """Helper for finding fusion based on its name.
 
         Returns:
             >=0 index of a fusion in the list
             -1: not found
         """
-        for index, fusion in enumerate(self.__fusions):
-            if fusion.get_name() == value:
+        for index, fusion in enumerate(self.fusions):
+            if fusion.name == value:
                 return index
         return -1

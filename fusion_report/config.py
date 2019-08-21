@@ -13,90 +13,109 @@ class Config:
     """Class for adjusting report defined in configuration file.
 
     Attributes:
-        __current_path: current working directory
-        __report_title: Title of the report
-        __logos: Dictionary of logos: fusion-report and nf-core/rnafusion
-        __institution: Institution name
-        __date: Date in format '%d/%m/%Y'
-        __assets: Additional CSS and JS files
+        current_path: current working directory
+        report_title: Title of the report
+        logos: Dictionary of logos: fusion-report and nf-core/rnafusion
+        institution: Institution name
+        date: Date in format '%d/%m/%Y'
+        assets: Additional CSS and JS files
     """
 
     def __init__(self) -> None:
-        self.__current_path: str = os.path.dirname(os.path.abspath(__file__))
-        self.__report_title: str = 'nfcore/rnafusion summary report'
-        self.__logos: Dict[str, str] = {
+        self._report_title = 'nfcore/rnafusion summary report'
+        self.current_path: str = os.path.dirname(os.path.abspath(__file__))
+        self.logos: Dict[str, str] = {
             'main': base64.b64encode(open(
-                os.path.join(self.__current_path, '../docs/img/fusion-report.png'), 'rb'
+                os.path.join(self.current_path, '../docs/img/fusion-report.png'), 'rb'
             ).read()).decode('utf-8'),
             'rnafusion': base64.b64encode(open(
-                os.path.join(self.__current_path, '../docs/img/rnafusion_logo.png'), 'rb'
+                os.path.join(self.current_path, '../docs/img/rnafusion_logo.png'), 'rb'
             ).read()).decode('utf-8')
         }
-        self.__institution: Dict[str, Any] = {}
-        self.__date: str = datetime.now().strftime('%d/%m/%Y')
-        self.__assets: Dict[str, List[str]] = {}
+        self._institution: Dict[str, Any] = {}
+        self._date: str = datetime.now().strftime('%d/%m/%Y')
+        self._assets: Dict[str, List[str]] = {}
 
-    def parse(self, path) -> Dict[str, Any]:
+    @property
+    def report_title(self) -> str:
+        """Return title."""
+        return self._report_title
+
+    @report_title.setter
+    def report_title(self, title: str) -> None:
+        if title.strip():
+            self._report_title = title.strip()
+
+    @property
+    def institution(self) -> str:
+        """Return institution name, img and url."""
+        return self._institution
+
+    @institution.setter
+    def institution(self, institution: Dict[str, str]) -> None:
+        if 'name' in institution.keys():
+            self._institution['name'] = institution['name']
+
+        if 'img' in institution.keys() and os.path.exists(institution['img']):
+            image = os.path.join(self.current_path, institution['img'])
+            self._institution['img'] = base64.b64encode(
+                open(image, 'rb').read()
+            ).decode('utf-8')
+
+        if 'url' in institution.keys():
+            self._institution['url'] = institution['url']
+
+    @property
+    def date(self) -> datetime:
+        """Return date in format."""
+        return self._date
+
+    @date.setter
+    def date(self, date_format: str) -> None:
+        if date_format.strip():
+            self._date = datetime.now().strftime(date_format)
+
+    @property
+    def assets(self) -> Dict[str, List[str]]:
+        """Return HTML assets, custom CSS or Javascript."""
+        return self._assets
+
+    @assets.setter
+    def assets(self, assets) -> None:
+        for key, value in assets.items():
+            if key in ('css', 'js') and value is not None:
+                self.assets[key] = [x for x in value if os.path.exists(x)]
+
+    def parse(self, path) -> 'Config':
         """
         Method for parsing the configuration file.
 
         Args:
             path (string): path to configuration file
         """
-        config: Dict[str, Any] = {
-            'report_title': self.__report_title,
-            'logos': self.__logos,
-            'institution': self.__institution,
-            'date': self.__date,
-            'assets': self.__assets
-        }
-
         if not path:
-            # return default configuration
-            return config
+            try:
+                with open(path, 'r', encoding='utf-8') as in_file:
+                    try:
+                        data = safe_load(in_file)
+                        self.report_title = data['report_title']
+                        self.institution = data['institution']
+                        self.date = data['date_format']
+                        self.assets = data['assets']
+                        return self
+                    except YAMLError as ex:
+                        raise ConfigException(ex)
+            except IOError as ex:
+                raise ConfigException(ex)
 
-        try:
-            with open(path, 'r', encoding='utf-8') as in_file:
-                try:
-                    data = safe_load(in_file)
-                    self.__set_title(data)
-                    self.__set_institution(data)
-                    self.__set_date_format(data)
-                    self.__set_assets(data)
-                    return config
-                except YAMLError as ex:
-                    raise ConfigException(ex)
-        except IOError as ex:
-            raise ConfigException(ex)
+        return self
 
-    def __set_title(self, config: Dict[str, Any]) -> None:
-        """Helper function for setting a custom title."""
-        if config['report_title'] is not None:
-            self.__report_title = config['report_title'].strip()
-
-    def __set_institution(self, config: Dict[str, Any]) -> None:
-        """Helper function for adding an institution."""
-        if config['institution'] is not None:
-            if 'name' in config['institution']:
-                self.__institution['name'] = config['institution']['name']
-
-            if 'img' in config['institution'] and os.path.exists(config['institution']['img']):
-                image = os.path.join(self.__current_path, config['institution']['img'])
-                self.__institution['img'] = base64.b64encode(
-                    open(image, 'rb').read()
-                ).decode('utf-8')
-
-            if 'url' in config['institution']:
-                self.__institution['url'] = config['institution']['url']
-
-    def __set_date_format(self, config) -> None:
-        """Helper function for setting a custom date format."""
-        if config['date_format'] is not None:
-            self.__date = datetime.now().strftime(config['date_format'])
-
-    def __set_assets(self, config) -> None:
-        """Helper function for adding custom CSS or Javascript."""
-        if config['assets'] is not None:
-            for key, value in config['assets'].items():
-                if key in ('css', 'js') and value is not None:
-                    self.__assets[key] = [x for x in value if os.path.exists(x)]
+    def json_serialize(self) -> Dict[str, Any]:
+        """Helper serialization method for templating engine."""
+        return {
+            'report_title': self.report_title,
+            'logos': self.logos,
+            'institution': self.institution,
+            'date': self.date,
+            'assets': self.assets
+        }

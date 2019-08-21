@@ -29,20 +29,20 @@ class App:
     """The class implements core methods.
 
     Attributes:
-        __manager: Fusion manager
-        ___args: Parsed settings
+        manager: Fusion manager
+        args: Parsed settings
     """
 
     def __init__(self) -> None:
         try:
-            self.__args = ArgsBuilder(__version__)
-            self.__manager = FusionManager(self.__args.get_supported_tools())
+            self.args = ArgsBuilder(__version__)
+            self.manager = FusionManager(self.args.supported_tools)
         except IOError as ex:
             raise AppException(ex)
 
     def build_args(self):
         """Builds command-line arguments."""
-        self.__args.build()
+        self.args.build()
 
     def run(self):
         """Parse parameters and execute commands.
@@ -50,18 +50,18 @@ class App:
         Raises:
             AppException
         """
-        params = self.__args.parse()
+        params = self.args.parse()
         try:
             if params.command == 'run':
                 Logger(__name__).info('Running application...')
-                self.__preprocess(params)
-                self.__generate_report(params)
-                self.__export_results(params.output, params.export)
+                self.preprocess(params)
+                self.generate_report(params)
+                self.export_results(params.output, params.export)
                 self.generate_multiqc(
-                    params.output, self.__manager.get_fusions(),
-                    params.sample, len(self.__manager.get_running_tools())
+                    params.output, self.manager.fusions,
+                    params.sample, len(self.manager.running_tools)
                 )
-                self.__generate_fusion_list(params.output, params.tool_cutoff)
+                self.generate_fusion_list(params.output, params.tool_cutoff)
             elif params.command == 'download':
                 Logger(__name__).info('Downloading resources...')
                 Download(params)
@@ -70,77 +70,77 @@ class App:
         except (AppException, DbException, DownloadException, IOError) as ex:
             raise AppException(ex)
 
-    def __preprocess(self, params: Namespace) -> None:
+    def preprocess(self, params: Namespace) -> None:
         """Parse, enrich and score fusion."""
-        self.__parse_fusion_outputs(vars(params))
-        self.__enrich(params.db_path)
-        self.__score(vars(params))
+        self.parse_fusion_outputs(vars(params))
+        self.enrich(params.db_path)
+        self.score(vars(params))
 
-    def __generate_report(self, params: Namespace) -> None:
+    def generate_report(self, params: Namespace) -> None:
         """Generate fusion report with all pages."""
         report = Report(params.config, params.output)
-        fusions = self.__manager.get_fusions()
+        fusions = self.manager.fusions
 
         index_page = report.create_page(
             'Summary', filename='index.html', page_variables={'sample': params.sample}
         )
         index_page.add_module(
-            'index_summary', self.__manager, params={'tool_cutoff': params.tool_cutoff}
+            'index_summary', self.manager, params={'tool_cutoff': params.tool_cutoff}
         )
         report.render(index_page)
 
         with tqdm(total=len(fusions)) as pbar:
             for fusion in fusions:
                 fusion_page = report.create_page(
-                    fusion.get_name(), page_variables={'sample': params.sample}
+                    fusion.name, page_variables={'sample': params.sample}
                 )
                 fusion_page.add_module('fusion_summary', params={'fusion': fusion})
                 fusion_page.add_module(
                     'fusiongdb.variations',
-                    params={'fusion': fusion.get_name(), 'db_path': params.db_path}
+                    params={'fusion': fusion.name, 'db_path': params.db_path}
                 )
                 fusion_page.add_module(
                     'fusiongdb.transcripts',
-                    params={'fusion': fusion.get_name(), 'db_path': params.db_path}
+                    params={'fusion': fusion.name, 'db_path': params.db_path}
                 )
                 fusion_page.add_module(
                     'fusiongdb.ppi',
-                    params={'fusion': fusion.get_name(), 'db_path': params.db_path}
+                    params={'fusion': fusion.name, 'db_path': params.db_path}
                 )
                 fusion_page.add_module(
                     'fusiongdb.drugs',
-                    params={'fusion': fusion.get_name(), 'db_path': params.db_path}
+                    params={'fusion': fusion.name, 'db_path': params.db_path}
                 )
                 fusion_page.add_module(
                     'fusiongdb.diseases',
-                    params={'fusion': fusion.get_name(), 'db_path': params.db_path}
+                    params={'fusion': fusion.name, 'db_path': params.db_path}
                 )
                 report.render(fusion_page)
-                pbar.set_description(f'Processing {fusion.get_name()}')
+                pbar.set_description(f'Processing {fusion.name}')
                 time.sleep(0.1)
                 pbar.update(1)
 
-    def __parse_fusion_outputs(self, params: Dict[str, Any]) -> None:
+    def parse_fusion_outputs(self, params: Dict[str, Any]) -> None:
         """Executes parsing for each provided fusion detection tool."""
         for param, value in params.items():
-            if param in self.__manager.get_supported_tools() and value:
+            if param in self.manager.supported_tools and value:
                 # param: fusion tool
                 # value: fusion tool output
-                self.__manager.parse(param, value)
+                self.manager.parse(param, value)
 
-    def __enrich(self, path: str) -> None:
+    def enrich(self, path: str) -> None:
         """Enrich fusion with all relevant information from local databases."""
         local_fusions: Dict[str, List[str]] = {
-            FusionGDB(path).get_name(): FusionGDB(path).get_all_fusions(),
-            MitelmanDB(path).get_name(): MitelmanDB(path).get_all_fusions(),
-            CosmicDB(path).get_name(): CosmicDB(path).get_all_fusions()
+            FusionGDB(path).name: FusionGDB(path).get_all_fusions(),
+            MitelmanDB(path).name: MitelmanDB(path).get_all_fusions(),
+            CosmicDB(path).name: CosmicDB(path).get_all_fusions()
         }
-        for fusion in self.__manager.get_fusions():
+        for fusion in self.manager.fusions:
             for db_name, db_list in local_fusions.items():
-                if fusion.get_name() in db_list:
+                if fusion.name in db_list:
                     fusion.add_db(db_name)
 
-    def __export_results(self, path: str, extension: str) -> None:
+    def export_results(self, path: str, extension: str) -> None:
         """Export results.
         Currently supporting file types: JSON and CSV
         """
@@ -148,7 +148,7 @@ class App:
         dest = f"{os.path.join(path, 'fusions')}.{extension}"
         if extension == 'json':
             with open(dest, 'w', encoding='utf-8') as output:
-                for fusion in self.__manager.get_fusions():
+                for fusion in self.manager.fusions:
                     results.append(fusion.json_serialize())
                 output.write(rapidjson.dumps(results))
         elif extension == 'csv':
@@ -158,27 +158,27 @@ class App:
                 )
                 # header
                 row = ['Fusion', 'Databases', 'Score', 'Explained score']
-                row.extend([x for x in sorted(self.__manager.get_running_tools())])
+                row.extend([x for x in sorted(self.manager.running_tools)])
                 csv_writer.writerow(row)
-                for fusion in self.__manager.get_fusions():
+                for fusion in self.manager.fusions:
                     row = [
-                        fusion.get_name(),
-                        ','.join(fusion.get_databases()),
-                        fusion.get_score(),
-                        fusion.get_score_explained(),
+                        fusion.name,
+                        ','.join(fusion.dbs),
+                        fusion.score,
+                        fusion.score_explained,
                     ]
-                    for tool in sorted(self.__manager.get_running_tools()):
-                        if tool not in fusion.get_tools().keys():
+                    for tool in sorted(self.manager.running_tools):
+                        if tool not in fusion.tools.keys():
                             row.append('')
                         else:
                             ';'.join([
-                                f'{key}: {value}' for key, value in fusion.get_tools()[tool].items()
+                                f'{key}: {value}' for key, value in fusion.tools[tool].items()
                             ])
                     csv_writer.writerow(row)
         else:
             Logger(__name__).error('Export output %s not supported', extension)
 
-    def __generate_fusion_list(self, path: str, cutoff: int):
+    def generate_fusion_list(self, path: str, cutoff: int):
         """
         Helper function that generates file containing list of found fusions and filtered list of
         fusions. One of these files ise used by FusionInspector to visualize the fusions.
@@ -190,27 +190,27 @@ class App:
         """
         # unfiltered list
         with open(os.path.join(path, 'fusion_list.tsv'), 'w', encoding='utf-8') as output:
-            for fusion in self.__manager.get_fusions():
-                output.write(f'{fusion.get_name()}\n')
+            for fusion in self.manager.fusions:
+                output.write(f'{fusion.name}\n')
 
         # filtered list
         with open(os.path.join(path, 'fusion_list_filtered.tsv'), 'w', encoding='utf-8') as output:
-            for fusion in self.__manager.get_fusions():
-                if len(fusion.get_tools()) >= cutoff:
-                    output.write(f'{fusion.get_name()}\n')
+            for fusion in self.manager.fusions:
+                if len(fusion.tools) >= cutoff:
+                    output.write(f'{fusion.name}\n')
 
-    def __score(self, params: Dict[str, Any]) -> None:
+    def score(self, params: Dict[str, Any]) -> None:
         """Custom scoring function for individual fusion.
         More information about the scoring function can be found in the documentation
         at https://github.com/matq007/fusion-report/docs/scoring-fusion
         """
 
-        for fusion in self.__manager.get_fusions():
+        for fusion in self.manager.fusions:
 
             # tool estimation
             tool_score = 0.0
             tmp_explained = []
-            for tool, _ in fusion.get_tools().items():
+            for tool, _ in fusion.tools.items():
                 tool_score += params[f'{tool.lower()}_weight'] / 100.0
                 tmp_explained.append(format((params[f'{tool}_weight'] / 100.0), '.3f'))
             score_explained = f'0.5 * ({" + ".join(tmp_explained)})'
@@ -219,13 +219,13 @@ class App:
             db_score = 0.0
             tmp_explained = []
             weights = {'fusiongdb': 0.20, 'cosmic': 0.40, 'mitelman': 0.40}
-            for db_name in fusion.get_databases():
+            for db_name in fusion.dbs:
                 db_score += 1.0 * weights[db_name.lower()]
                 tmp_explained.append(format(weights[db_name.lower()], '.3f'))
             score_explained += f' + 0.5 * ({" + ".join(tmp_explained)})'
 
             score = float('%0.3f' % (0.5 * tool_score + 0.5 * db_score))
-            fusion.set_score(score, score_explained)
+            fusion.score = (score, score_explained)
 
     @staticmethod
     def generate_multiqc(path: str, fusions: List[Fusion],
@@ -234,7 +234,7 @@ class App:
 
         counts: Dict[str, int] = {'together': 0}
         for fusion in fusions:
-            tools = fusion.get_tools()
+            tools = fusion.dbs
             if len(tools) == running_tools_count:
                 counts['together'] += 1
             for tool in tools:

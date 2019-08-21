@@ -32,10 +32,10 @@ of your database.
 
 ```python
 local_fusions: Dict[str, List[str]] = {
-    FusionGDB(path).get_name(): FusionGDB(path).get_all_fusions(),
-    MitelmanDB(path).get_name(): MitelmanDB(path).get_all_fusions(),
-    CosmicDB(path).get_name(): CosmicDB(path).get_all_fusions(),
-    TestDB(path).get_name(): TestDB(path).get_all_fusions() # add your database here
+    FusionGDB(path).name: FusionGDB(path).get_all_fusions(),
+    MitelmanDB(path).name: MitelmanDB(path).get_all_fusions(),
+    CosmicDB(path).name: CosmicDB(path).get_all_fusions(),
+    TestDB(path).name: TestDB(path).get_all_fusions() # add your database here
 }
 ```
 
