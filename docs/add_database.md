@@ -45,8 +45,8 @@ To do this head over to `fusion_report/download.py`.
     4.1. Create fusion `__get_test()`
     ```python
     # file, url = ...
-    
-    # You finish the function by calling TestDB() object and running setup function. 
+
+    # You finish the function by calling TestDB() object and running setup function.
     db = TestDB('.')
     # This is a in-house function which will:
     # 1. Create database using your schema
@@ -56,10 +56,10 @@ To do this head over to `fusion_report/download.py`.
     4.2. Add your function into  `__download_all()`
     ```python
     processes = [
-       Process(target=self.__get_fusiongdb),
-       Process(target=self.__get_mitelman),
-       Process(target=self.__get_cosmic),
-       Process(target=self.__get_test)
+       Process(target=self.get_fusiongdb),
+       Process(target=self.get_mitelman),
+       Process(target=self.get_cosmic),
+       Process(target=self.get_test)
     ]
     ```
 
