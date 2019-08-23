@@ -2,6 +2,7 @@
 import logging
 import sys
 from logging.handlers import TimedRotatingFileHandler
+from typing import Any
 
 from colorlog import ColoredFormatter
 
@@ -15,7 +16,7 @@ class Logger(metaclass=Singleton):
         logger: Logger instance
         filename: Logger file name
     """
-    logger = None
+    logger: Any = {}
 
     def __init__(self, name: str) -> None:
         self.logger = logging.getLogger(name)
@@ -23,7 +24,7 @@ class Logger(metaclass=Singleton):
         self.logger.setLevel(logging.INFO)
 
     @staticmethod
-    def get_logger() -> logging:
+    def get_logger():
         """Return logger."""
         return logging.getLogger()
 

@@ -26,7 +26,7 @@ class CustomModule(BaseModule):
         """
         running_tools = sorted(self.manager.running_tools)
         counts: Dict[str, int] = dict.fromkeys(running_tools, 0)
-        counts['together']: int = 0
+        counts['together'] = 0
         running_tools_count: int = len(running_tools)
         for fusion in self.manager.fusions:
             fusion_tools = fusion.tools.keys()
@@ -62,7 +62,7 @@ class CustomModule(BaseModule):
         tools = self.manager.running_tools
         filter_flag = len(tools) < self.params['tool_cutoff']
         for fusion in self.manager.fusions:
-            row = {}
+            row: Dict[str, Any] = {}
             # If number of executed fusion detection tools is lower than cutoff, filter is ignored
             if filter_flag:
                 row = {

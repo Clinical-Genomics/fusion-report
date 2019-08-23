@@ -37,7 +37,7 @@ class Template:
         if not os.path.exists(output_dir):
             os.mkdir(output_dir)
 
-    def render(self, page: Page, extra_variables: Dict[str, Any] = None) -> None:
+    def render(self, page: Page, extra_variables: Dict[str, Any]) -> None:
         """Renders page"""
         merged_variables = {**self.j2_variables.json_serialize(), **extra_variables}
         view = self.j2_env.get_template(page.view).render(merged_variables)

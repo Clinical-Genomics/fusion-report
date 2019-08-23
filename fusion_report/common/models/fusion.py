@@ -1,5 +1,5 @@
 """ Fusion Model """
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 from fusion_report.common.logger import Logger
 
@@ -24,16 +24,17 @@ class Fusion:
         return self._score['score']
 
     @score.setter
-    def score(self, values: Tuple[str, Any]) -> None:
-        self._score = {
-            'score': values[0],
-            'explained': values[1]
-        }
+    def score(self, value: float) -> None:
+        self._score['score'] = float(value)
 
     @property
     def score_explained(self) -> str:
         """Returns explanation of how the score was calculated."""
         return self._score['explained']
+
+    @score_explained.setter
+    def score_explained(self, value: str) -> None:
+        self._score['explained'] = value
 
     def add_tool(self, tool: str, details: Dict[str, Any]) -> None:
         """Add new fusion tool to the list."""

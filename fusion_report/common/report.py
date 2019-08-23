@@ -1,5 +1,5 @@
 """Report class"""
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional
 
 from fusion_report.common.exceptions.report import ReportException
 from fusion_report.common.page import Page
@@ -51,15 +51,15 @@ class Report(Template):
 
         return self.pages[index]
 
-    def render(self, page: Page, extra_variables: Dict[str, Any] = None):
+    def render(self, page: Page, extra_variables: Optional[Dict[str, Any]] = None):
         """Method for rendering page using templating engine."""
         template_variables: Dict[str, Any] = page.get_content()
 
         # load modules
         template_variables['modules'] = page.modules
 
-        # generate menu (html_id, menu item)
-        template_variables['menu']: List[Tuple[str, str]] = []
+        # generate menu (html_id, menu item): List[Tuple[str, str]]
+        template_variables['menu'] = []
         for _, module in template_variables['modules'].items():
             for item in module['menu']:
                 template_variables['menu'].append((self.get_id(item), item))
@@ -69,15 +69,16 @@ class Report(Template):
 
         super().render(page, template_variables)
 
-    def index_by(self, value: str) -> int:
+    def index_by(self, value: Optional[str]) -> int:
         """Find page based on its filename.
 
         Return:
             >= 0: page exists
             -1: page doesn't exist
         """
-        for index, page in enumerate(self.pages):
-            if page.filename == value:
-                return index
+        if value:
+            for index, page in enumerate(self.pages):
+                if page.filename == value:
+                    return index
 
         return -1

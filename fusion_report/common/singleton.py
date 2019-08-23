@@ -1,9 +1,10 @@
 """Singleton"""
+from typing import Any
 
 
 class Singleton(type):
     """Implementation of Singleton design pattern"""
-    _instances = {}
+    _instances: Any = {}
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:

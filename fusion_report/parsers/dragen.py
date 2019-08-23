@@ -9,7 +9,7 @@ class Dragen(AbstractFusionTool):
     def parse(self, line, delimiter='\t') -> Tuple[str, Dict[str, Any]]:
         col: List[str] = line.strip().split(delimiter)
         fusion: str = f'{col[0]}'
-        details: Dict[str, any] = {
+        details: Dict[str, Any] = {
             'position': f'{col[2]}#{col[3]}'.replace('chr', ''),
             'score': int(col[1]),
         }

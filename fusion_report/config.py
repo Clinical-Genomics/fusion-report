@@ -26,10 +26,10 @@ class Config:
         self.current_path: str = os.path.dirname(os.path.abspath(__file__))
         self.logos: Dict[str, str] = {
             'main': base64.b64encode(open(
-                os.path.join(self.current_path, '../docs/img/fusion-report.png'), 'rb'
+                os.path.join(self.current_path, 'templates/assets/img/fusion-report.png'), 'rb'
             ).read()).decode('utf-8'),
             'rnafusion': base64.b64encode(open(
-                os.path.join(self.current_path, '../docs/img/rnafusion_logo.png'), 'rb'
+                os.path.join(self.current_path, 'templates/assets/img/rnafusion_logo.png'), 'rb'
             ).read()).decode('utf-8')
         }
         self._institution: Dict[str, Any] = {}
@@ -47,7 +47,7 @@ class Config:
             self._report_title = title.strip()
 
     @property
-    def institution(self) -> str:
+    def institution(self) -> Dict[str, Any]:
         """Return institution name, img and url."""
         return self._institution
 
@@ -66,7 +66,7 @@ class Config:
             self._institution['url'] = institution['url']
 
     @property
-    def date(self) -> datetime:
+    def date(self) -> str:
         """Return date in format."""
         return self._date
 
@@ -93,7 +93,7 @@ class Config:
         Args:
             path (string): path to configuration file
         """
-        if not path:
+        if path:
             try:
                 with open(path, 'r', encoding='utf-8') as in_file:
                     try:

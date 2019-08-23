@@ -157,11 +157,11 @@ class App:
                     output, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL
                 )
                 # header
-                row = ['Fusion', 'Databases', 'Score', 'Explained score']
-                row.extend([x for x in sorted(self.manager.running_tools)])
-                csv_writer.writerow(row)
+                header = ['Fusion', 'Databases', 'Score', 'Explained score']
+                header.extend([x for x in sorted(self.manager.running_tools)])
+                csv_writer.writerow(header)
                 for fusion in self.manager.fusions:
-                    row = [
+                    row: List[Any] = [
                         fusion.name,
                         ','.join(fusion.dbs),
                         fusion.score,
@@ -213,7 +213,7 @@ class App:
             for tool, _ in fusion.tools.items():
                 tool_score += params[f'{tool.lower()}_weight'] / 100.0
                 tmp_explained.append(format((params[f'{tool}_weight'] / 100.0), '.3f'))
-            score_explained = f'0.5 * ({" + ".join(tmp_explained)})'
+            score_explained: str = f'0.5 * ({" + ".join(tmp_explained)})'
 
             # database estimation
             db_score = 0.0
@@ -224,8 +224,8 @@ class App:
                 tmp_explained.append(format(weights[db_name.lower()], '.3f'))
             score_explained += f' + 0.5 * ({" + ".join(tmp_explained)})'
 
-            score = float('%0.3f' % (0.5 * tool_score + 0.5 * db_score))
-            fusion.score = (score, score_explained)
+            score: float = float('%0.3f' % (0.5 * tool_score + 0.5 * db_score))
+            fusion.score, fusion.score_explained = score, score_explained
 
     @staticmethod
     def generate_multiqc(path: str, fusions: List[Fusion],
