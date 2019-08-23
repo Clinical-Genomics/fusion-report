@@ -4,12 +4,10 @@ from fusion_report.app import __version__
 
 PACKAGE_DATA = {
     'fusion_report': [
-        'db/schema/*.sql'
-        'templates/*/*',
-        '../docs/img/_static/*',
-        '../LICENSE',
-        '../README.md',
-        '../requirements.txt'
+        '../docs/img/*'
+        'data/schema/*.sql'
+        'arguments.json',
+        'templates/*/*'
     ]
 }
 
@@ -29,7 +27,7 @@ setup(
     author_email='mproksik@gmail.com',
     url='https://github.com/matq007/fusion-report',
     license='GPL_v3',
-    packages=find_packages(exclude=('tests', 'docs')),
+    packages=find_packages(include='fusion_report, fusion_report.*', exclude=('tests', 'docs')),
     install_requires=INSTALL_REQUIREMENTS,
     zip_safe=False,
     scripts=['bin/fusion_report'],
