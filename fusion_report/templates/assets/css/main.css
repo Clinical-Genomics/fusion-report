@@ -1,5 +1,5 @@
 body {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 
 /*
@@ -12,8 +12,7 @@ body {
   bottom: 0;
   left: 0;
   z-index: 100;
-  /* Behind the navbar */
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1); /* Behind the navbar */
 }
 
 .feather {
@@ -26,9 +25,14 @@ body {
   position: relative;
   top: 0;
   height: calc(100vh - 48px);
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.card-header .nav-link {
+  cursor: pointer;
+  text-transform: capitalize;
 }
 
 .sidebar .nav-link {
@@ -57,7 +61,7 @@ body {
 }
 
 .sidebar-heading {
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -69,7 +73,7 @@ body {
 }
 
 @media screen and (max-height: 667px) {
-  .footer img{
+  .footer img {
     display: none;
   }
 }
@@ -96,11 +100,6 @@ body {
   margin-bottom: 20px;
 }
 
-.card-header .nav-link {
-  cursor: pointer;
-  text-transform: capitalize;
-}
-
 /*
  * Utilities
  */
@@ -124,7 +123,7 @@ body {
  */
 
 .tabulator {
-  font-size: .875rem!important;
+  font-size: 0.875rem !important;
 }
 
 .badge {
@@ -132,7 +131,7 @@ body {
 }
 
 .tabulator-row {
-  font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 85%;
 }
 

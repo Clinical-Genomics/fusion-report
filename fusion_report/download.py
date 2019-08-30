@@ -6,6 +6,7 @@ import os
 import shutil
 import ssl
 import tarfile
+import urllib.error
 import urllib.request
 from argparse import Namespace
 from multiprocessing import Pool, Process
@@ -73,6 +74,7 @@ class Download:
     @staticmethod
     def get_large_file(url: str, ignore_ssl: bool = False) -> None:
         """Method for downloading a large file."""
+
         ctx = None
         if ignore_ssl:
             ctx = ssl.create_default_context()
@@ -80,14 +82,23 @@ class Download:
             ctx.verify_mode = ssl.CERT_NONE
 
         if url.startswith('https') or url.startswith('ftp'):
-            with urllib.request.urlopen(url, context=ctx) as response:
-                file = url.split('/')[-1].split('?')[0]
-                Logger(__name__).info('Downloading %s', file)
-                # only download if file size doesn't match
-                if not os.path.exists(file) or \
-                   (response.info()['Content-Length'] or 0) != os.stat(file).st_size:
-                    with open(file, 'wb') as out_file:
-                        shutil.copyfileobj(response, out_file)
+            req = urllib.request.Request(url)
+            req.add_header(
+                'User-Agent',
+                '''Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko)
+                Chrome/41.0.2228.0 Safari/537.3'''
+            )
+            try:
+                with urllib.request.urlopen(req, context=ctx) as response:
+                    file = url.split('/')[-1].split('?')[0]
+                    Logger(__name__).info('Downloading %s', file)
+                    # only download if file size doesn't match
+                    if not os.path.exists(file) or \
+                            (response.info()['Content-Length'] or 0) != os.stat(file).st_size:
+                        with open(file, 'wb') as out_file:
+                            shutil.copyfileobj(response, out_file)
+            except urllib.error.HTTPError as ex:
+                raise DownloadException(ex)
         else:
             Logger(__name__).error('Downloading resources supports only HTTPS or FTP')
 

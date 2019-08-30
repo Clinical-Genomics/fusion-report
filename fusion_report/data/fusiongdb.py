@@ -21,7 +21,7 @@ class FusionGDB(Db, metaclass=Singleton):
 
     def get_all_fusions(self) -> List[str]:
         """Returns all fusions from database."""
-        query: str = '''SELECT DISTINCT (h_gene || "--" || t_gene) as fusion_pair 
+        query: str = '''SELECT DISTINCT (h_gene || "--" || t_gene) as fusion_pair
                         FROM tcga_chitars_combined_fusion_information_on_hg19'''
         res = self.select(query)
 

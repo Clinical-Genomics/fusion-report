@@ -20,10 +20,10 @@ function getTable(name) {
 
 // Table formatters
 let foundDBFormatter = function(cell, formatterParams) {
-    let newCell = '';
+    let newCell = "";
     let items = cell.getValue();
     if (items.length === 0) {
-        newCell = `<span class="badge badge-danger">Not found</span>`;
+        newCell = "<span class='badge badge-danger'>Not found</span>";
     } else {
         items.forEach(function (item) {
             newCell += `<span class="badge badge-${formatterParams[item]}">
@@ -75,7 +75,7 @@ let linkFormatter = function(cell, formatterParams) {
 };
 
 // Table function buttons
-function copy_table(name) {
+function copyTable(name) {
     let table = getTable(name);
     if (table !== undefined) { table.copyToClipboard("table"); }
 }

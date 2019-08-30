@@ -10,28 +10,14 @@ jobs:
         - pip install -r requirements-dev.txt
         - flake8 fusion_report/
         - mypy fusion_report/
-    - stage: soft-test
+    - stage: running-test
       before_script:
         - pip install -r requirements.txt
         - python setup.py install
       script:
         - fusion_report --help
-    - stage: release-test
-      before_script:
-        - pip install -r requirements.txt
-        - python setup.py install
-      if: type = pull_request AND branch = master
-      script:
-        - fusion_report download --cosmic_usr '$COSMIC_USERNAME' --cosmic_passwd '$COSMIC_PASSWORD' ./db/
-        - fusion_report run "test" tests/example db/
-          --ericscript tests/test_data/ericscript.tsv
-          --starfusion tests/test_data/starfusion.tsv
-          --fusioncatcher tests/test_data/fusioncatcher.txt
-          --squid tests/test_data/squid.txt
-          --pizzly tests/test_data/pizzly.tsv
-          --dragen tests/test_data/dragen.tsv
-          --arriba tests/test_data/arriba.tsv
-          --export csv
+        - fusion_report run --help
+        - fusion_report download --help
     - stage: publish-documentation
       if: type = push AND branch = master
       script: skip
@@ -44,6 +30,5 @@ jobs:
 
 stages:
   - lint
-  - soft-test
-  - release-test
+  - running-test
   - publish-documentation

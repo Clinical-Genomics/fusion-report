@@ -76,7 +76,7 @@ class ArgsBuilder:
 
     def download_args(self, args) -> None:
         """Build download command-line arguments."""
-        download_parser = self.command_parser.add_parser('download', 
+        download_parser = self.command_parser.add_parser('download',
                                                          help='Download required databases')
         for mandatory in args['mandatory']:
             download_parser.add_argument(mandatory['key'], help=mandatory['help'], type=str)
