@@ -19,7 +19,7 @@
 /*# sourceMappingURL=tabulator_bootstrap4.min.css.map */
 </style>
     <style type="text/css">body {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 
 /*
@@ -32,8 +32,7 @@
   bottom: 0;
   left: 0;
   z-index: 100;
-  /* Behind the navbar */
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1); /* Behind the navbar */
 }
 
 .feather {
@@ -46,9 +45,14 @@
   position: relative;
   top: 0;
   height: calc(100vh - 48px);
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.card-header .nav-link {
+  cursor: pointer;
+  text-transform: capitalize;
 }
 
 .sidebar .nav-link {
@@ -77,7 +81,7 @@
 }
 
 .sidebar-heading {
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -89,7 +93,7 @@
 }
 
 @media screen and (max-height: 667px) {
-  .footer img{
+  .footer img {
     display: none;
   }
 }
@@ -116,11 +120,6 @@
   margin-bottom: 20px;
 }
 
-.card-header .nav-link {
-  cursor: pointer;
-  text-transform: capitalize;
-}
-
 /*
  * Utilities
  */
@@ -144,7 +143,7 @@
  */
 
 .tabulator {
-  font-size: .875rem!important;
+  font-size: 0.875rem !important;
 }
 
 .badge {
@@ -152,7 +151,7 @@
 }
 
 .tabulator-row {
-  font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 85%;
 }
 
@@ -198,10 +197,10 @@ function getTable(name) {
 
 // Table formatters
 let foundDBFormatter = function(cell, formatterParams) {
-    let newCell = '';
+    let newCell = "";
     let items = cell.getValue();
     if (items.length === 0) {
-        newCell = `<span class="badge badge-danger">Not found</span>`;
+        newCell = "<span class='badge badge-danger'>Not found</span>";
     } else {
         items.forEach(function (item) {
             newCell += `<span class="badge badge-${formatterParams[item]}">
@@ -253,7 +252,7 @@ let linkFormatter = function(cell, formatterParams) {
 };
 
 // Table function buttons
-function copy_table(name) {
+function copyTable(name) {
     let table = getTable(name);
     if (table !== undefined) { table.copyToClipboard("table"); }
 }
@@ -1228,7 +1227,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
     <h1 class="h2">BRD4--NUTM1</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group mr-2">
-            <p class="mb-0">Generated 20/08/2019<br><strong>test</strong></p>
+            <p class="mb-0">Generated 30/08/2019<br><strong>test</strong></p>
         </div>
     </div>
 </div>
@@ -1420,7 +1419,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("variations_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("variations_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>
@@ -1552,7 +1551,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("transcripts_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("transcripts_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>
@@ -1719,7 +1718,7 @@ var r=function(){function e(e){return-e.tension*e.x-e.friction*e.v}function t(t,
     </div>
 </section>
 
-<input type="hidden" name="ppi" value='[{"classes": "core", "data": {"id": "fusion"}}, {"classes": "core", "data": {"id": "BRD4"}}, {"classes": "core", "data": {"id": "NUTM1"}}, {"classes": "core-connection", "data": {"id": "fusionBRD4", "source": "fusion", "target": "BRD4"}}, {"classes": "core-connection", "data": {"id": "fusionNUTM1", "source": "fusion", "target": "NUTM1"}}, {"data": {"id": "HIST1H3A"}}, {"data": {"id": "HIST1H3A--BRD4", "source": "BRD4", "target": "HIST1H3A"}}, {"data": {"id": "HIST1H4A"}}, {"data": {"id": "HIST1H4A--BRD4", "source": "BRD4", "target": "HIST1H4A"}}, {"data": {"id": "MED1"}}, {"data": {"id": "MED1--BRD4", "source": "BRD4", "target": "MED1"}}, {"data": {"id": "RTF1"}}, {"data": {"id": "RTF1--BRD4", "source": "BRD4", "target": "RTF1"}}, {"data": {"id": "CCNT2"}}, {"data": {"id": "CCNT2--BRD4", "source": "BRD4", "target": "CCNT2"}}, {"data": {"id": "YWHAE"}}, {"data": {"id": "YWHAE--BRD4", "source": "BRD4", "target": "YWHAE"}}, {"data": {"id": "SMC1A"}}, {"data": {"id": "SMC1A--BRD4", "source": "BRD4", "target": "SMC1A"}}, {"data": {"id": "BRCA1"}}, {"data": {"id": "BRCA1--BRD4", "source": "BRD4", "target": "BRCA1"}}, {"data": {"id": "SIRT1"}}, {"data": {"id": "SIRT1--BRD4", "source": "BRD4", "target": "SIRT1"}}, {"data": {"id": "RFC4"}}, {"data": {"id": "RFC4--BRD4", "source": "BRD4", "target": "RFC4"}}, {"data": {"id": "HIST2H4A"}}, {"data": {"id": "HIST2H4A--BRD4", "source": "BRD4", "target": "HIST2H4A"}}, {"data": {"id": "RFC3"}}, {"data": {"id": "RFC3--BRD4", "source": "BRD4", "target": "RFC3"}}, {"data": {"id": "AP3M1"}}, {"data": {"id": "AP3M1--BRD4", "source": "BRD4", "target": "AP3M1"}}, {"data": {"id": "BRD2"}}, {"data": {"id": "BRD2--BRD4", "source": "BRD4", "target": "BRD2"}}, {"data": {"id": "RFC2"}}, {"data": {"id": "RFC2--BRD4", "source": "BRD4", "target": "RFC2"}}, {"data": {"id": "KDM5C"}}, {"data": {"id": "KDM5C--BRD4", "source": "BRD4", "target": "KDM5C"}}, {"data": {"id": "GPSM1"}}, {"data": {"id": "GPSM1--BRD4", "source": "BRD4", "target": "GPSM1"}}, {"data": {"id": "HEXIM1"}}, {"data": {"id": "HEXIM1--BRD4", "source": "BRD4", "target": "HEXIM1"}}, {"data": {"id": "CAMKV"}}, {"data": {"id": "CAMKV--BRD4", "source": "BRD4", "target": "CAMKV"}}, {"data": {"id": "SIRT5"}}, {"data": {"id": "SIRT5--BRD4", "source": "BRD4", "target": "SIRT5"}}, {"data": {"id": "CHEK2"}}, {"data": {"id": "CHEK2--BRD4", "source": "BRD4", "target": "CHEK2"}}, {"data": {"id": "CDK9"}}, {"data": {"id": "CDK9--BRD4", "source": "BRD4", "target": "CDK9"}}, {"data": {"id": "RBM25"}}, {"data": {"id": "RBM25--BRD4", "source": "BRD4", "target": "RBM25"}}, {"data": {"id": "MAP2K1"}}, {"data": {"id": "MAP2K1--BRD4", "source": "BRD4", "target": "MAP2K1"}}, {"data": {"id": "TRIM25"}}, {"data": {"id": "TRIM25--BRD4", "source": "BRD4", "target": "TRIM25"}}, {"data": {"id": "MLLT1"}}, {"data": {"id": "MLLT1--BRD4", "source": "BRD4", "target": "MLLT1"}}, {"data": {"id": "BRD3"}}, {"data": {"id": "BRD3--BRD4", "source": "BRD4", "target": "BRD3"}}, {"data": {"id": "C8orf33"}}, {"data": {"id": "C8orf33--BRD4", "source": "BRD4", "target": "C8orf33"}}, {"data": {"id": "FAM90A1"}}, {"data": {"id": "FAM90A1--BRD4", "source": "BRD4", "target": "FAM90A1"}}, {"data": {"id": "HIST4H4"}}, {"data": {"id": "HIST4H4--BRD4", "source": "BRD4", "target": "HIST4H4"}}, {"data": {"id": "CKM"}}, {"data": {"id": "CKM--BRD4", "source": "BRD4", "target": "CKM"}}, {"data": {"id": "PGAM2"}}, {"data": {"id": "PGAM2--BRD4", "source": "BRD4", "target": "PGAM2"}}, {"data": {"id": "CYP1A1"}}, {"data": {"id": "CYP1A1--BRD4", "source": "BRD4", "target": "CYP1A1"}}, {"data": {"id": "RB1"}}, {"data": {"id": "RB1--BRD4", "source": "BRD4", "target": "RB1"}}, {"data": {"id": "RN7SK"}}, {"data": {"id": "RN7SK--BRD4", "source": "BRD4", "target": "RN7SK"}}, {"data": {"id": "MESDC2"}}, {"data": {"id": "MESDC2--BRD4", "source": "BRD4", "target": "MESDC2"}}, {"data": {"id": "CUL1"}}, {"data": {"id": "CUL1--BRD4", "source": "BRD4", "target": "CUL1"}}, {"data": {"id": "RFC1"}}, {"data": {"id": "RFC1--BRD4", "source": "BRD4", "target": "RFC1"}}, {"data": {"id": "GLTSCR1"}}, {"data": {"id": "GLTSCR1--BRD4", "source": "BRD4", "target": "GLTSCR1"}}, {"data": {"id": "INO80B"}}, {"data": {"id": "INO80B--BRD4", "source": "BRD4", "target": "INO80B"}}, {"data": {"id": "ATAD5"}}, {"data": {"id": "ATAD5--BRD4", "source": "BRD4", "target": "ATAD5"}}, {"data": {"id": "NUMA1"}}, {"data": {"id": "NUMA1--BRD4", "source": "BRD4", "target": "NUMA1"}}, {"data": {"id": "CDC5L"}}, {"data": {"id": "CDC5L--BRD4", "source": "BRD4", "target": "CDC5L"}}, {"data": {"id": "TCERG1"}}, {"data": {"id": "TCERG1--BRD4", "source": "BRD4", "target": "TCERG1"}}, {"data": {"id": "YWHAZ"}}, {"data": {"id": "YWHAZ--BRD4", "source": "BRD4", "target": "YWHAZ"}}, {"data": {"id": "FGFR3"}}, {"data": {"id": "FGFR3--BRD4", "source": "BRD4", "target": "FGFR3"}}, {"data": {"id": "AR"}}, {"data": {"id": "AR--BRD4", "source": "BRD4", "target": "AR"}}, {"data": {"id": "CHEK1"}}, {"data": {"id": "CHEK1--BRD4", "source": "BRD4", "target": "CHEK1"}}, {"data": {"id": "ZC3H18"}}, {"data": {"id": "ZC3H18--BRD4", "source": "BRD4", "target": "ZC3H18"}}, {"data": {"id": "CHD8"}}, {"data": {"id": "CHD8--BRD4", "source": "BRD4", "target": "CHD8"}}, {"data": {"id": "SIPA1"}}, {"data": {"id": "SIPA1--BRD4", "source": "BRD4", "target": "SIPA1"}}, {"data": {"id": "JMJD6"}}, {"data": {"id": "JMJD6--BRD4", "source": "BRD4", "target": "JMJD6"}}, {"data": {"id": "PIP4K2A"}}, {"data": {"id": "PIP4K2A--BRD4", "source": "BRD4", "target": "PIP4K2A"}}, {"data": {"id": "MED14"}}, {"data": {"id": "MED14--BRD4", "source": "BRD4", "target": "MED14"}}, {"data": {"id": "RPL6"}}, {"data": {"id": "RPL6--BRD4", "source": "BRD4", "target": "RPL6"}}, {"data": {"id": "WEE1"}}, {"data": {"id": "WEE1--BRD4", "source": "BRD4", "target": "WEE1"}}, {"data": {"id": "MED24"}}, {"data": {"id": "MED24--BRD4", "source": "BRD4", "target": "MED24"}}, {"data": {"id": "PTAR1"}}, {"data": {"id": "PTAR1--BRD4", "source": "BRD4", "target": "PTAR1"}}, {"data": {"id": "ELAVL1"}}, {"data": {"id": "ELAVL1--BRD4", "source": "BRD4", "target": "ELAVL1"}}, {"data": {"id": "ERG"}}, {"data": {"id": "ERG--BRD4", "source": "BRD4", "target": "ERG"}}, {"data": {"id": "STAT3"}}, {"data": {"id": "STAT3--BRD4", "source": "BRD4", "target": "STAT3"}}, {"data": {"id": "MMGT1"}}, {"data": {"id": "MMGT1--BRD4", "source": "BRD4", "target": "MMGT1"}}, {"data": {"id": "PTEN"}}, {"data": {"id": "PTEN--BRD4", "source": "BRD4", "target": "PTEN"}}, {"data": {"id": "MED12"}}, {"data": {"id": "MED12--BRD4", "source": "BRD4", "target": "MED12"}}, {"data": {"id": "AFF1"}}, {"data": {"id": "AFF1--BRD4", "source": "BRD4", "target": "AFF1"}}, {"data": {"id": "CUL3"}}, {"data": {"id": "CUL3--BRD4", "source": "BRD4", "target": "CUL3"}}, {"data": {"id": "BAIAP2"}}, {"data": {"id": "BAIAP2--BRD4", "source": "BRD4", "target": "BAIAP2"}}, {"data": {"id": "BAIAP2L1"}}, {"data": {"id": "BAIAP2L1--BRD4", "source": "BRD4", "target": "BAIAP2L1"}}, {"data": {"id": "PRPF40A"}}, {"data": {"id": "PRPF40A--BRD4", "source": "BRD4", "target": "PRPF40A"}}, {"data": {"id": "AK1"}}, {"data": {"id": "AK1--BRD4", "source": "BRD4", "target": "AK1"}}, {"data": {"id": "BRD9"}}, {"data": {"id": "BRD9--BRD4", "source": "BRD4", "target": "BRD9"}}, {"data": {"id": "WHSC1"}}, {"data": {"id": "WHSC1--BRD4", "source": "BRD4", "target": "WHSC1"}}, {"data": {"id": "KAT8"}}, {"data": {"id": "KAT8--BRD4", "source": "BRD4", "target": "KAT8"}}, {"data": {"id": "MYC"}}, {"data": {"id": "MYC--BRD4", "source": "BRD4", "target": "MYC"}}, {"data": {"id": "LDHC"}}, {"data": {"id": "LDHC--BRD4", "source": "BRD4", "target": "LDHC"}}, {"data": {"id": "CHD4"}}, {"data": {"id": "CHD4--BRD4", "source": "BRD4", "target": "CHD4"}}, {"data": {"id": "KDM5B"}}, {"data": {"id": "KDM5B--BRD4", "source": "BRD4", "target": "KDM5B"}}, {"data": {"id": "CCNT1"}}, {"data": {"id": "CCNT1--BRD4", "source": "BRD4", "target": "CCNT1"}}, {"data": {"id": "CDC7"}}, {"data": {"id": "CDC7--BRD4", "source": "BRD4", "target": "CDC7"}}, {"data": {"id": "SMARCA4"}}, {"data": {"id": "SMARCA4--BRD4", "source": "BRD4", "target": "SMARCA4"}}, {"data": {"id": "SPOP"}}, {"data": {"id": "SPOP--BRD4", "source": "BRD4", "target": "SPOP"}}, {"data": {"id": "HIST2H3C"}}, {"data": {"id": "HIST2H3C--BRD4", "source": "BRD4", "target": "HIST2H3C"}}, {"data": {"id": "DHFR"}}, {"data": {"id": "DHFR--BRD4", "source": "BRD4", "target": "DHFR"}}, {"data": {"id": "RFC5"}}, {"data": {"id": "RFC5--BRD4", "source": "BRD4", "target": "RFC5"}}, {"data": {"id": "MED17"}}, {"data": {"id": "MED17--BRD4", "source": "BRD4", "target": "MED17"}}, {"data": {"id": "WHSC1L1"}}, {"data": {"id": "WHSC1L1--BRD4", "source": "BRD4", "target": "WHSC1L1"}}, {"data": {"id": "ZNF592"}}, {"data": {"id": "ZNF592--BRD4", "source": "BRD4", "target": "ZNF592"}}, {"data": {"id": "DMAP1"}}, {"data": {"id": "DMAP1--BRD4", "source": "BRD4", "target": "DMAP1"}}, {"data": {"id": "SAMD4A"}}, {"data": {"id": "SAMD4A--NUTM1", "source": "NUTM1", "target": "SAMD4A"}}, {"data": {"id": "ALOX5"}}, {"data": {"id": "ALOX5--NUTM1", "source": "NUTM1", "target": "ALOX5"}}, {"data": {"id": "TP53BP2"}}, {"data": {"id": "TP53BP2--NUTM1", "source": "NUTM1", "target": "TP53BP2"}}, {"data": {"id": "CCHCR1"}}, {"data": {"id": "CCHCR1--NUTM1", "source": "NUTM1", "target": "CCHCR1"}}, {"data": {"id": "LMO1"}}, {"data": {"id": "LMO1--NUTM1", "source": "NUTM1", "target": "LMO1"}}, {"data": {"id": "MORN4"}}, {"data": {"id": "MORN4--NUTM1", "source": "NUTM1", "target": "MORN4"}}, {"data": {"id": "HSPBAP1"}}, {"data": {"id": "HSPBAP1--NUTM1", "source": "NUTM1", "target": "HSPBAP1"}}, {"data": {"id": "KPNA2"}}, {"data": {"id": "KPNA2--NUTM1", "source": "NUTM1", "target": "KPNA2"}}, {"data": {"id": "ZNF277"}}, {"data": {"id": "ZNF277--NUTM1", "source": "NUTM1", "target": "ZNF277"}}, {"data": {"id": "SH2D4A"}}, {"data": {"id": "SH2D4A--NUTM1", "source": "NUTM1", "target": "SH2D4A"}}, {"data": {"id": "RIC8A"}}, {"data": {"id": "RIC8A--NUTM1", "source": "NUTM1", "target": "RIC8A"}}, {"data": {"id": "FAM161A"}}, {"data": {"id": "FAM161A--NUTM1", "source": "NUTM1", "target": "FAM161A"}}, {"data": {"id": "LMO2"}}, {"data": {"id": "LMO2--NUTM1", "source": "NUTM1", "target": "LMO2"}}, {"data": {"id": "P4HA3"}}, {"data": {"id": "P4HA3--NUTM1", "source": "NUTM1", "target": "P4HA3"}}, {"data": {"id": "IFIT2"}}, {"data": {"id": "IFIT2--NUTM1", "source": "NUTM1", "target": "IFIT2"}}, {"data": {"id": "KANSL1"}}, {"data": {"id": "KANSL1--NUTM1", "source": "NUTM1", "target": "KANSL1"}}, {"data": {"id": "PRKAA2"}}, {"data": {"id": "PRKAA2--NUTM1", "source": "NUTM1", "target": "PRKAA2"}}, {"data": {"id": "PSME4"}}, {"data": {"id": "PSME4--NUTM1", "source": "NUTM1", "target": "PSME4"}}, {"data": {"id": "ZMYND10"}}, {"data": {"id": "ZMYND10--NUTM1", "source": "NUTM1", "target": "ZMYND10"}}, {"data": {"id": "LMO3"}}, {"data": {"id": "LMO3--NUTM1", "source": "NUTM1", "target": "LMO3"}}, {"data": {"id": "NEBL"}}, {"data": {"id": "NEBL--NUTM1", "source": "NUTM1", "target": "NEBL"}}, {"data": {"id": "LHX8"}}, {"data": {"id": "LHX8--NUTM1", "source": "NUTM1", "target": "LHX8"}}, {"data": {"id": "EP300"}}, {"data": {"id": "fusion--EP300", "source": "fusion", "target": "EP300"}}]'>
+<input type="hidden" name="ppi" value='[{"classes": "core", "data": {"id": "fusion"}}, {"classes": "core", "data": {"id": "BRD4"}}, {"classes": "core", "data": {"id": "NUTM1"}}, {"classes": "core-connection", "data": {"id": "fusionBRD4", "source": "fusion", "target": "BRD4"}}, {"classes": "core-connection", "data": {"id": "fusionNUTM1", "source": "fusion", "target": "NUTM1"}}, {"data": {"id": "STAT3"}}, {"data": {"id": "STAT3--BRD4", "source": "BRD4", "target": "STAT3"}}, {"data": {"id": "CDC7"}}, {"data": {"id": "CDC7--BRD4", "source": "BRD4", "target": "CDC7"}}, {"data": {"id": "KAT8"}}, {"data": {"id": "KAT8--BRD4", "source": "BRD4", "target": "KAT8"}}, {"data": {"id": "MMGT1"}}, {"data": {"id": "MMGT1--BRD4", "source": "BRD4", "target": "MMGT1"}}, {"data": {"id": "ZC3H18"}}, {"data": {"id": "ZC3H18--BRD4", "source": "BRD4", "target": "ZC3H18"}}, {"data": {"id": "ZNF592"}}, {"data": {"id": "ZNF592--BRD4", "source": "BRD4", "target": "ZNF592"}}, {"data": {"id": "SIRT5"}}, {"data": {"id": "SIRT5--BRD4", "source": "BRD4", "target": "SIRT5"}}, {"data": {"id": "FGFR3"}}, {"data": {"id": "FGFR3--BRD4", "source": "BRD4", "target": "FGFR3"}}, {"data": {"id": "TRIM25"}}, {"data": {"id": "TRIM25--BRD4", "source": "BRD4", "target": "TRIM25"}}, {"data": {"id": "BRCA1"}}, {"data": {"id": "BRCA1--BRD4", "source": "BRD4", "target": "BRCA1"}}, {"data": {"id": "CDK9"}}, {"data": {"id": "CDK9--BRD4", "source": "BRD4", "target": "CDK9"}}, {"data": {"id": "ELAVL1"}}, {"data": {"id": "ELAVL1--BRD4", "source": "BRD4", "target": "ELAVL1"}}, {"data": {"id": "RFC5"}}, {"data": {"id": "RFC5--BRD4", "source": "BRD4", "target": "RFC5"}}, {"data": {"id": "WHSC1L1"}}, {"data": {"id": "WHSC1L1--BRD4", "source": "BRD4", "target": "WHSC1L1"}}, {"data": {"id": "ERG"}}, {"data": {"id": "ERG--BRD4", "source": "BRD4", "target": "ERG"}}, {"data": {"id": "YWHAZ"}}, {"data": {"id": "YWHAZ--BRD4", "source": "BRD4", "target": "YWHAZ"}}, {"data": {"id": "GLTSCR1"}}, {"data": {"id": "GLTSCR1--BRD4", "source": "BRD4", "target": "GLTSCR1"}}, {"data": {"id": "BAIAP2"}}, {"data": {"id": "BAIAP2--BRD4", "source": "BRD4", "target": "BAIAP2"}}, {"data": {"id": "CKM"}}, {"data": {"id": "CKM--BRD4", "source": "BRD4", "target": "CKM"}}, {"data": {"id": "MED1"}}, {"data": {"id": "MED1--BRD4", "source": "BRD4", "target": "MED1"}}, {"data": {"id": "RPL6"}}, {"data": {"id": "RPL6--BRD4", "source": "BRD4", "target": "RPL6"}}, {"data": {"id": "CUL3"}}, {"data": {"id": "CUL3--BRD4", "source": "BRD4", "target": "CUL3"}}, {"data": {"id": "PRPF40A"}}, {"data": {"id": "PRPF40A--BRD4", "source": "BRD4", "target": "PRPF40A"}}, {"data": {"id": "AR"}}, {"data": {"id": "AR--BRD4", "source": "BRD4", "target": "AR"}}, {"data": {"id": "HIST2H4A"}}, {"data": {"id": "HIST2H4A--BRD4", "source": "BRD4", "target": "HIST2H4A"}}, {"data": {"id": "WHSC1"}}, {"data": {"id": "WHSC1--BRD4", "source": "BRD4", "target": "WHSC1"}}, {"data": {"id": "SPOP"}}, {"data": {"id": "SPOP--BRD4", "source": "BRD4", "target": "SPOP"}}, {"data": {"id": "HIST1H4A"}}, {"data": {"id": "HIST1H4A--BRD4", "source": "BRD4", "target": "HIST1H4A"}}, {"data": {"id": "FAM90A1"}}, {"data": {"id": "FAM90A1--BRD4", "source": "BRD4", "target": "FAM90A1"}}, {"data": {"id": "RN7SK"}}, {"data": {"id": "RN7SK--BRD4", "source": "BRD4", "target": "RN7SK"}}, {"data": {"id": "PGAM2"}}, {"data": {"id": "PGAM2--BRD4", "source": "BRD4", "target": "PGAM2"}}, {"data": {"id": "CYP1A1"}}, {"data": {"id": "CYP1A1--BRD4", "source": "BRD4", "target": "CYP1A1"}}, {"data": {"id": "C8orf33"}}, {"data": {"id": "C8orf33--BRD4", "source": "BRD4", "target": "C8orf33"}}, {"data": {"id": "INO80B"}}, {"data": {"id": "INO80B--BRD4", "source": "BRD4", "target": "INO80B"}}, {"data": {"id": "JMJD6"}}, {"data": {"id": "JMJD6--BRD4", "source": "BRD4", "target": "JMJD6"}}, {"data": {"id": "PTAR1"}}, {"data": {"id": "PTAR1--BRD4", "source": "BRD4", "target": "PTAR1"}}, {"data": {"id": "CCNT1"}}, {"data": {"id": "CCNT1--BRD4", "source": "BRD4", "target": "CCNT1"}}, {"data": {"id": "KDM5C"}}, {"data": {"id": "KDM5C--BRD4", "source": "BRD4", "target": "KDM5C"}}, {"data": {"id": "RFC2"}}, {"data": {"id": "RFC2--BRD4", "source": "BRD4", "target": "RFC2"}}, {"data": {"id": "GPSM1"}}, {"data": {"id": "GPSM1--BRD4", "source": "BRD4", "target": "GPSM1"}}, {"data": {"id": "AP3M1"}}, {"data": {"id": "AP3M1--BRD4", "source": "BRD4", "target": "AP3M1"}}, {"data": {"id": "AFF1"}}, {"data": {"id": "AFF1--BRD4", "source": "BRD4", "target": "AFF1"}}, {"data": {"id": "RFC1"}}, {"data": {"id": "RFC1--BRD4", "source": "BRD4", "target": "RFC1"}}, {"data": {"id": "AK1"}}, {"data": {"id": "AK1--BRD4", "source": "BRD4", "target": "AK1"}}, {"data": {"id": "MLLT1"}}, {"data": {"id": "MLLT1--BRD4", "source": "BRD4", "target": "MLLT1"}}, {"data": {"id": "SMARCA4"}}, {"data": {"id": "SMARCA4--BRD4", "source": "BRD4", "target": "SMARCA4"}}, {"data": {"id": "HIST1H3A"}}, {"data": {"id": "HIST1H3A--BRD4", "source": "BRD4", "target": "HIST1H3A"}}, {"data": {"id": "HIST4H4"}}, {"data": {"id": "HIST4H4--BRD4", "source": "BRD4", "target": "HIST4H4"}}, {"data": {"id": "MED12"}}, {"data": {"id": "MED12--BRD4", "source": "BRD4", "target": "MED12"}}, {"data": {"id": "LDHC"}}, {"data": {"id": "LDHC--BRD4", "source": "BRD4", "target": "LDHC"}}, {"data": {"id": "CHD8"}}, {"data": {"id": "CHD8--BRD4", "source": "BRD4", "target": "CHD8"}}, {"data": {"id": "CHEK2"}}, {"data": {"id": "CHEK2--BRD4", "source": "BRD4", "target": "CHEK2"}}, {"data": {"id": "ATAD5"}}, {"data": {"id": "ATAD5--BRD4", "source": "BRD4", "target": "ATAD5"}}, {"data": {"id": "HEXIM1"}}, {"data": {"id": "HEXIM1--BRD4", "source": "BRD4", "target": "HEXIM1"}}, {"data": {"id": "BRD2"}}, {"data": {"id": "BRD2--BRD4", "source": "BRD4", "target": "BRD2"}}, {"data": {"id": "SIRT1"}}, {"data": {"id": "SIRT1--BRD4", "source": "BRD4", "target": "SIRT1"}}, {"data": {"id": "MED24"}}, {"data": {"id": "MED24--BRD4", "source": "BRD4", "target": "MED24"}}, {"data": {"id": "RFC4"}}, {"data": {"id": "RFC4--BRD4", "source": "BRD4", "target": "RFC4"}}, {"data": {"id": "SMC1A"}}, {"data": {"id": "SMC1A--BRD4", "source": "BRD4", "target": "SMC1A"}}, {"data": {"id": "RFC3"}}, {"data": {"id": "RFC3--BRD4", "source": "BRD4", "target": "RFC3"}}, {"data": {"id": "SIPA1"}}, {"data": {"id": "SIPA1--BRD4", "source": "BRD4", "target": "SIPA1"}}, {"data": {"id": "BAIAP2L1"}}, {"data": {"id": "BAIAP2L1--BRD4", "source": "BRD4", "target": "BAIAP2L1"}}, {"data": {"id": "RBM25"}}, {"data": {"id": "RBM25--BRD4", "source": "BRD4", "target": "RBM25"}}, {"data": {"id": "CUL1"}}, {"data": {"id": "CUL1--BRD4", "source": "BRD4", "target": "CUL1"}}, {"data": {"id": "MED17"}}, {"data": {"id": "MED17--BRD4", "source": "BRD4", "target": "MED17"}}, {"data": {"id": "TCERG1"}}, {"data": {"id": "TCERG1--BRD4", "source": "BRD4", "target": "TCERG1"}}, {"data": {"id": "CAMKV"}}, {"data": {"id": "CAMKV--BRD4", "source": "BRD4", "target": "CAMKV"}}, {"data": {"id": "BRD9"}}, {"data": {"id": "BRD9--BRD4", "source": "BRD4", "target": "BRD9"}}, {"data": {"id": "NUMA1"}}, {"data": {"id": "NUMA1--BRD4", "source": "BRD4", "target": "NUMA1"}}, {"data": {"id": "CHD4"}}, {"data": {"id": "CHD4--BRD4", "source": "BRD4", "target": "CHD4"}}, {"data": {"id": "RTF1"}}, {"data": {"id": "RTF1--BRD4", "source": "BRD4", "target": "RTF1"}}, {"data": {"id": "RB1"}}, {"data": {"id": "RB1--BRD4", "source": "BRD4", "target": "RB1"}}, {"data": {"id": "BRD3"}}, {"data": {"id": "BRD3--BRD4", "source": "BRD4", "target": "BRD3"}}, {"data": {"id": "MYC"}}, {"data": {"id": "MYC--BRD4", "source": "BRD4", "target": "MYC"}}, {"data": {"id": "MAP2K1"}}, {"data": {"id": "MAP2K1--BRD4", "source": "BRD4", "target": "MAP2K1"}}, {"data": {"id": "PIP4K2A"}}, {"data": {"id": "PIP4K2A--BRD4", "source": "BRD4", "target": "PIP4K2A"}}, {"data": {"id": "HIST2H3C"}}, {"data": {"id": "HIST2H3C--BRD4", "source": "BRD4", "target": "HIST2H3C"}}, {"data": {"id": "CHEK1"}}, {"data": {"id": "CHEK1--BRD4", "source": "BRD4", "target": "CHEK1"}}, {"data": {"id": "DHFR"}}, {"data": {"id": "DHFR--BRD4", "source": "BRD4", "target": "DHFR"}}, {"data": {"id": "WEE1"}}, {"data": {"id": "WEE1--BRD4", "source": "BRD4", "target": "WEE1"}}, {"data": {"id": "CCNT2"}}, {"data": {"id": "CCNT2--BRD4", "source": "BRD4", "target": "CCNT2"}}, {"data": {"id": "MESDC2"}}, {"data": {"id": "MESDC2--BRD4", "source": "BRD4", "target": "MESDC2"}}, {"data": {"id": "MED14"}}, {"data": {"id": "MED14--BRD4", "source": "BRD4", "target": "MED14"}}, {"data": {"id": "DMAP1"}}, {"data": {"id": "DMAP1--BRD4", "source": "BRD4", "target": "DMAP1"}}, {"data": {"id": "PTEN"}}, {"data": {"id": "PTEN--BRD4", "source": "BRD4", "target": "PTEN"}}, {"data": {"id": "CDC5L"}}, {"data": {"id": "CDC5L--BRD4", "source": "BRD4", "target": "CDC5L"}}, {"data": {"id": "KDM5B"}}, {"data": {"id": "KDM5B--BRD4", "source": "BRD4", "target": "KDM5B"}}, {"data": {"id": "YWHAE"}}, {"data": {"id": "YWHAE--BRD4", "source": "BRD4", "target": "YWHAE"}}, {"data": {"id": "LMO3"}}, {"data": {"id": "LMO3--NUTM1", "source": "NUTM1", "target": "LMO3"}}, {"data": {"id": "ALOX5"}}, {"data": {"id": "ALOX5--NUTM1", "source": "NUTM1", "target": "ALOX5"}}, {"data": {"id": "LMO2"}}, {"data": {"id": "LMO2--NUTM1", "source": "NUTM1", "target": "LMO2"}}, {"data": {"id": "ZMYND10"}}, {"data": {"id": "ZMYND10--NUTM1", "source": "NUTM1", "target": "ZMYND10"}}, {"data": {"id": "KPNA2"}}, {"data": {"id": "KPNA2--NUTM1", "source": "NUTM1", "target": "KPNA2"}}, {"data": {"id": "TP53BP2"}}, {"data": {"id": "TP53BP2--NUTM1", "source": "NUTM1", "target": "TP53BP2"}}, {"data": {"id": "LHX8"}}, {"data": {"id": "LHX8--NUTM1", "source": "NUTM1", "target": "LHX8"}}, {"data": {"id": "PRKAA2"}}, {"data": {"id": "PRKAA2--NUTM1", "source": "NUTM1", "target": "PRKAA2"}}, {"data": {"id": "SH2D4A"}}, {"data": {"id": "SH2D4A--NUTM1", "source": "NUTM1", "target": "SH2D4A"}}, {"data": {"id": "FAM161A"}}, {"data": {"id": "FAM161A--NUTM1", "source": "NUTM1", "target": "FAM161A"}}, {"data": {"id": "ZNF277"}}, {"data": {"id": "ZNF277--NUTM1", "source": "NUTM1", "target": "ZNF277"}}, {"data": {"id": "KANSL1"}}, {"data": {"id": "KANSL1--NUTM1", "source": "NUTM1", "target": "KANSL1"}}, {"data": {"id": "SAMD4A"}}, {"data": {"id": "SAMD4A--NUTM1", "source": "NUTM1", "target": "SAMD4A"}}, {"data": {"id": "LMO1"}}, {"data": {"id": "LMO1--NUTM1", "source": "NUTM1", "target": "LMO1"}}, {"data": {"id": "MORN4"}}, {"data": {"id": "MORN4--NUTM1", "source": "NUTM1", "target": "MORN4"}}, {"data": {"id": "RIC8A"}}, {"data": {"id": "RIC8A--NUTM1", "source": "NUTM1", "target": "RIC8A"}}, {"data": {"id": "HSPBAP1"}}, {"data": {"id": "HSPBAP1--NUTM1", "source": "NUTM1", "target": "HSPBAP1"}}, {"data": {"id": "IFIT2"}}, {"data": {"id": "IFIT2--NUTM1", "source": "NUTM1", "target": "IFIT2"}}, {"data": {"id": "PSME4"}}, {"data": {"id": "PSME4--NUTM1", "source": "NUTM1", "target": "PSME4"}}, {"data": {"id": "P4HA3"}}, {"data": {"id": "P4HA3--NUTM1", "source": "NUTM1", "target": "P4HA3"}}, {"data": {"id": "NEBL"}}, {"data": {"id": "NEBL--NUTM1", "source": "NUTM1", "target": "NEBL"}}, {"data": {"id": "CCHCR1"}}, {"data": {"id": "CCHCR1--NUTM1", "source": "NUTM1", "target": "CCHCR1"}}, {"data": {"id": "EP300"}}, {"data": {"id": "fusion--EP300", "source": "fusion", "target": "EP300"}}]'>
 
 <script>
     var ppiObject = undefined;
@@ -1818,7 +1817,7 @@ var r=function(){function e(e){return-e.tension*e.x-e.friction*e.v}function t(t,
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("targeting_drugs_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("targeting_drugs_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>
@@ -1934,7 +1933,7 @@ var r=function(){function e(e){return-e.tension*e.x-e.friction*e.v}function t(t,
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("related_diseases_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("related_diseases_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>

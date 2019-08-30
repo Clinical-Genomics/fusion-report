@@ -19,7 +19,7 @@
 /*# sourceMappingURL=tabulator_bootstrap4.min.css.map */
 </style>
     <style type="text/css">body {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 
 /*
@@ -32,8 +32,7 @@
   bottom: 0;
   left: 0;
   z-index: 100;
-  /* Behind the navbar */
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1); /* Behind the navbar */
 }
 
 .feather {
@@ -46,9 +45,14 @@
   position: relative;
   top: 0;
   height: calc(100vh - 48px);
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.card-header .nav-link {
+  cursor: pointer;
+  text-transform: capitalize;
 }
 
 .sidebar .nav-link {
@@ -77,7 +81,7 @@
 }
 
 .sidebar-heading {
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -89,7 +93,7 @@
 }
 
 @media screen and (max-height: 667px) {
-  .footer img{
+  .footer img {
     display: none;
   }
 }
@@ -116,11 +120,6 @@
   margin-bottom: 20px;
 }
 
-.card-header .nav-link {
-  cursor: pointer;
-  text-transform: capitalize;
-}
-
 /*
  * Utilities
  */
@@ -144,7 +143,7 @@
  */
 
 .tabulator {
-  font-size: .875rem!important;
+  font-size: 0.875rem !important;
 }
 
 .badge {
@@ -152,7 +151,7 @@
 }
 
 .tabulator-row {
-  font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 85%;
 }
 
@@ -198,10 +197,10 @@ function getTable(name) {
 
 // Table formatters
 let foundDBFormatter = function(cell, formatterParams) {
-    let newCell = '';
+    let newCell = "";
     let items = cell.getValue();
     if (items.length === 0) {
-        newCell = `<span class="badge badge-danger">Not found</span>`;
+        newCell = "<span class='badge badge-danger'>Not found</span>";
     } else {
         items.forEach(function (item) {
             newCell += `<span class="badge badge-${formatterParams[item]}">
@@ -253,7 +252,7 @@ let linkFormatter = function(cell, formatterParams) {
 };
 
 // Table function buttons
-function copy_table(name) {
+function copyTable(name) {
     let table = getTable(name);
     if (table !== undefined) { table.copyToClipboard("table"); }
 }
@@ -1228,7 +1227,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
     <h1 class="h2">MALT1--IGH@</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group mr-2">
-            <p class="mb-0">Generated 20/08/2019<br><strong>test</strong></p>
+            <p class="mb-0">Generated 30/08/2019<br><strong>test</strong></p>
         </div>
     </div>
 </div>
@@ -1325,7 +1324,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("variations_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("variations_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>
@@ -1457,7 +1456,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("transcripts_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("transcripts_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>
@@ -1723,7 +1722,7 @@ var r=function(){function e(e){return-e.tension*e.x-e.friction*e.v}function t(t,
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("targeting_drugs_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("targeting_drugs_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>
@@ -1839,7 +1838,7 @@ var r=function(){function e(e){return-e.tension*e.x-e.friction*e.v}function t(t,
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("related_diseases_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("related_diseases_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>

@@ -19,7 +19,7 @@
 /*# sourceMappingURL=tabulator_bootstrap4.min.css.map */
 </style>
     <style type="text/css">body {
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 
 /*
@@ -32,8 +32,7 @@
   bottom: 0;
   left: 0;
   z-index: 100;
-  /* Behind the navbar */
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1); /* Behind the navbar */
 }
 
 .feather {
@@ -46,9 +45,14 @@
   position: relative;
   top: 0;
   height: calc(100vh - 48px);
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.card-header .nav-link {
+  cursor: pointer;
+  text-transform: capitalize;
 }
 
 .sidebar .nav-link {
@@ -77,7 +81,7 @@
 }
 
 .sidebar-heading {
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -89,7 +93,7 @@
 }
 
 @media screen and (max-height: 667px) {
-  .footer img{
+  .footer img {
     display: none;
   }
 }
@@ -116,11 +120,6 @@
   margin-bottom: 20px;
 }
 
-.card-header .nav-link {
-  cursor: pointer;
-  text-transform: capitalize;
-}
-
 /*
  * Utilities
  */
@@ -144,7 +143,7 @@
  */
 
 .tabulator {
-  font-size: .875rem!important;
+  font-size: 0.875rem !important;
 }
 
 .badge {
@@ -152,7 +151,7 @@
 }
 
 .tabulator-row {
-  font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 85%;
 }
 
@@ -198,10 +197,10 @@ function getTable(name) {
 
 // Table formatters
 let foundDBFormatter = function(cell, formatterParams) {
-    let newCell = '';
+    let newCell = "";
     let items = cell.getValue();
     if (items.length === 0) {
-        newCell = `<span class="badge badge-danger">Not found</span>`;
+        newCell = "<span class='badge badge-danger'>Not found</span>";
     } else {
         items.forEach(function (item) {
             newCell += `<span class="badge badge-${formatterParams[item]}">
@@ -253,7 +252,7 @@ let linkFormatter = function(cell, formatterParams) {
 };
 
 // Table function buttons
-function copy_table(name) {
+function copyTable(name) {
     let table = getTable(name);
     if (table !== undefined) { table.copyToClipboard("table"); }
 }
@@ -1228,7 +1227,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
     <h1 class="h2">ETV6--NTRK3</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group mr-2">
-            <p class="mb-0">Generated 20/08/2019<br><strong>test</strong></p>
+            <p class="mb-0">Generated 30/08/2019<br><strong>test</strong></p>
         </div>
     </div>
 </div>
@@ -1421,7 +1420,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("variations_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("variations_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>
@@ -1553,7 +1552,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("transcripts_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("transcripts_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>
@@ -1720,7 +1719,7 @@ var r=function(){function e(e){return-e.tension*e.x-e.friction*e.v}function t(t,
     </div>
 </section>
 
-<input type="hidden" name="ppi" value='[{"classes": "core", "data": {"id": "fusion"}}, {"classes": "core", "data": {"id": "ETV6"}}, {"classes": "core", "data": {"id": "NTRK3"}}, {"classes": "core-connection", "data": {"id": "fusionETV6", "source": "fusion", "target": "ETV6"}}, {"classes": "core-connection", "data": {"id": "fusionNTRK3", "source": "fusion", "target": "NTRK3"}}, {"data": {"id": "FBXL6"}}, {"data": {"id": "FBXL6--ETV6", "source": "ETV6", "target": "FBXL6"}}, {"data": {"id": "ETV6"}}, {"data": {"id": "ETV6--ETV6", "source": "ETV6", "target": "ETV6"}}, {"data": {"id": "LRP6"}}, {"data": {"id": "LRP6--ETV6", "source": "ETV6", "target": "LRP6"}}, {"data": {"id": "ACTA1"}}, {"data": {"id": "ACTA1--ETV6", "source": "ETV6", "target": "ACTA1"}}, {"data": {"id": "FLI1"}}, {"data": {"id": "FLI1--ETV6", "source": "ETV6", "target": "FLI1"}}, {"data": {"id": "HDAC6"}}, {"data": {"id": "HDAC6--ETV6", "source": "ETV6", "target": "HDAC6"}}, {"data": {"id": "TRAF3"}}, {"data": {"id": "TRAF3--ETV6", "source": "ETV6", "target": "TRAF3"}}, {"data": {"id": "GAB2"}}, {"data": {"id": "GAB2--ETV6", "source": "ETV6", "target": "GAB2"}}, {"data": {"id": "SUMO1"}}, {"data": {"id": "SUMO1--ETV6", "source": "ETV6", "target": "SUMO1"}}, {"data": {"id": "VPS26B"}}, {"data": {"id": "VPS26B--ETV6", "source": "ETV6", "target": "VPS26B"}}, {"data": {"id": "SOCS3"}}, {"data": {"id": "SOCS3--ETV6", "source": "ETV6", "target": "SOCS3"}}, {"data": {"id": "GRB2"}}, {"data": {"id": "GRB2--ETV6", "source": "ETV6", "target": "GRB2"}}, {"data": {"id": "NCOR1"}}, {"data": {"id": "NCOR1--ETV6", "source": "ETV6", "target": "NCOR1"}}, {"data": {"id": "IRF8"}}, {"data": {"id": "IRF8--ETV6", "source": "ETV6", "target": "IRF8"}}, {"data": {"id": "NFATC2"}}, {"data": {"id": "NFATC2--ETV6", "source": "ETV6", "target": "NFATC2"}}, {"data": {"id": "KAT5"}}, {"data": {"id": "KAT5--ETV6", "source": "ETV6", "target": "KAT5"}}, {"data": {"id": "LRP5"}}, {"data": {"id": "LRP5--ETV6", "source": "ETV6", "target": "LRP5"}}, {"data": {"id": "L3MBTL1"}}, {"data": {"id": "L3MBTL1--ETV6", "source": "ETV6", "target": "L3MBTL1"}}, {"data": {"id": "PIN1"}}, {"data": {"id": "PIN1--ETV6", "source": "ETV6", "target": "PIN1"}}, {"data": {"id": "SIN3A"}}, {"data": {"id": "SIN3A--ETV6", "source": "ETV6", "target": "SIN3A"}}, {"data": {"id": "SKP1"}}, {"data": {"id": "SKP1--ETV6", "source": "ETV6", "target": "SKP1"}}, {"data": {"id": "CRKL"}}, {"data": {"id": "CRKL--ETV6", "source": "ETV6", "target": "CRKL"}}, {"data": {"id": "PDGFRB"}}, {"data": {"id": "PDGFRB--ETV6", "source": "ETV6", "target": "PDGFRB"}}, {"data": {"id": "SOX2"}}, {"data": {"id": "SOX2--ETV6", "source": "ETV6", "target": "SOX2"}}, {"data": {"id": "UBE2I"}}, {"data": {"id": "UBE2I--ETV6", "source": "ETV6", "target": "UBE2I"}}, {"data": {"id": "NID2"}}, {"data": {"id": "NID2--ETV6", "source": "ETV6", "target": "NID2"}}, {"data": {"id": "USP7"}}, {"data": {"id": "USP7--ETV6", "source": "ETV6", "target": "USP7"}}, {"data": {"id": "SOCS1"}}, {"data": {"id": "SOCS1--ETV6", "source": "ETV6", "target": "SOCS1"}}, {"data": {"id": "WDYHV1"}}, {"data": {"id": "WDYHV1--ETV6", "source": "ETV6", "target": "WDYHV1"}}, {"data": {"id": "ELAVL1"}}, {"data": {"id": "ELAVL1--ETV6", "source": "ETV6", "target": "ELAVL1"}}, {"data": {"id": "ETV7"}}, {"data": {"id": "ETV7--ETV6", "source": "ETV6", "target": "ETV7"}}, {"data": {"id": "HDAC3"}}, {"data": {"id": "HDAC3--ETV6", "source": "ETV6", "target": "HDAC3"}}, {"data": {"id": "AP1M1"}}, {"data": {"id": "AP1M1--ETV6", "source": "ETV6", "target": "AP1M1"}}, {"data": {"id": "HDAC9"}}, {"data": {"id": "HDAC9--ETV6", "source": "ETV6", "target": "HDAC9"}}, {"data": {"id": "KIAA0391"}}, {"data": {"id": "KIAA0391--NTRK3", "source": "NTRK3", "target": "KIAA0391"}}, {"data": {"id": "APP"}}, {"data": {"id": "APP--NTRK3", "source": "NTRK3", "target": "APP"}}, {"data": {"id": "C6orf120"}}, {"data": {"id": "C6orf120--NTRK3", "source": "NTRK3", "target": "C6orf120"}}, {"data": {"id": "TBC1D24"}}, {"data": {"id": "TBC1D24--NTRK3", "source": "NTRK3", "target": "TBC1D24"}}, {"data": {"id": "HRAS"}}, {"data": {"id": "HRAS--NTRK3", "source": "NTRK3", "target": "HRAS"}}, {"data": {"id": "EHD4"}}, {"data": {"id": "EHD4--NTRK3", "source": "NTRK3", "target": "EHD4"}}, {"data": {"id": "GNB2"}}, {"data": {"id": "GNB2--NTRK3", "source": "NTRK3", "target": "GNB2"}}, {"data": {"id": "PTPRS"}}, {"data": {"id": "PTPRS--NTRK3", "source": "NTRK3", "target": "PTPRS"}}, {"data": {"id": "MYADM"}}, {"data": {"id": "MYADM--NTRK3", "source": "NTRK3", "target": "MYADM"}}, {"data": {"id": "TMEM192"}}, {"data": {"id": "TMEM192--NTRK3", "source": "NTRK3", "target": "TMEM192"}}, {"data": {"id": "FRS2"}}, {"data": {"id": "FRS2--NTRK3", "source": "NTRK3", "target": "FRS2"}}, {"data": {"id": "PLCG1"}}, {"data": {"id": "PLCG1--NTRK3", "source": "NTRK3", "target": "PLCG1"}}, {"data": {"id": "NTRK1"}}, {"data": {"id": "NTRK1--NTRK3", "source": "NTRK3", "target": "NTRK1"}}, {"data": {"id": "DENND4A"}}, {"data": {"id": "DENND4A--NTRK3", "source": "NTRK3", "target": "DENND4A"}}, {"data": {"id": "TMEM11"}}, {"data": {"id": "TMEM11--NTRK3", "source": "NTRK3", "target": "TMEM11"}}, {"data": {"id": "EFR3A"}}, {"data": {"id": "EFR3A--NTRK3", "source": "NTRK3", "target": "EFR3A"}}, {"data": {"id": "NTF3"}}, {"data": {"id": "NTF3--NTRK3", "source": "NTRK3", "target": "NTF3"}}, {"data": {"id": "CXCR4"}}, {"data": {"id": "CXCR4--NTRK3", "source": "NTRK3", "target": "CXCR4"}}, {"data": {"id": "MTOR"}}, {"data": {"id": "MTOR--NTRK3", "source": "NTRK3", "target": "MTOR"}}, {"data": {"id": "ATP7B"}}, {"data": {"id": "ATP7B--NTRK3", "source": "NTRK3", "target": "ATP7B"}}, {"data": {"id": "PAG1"}}, {"data": {"id": "PAG1--NTRK3", "source": "NTRK3", "target": "PAG1"}}, {"data": {"id": "IRAK3"}}, {"data": {"id": "IRAK3--NTRK3", "source": "NTRK3", "target": "IRAK3"}}, {"data": {"id": "TNK2"}}, {"data": {"id": "TNK2--NTRK3", "source": "NTRK3", "target": "TNK2"}}, {"data": {"id": "SH3BP4"}}, {"data": {"id": "SH3BP4--NTRK3", "source": "NTRK3", "target": "SH3BP4"}}, {"data": {"id": "ACAD10"}}, {"data": {"id": "ACAD10--NTRK3", "source": "NTRK3", "target": "ACAD10"}}, {"data": {"id": "PTCD2"}}, {"data": {"id": "PTCD2--NTRK3", "source": "NTRK3", "target": "PTCD2"}}, {"data": {"id": "FAM171A2"}}, {"data": {"id": "FAM171A2--NTRK3", "source": "NTRK3", "target": "FAM171A2"}}, {"data": {"id": "SLC39A11"}}, {"data": {"id": "SLC39A11--NTRK3", "source": "NTRK3", "target": "SLC39A11"}}, {"data": {"id": "RPTOR"}}, {"data": {"id": "RPTOR--NTRK3", "source": "NTRK3", "target": "RPTOR"}}, {"data": {"id": "GNB4"}}, {"data": {"id": "GNB4--NTRK3", "source": "NTRK3", "target": "GNB4"}}, {"data": {"id": "INTS7"}}, {"data": {"id": "INTS7--NTRK3", "source": "NTRK3", "target": "INTS7"}}, {"data": {"id": "EPHA2"}}, {"data": {"id": "EPHA2--NTRK3", "source": "NTRK3", "target": "EPHA2"}}, {"data": {"id": "HEATR6"}}, {"data": {"id": "HEATR6--NTRK3", "source": "NTRK3", "target": "HEATR6"}}, {"data": {"id": "PTPN1"}}, {"data": {"id": "PTPN1--NTRK3", "source": "NTRK3", "target": "PTPN1"}}, {"data": {"id": "C1GALT1"}}, {"data": {"id": "C1GALT1--NTRK3", "source": "NTRK3", "target": "C1GALT1"}}, {"data": {"id": "SQSTM1"}}, {"data": {"id": "SQSTM1--NTRK3", "source": "NTRK3", "target": "SQSTM1"}}, {"data": {"id": "SHC1"}}, {"data": {"id": "SHC1--NTRK3", "source": "NTRK3", "target": "SHC1"}}, {"data": {"id": "HSP90AA1"}}, {"data": {"id": "HSP90AA1--NTRK3", "source": "NTRK3", "target": "HSP90AA1"}}, {"data": {"id": "LGALS1"}}, {"data": {"id": "LGALS1--NTRK3", "source": "NTRK3", "target": "LGALS1"}}]'>
+<input type="hidden" name="ppi" value='[{"classes": "core", "data": {"id": "fusion"}}, {"classes": "core", "data": {"id": "ETV6"}}, {"classes": "core", "data": {"id": "NTRK3"}}, {"classes": "core-connection", "data": {"id": "fusionETV6", "source": "fusion", "target": "ETV6"}}, {"classes": "core-connection", "data": {"id": "fusionNTRK3", "source": "fusion", "target": "NTRK3"}}, {"data": {"id": "GAB2"}}, {"data": {"id": "GAB2--ETV6", "source": "ETV6", "target": "GAB2"}}, {"data": {"id": "HDAC3"}}, {"data": {"id": "HDAC3--ETV6", "source": "ETV6", "target": "HDAC3"}}, {"data": {"id": "SOX2"}}, {"data": {"id": "SOX2--ETV6", "source": "ETV6", "target": "SOX2"}}, {"data": {"id": "TRAF3"}}, {"data": {"id": "TRAF3--ETV6", "source": "ETV6", "target": "TRAF3"}}, {"data": {"id": "NID2"}}, {"data": {"id": "NID2--ETV6", "source": "ETV6", "target": "NID2"}}, {"data": {"id": "USP7"}}, {"data": {"id": "USP7--ETV6", "source": "ETV6", "target": "USP7"}}, {"data": {"id": "L3MBTL1"}}, {"data": {"id": "L3MBTL1--ETV6", "source": "ETV6", "target": "L3MBTL1"}}, {"data": {"id": "UBE2I"}}, {"data": {"id": "UBE2I--ETV6", "source": "ETV6", "target": "UBE2I"}}, {"data": {"id": "LRP6"}}, {"data": {"id": "LRP6--ETV6", "source": "ETV6", "target": "LRP6"}}, {"data": {"id": "NCOR1"}}, {"data": {"id": "NCOR1--ETV6", "source": "ETV6", "target": "NCOR1"}}, {"data": {"id": "CRKL"}}, {"data": {"id": "CRKL--ETV6", "source": "ETV6", "target": "CRKL"}}, {"data": {"id": "ELAVL1"}}, {"data": {"id": "ELAVL1--ETV6", "source": "ETV6", "target": "ELAVL1"}}, {"data": {"id": "SIN3A"}}, {"data": {"id": "SIN3A--ETV6", "source": "ETV6", "target": "SIN3A"}}, {"data": {"id": "KAT5"}}, {"data": {"id": "KAT5--ETV6", "source": "ETV6", "target": "KAT5"}}, {"data": {"id": "SUMO1"}}, {"data": {"id": "SUMO1--ETV6", "source": "ETV6", "target": "SUMO1"}}, {"data": {"id": "SOCS3"}}, {"data": {"id": "SOCS3--ETV6", "source": "ETV6", "target": "SOCS3"}}, {"data": {"id": "PIN1"}}, {"data": {"id": "PIN1--ETV6", "source": "ETV6", "target": "PIN1"}}, {"data": {"id": "AP1M1"}}, {"data": {"id": "AP1M1--ETV6", "source": "ETV6", "target": "AP1M1"}}, {"data": {"id": "FLI1"}}, {"data": {"id": "FLI1--ETV6", "source": "ETV6", "target": "FLI1"}}, {"data": {"id": "WDYHV1"}}, {"data": {"id": "WDYHV1--ETV6", "source": "ETV6", "target": "WDYHV1"}}, {"data": {"id": "NFATC2"}}, {"data": {"id": "NFATC2--ETV6", "source": "ETV6", "target": "NFATC2"}}, {"data": {"id": "ACTA1"}}, {"data": {"id": "ACTA1--ETV6", "source": "ETV6", "target": "ACTA1"}}, {"data": {"id": "SKP1"}}, {"data": {"id": "SKP1--ETV6", "source": "ETV6", "target": "SKP1"}}, {"data": {"id": "FBXL6"}}, {"data": {"id": "FBXL6--ETV6", "source": "ETV6", "target": "FBXL6"}}, {"data": {"id": "ETV6"}}, {"data": {"id": "ETV6--ETV6", "source": "ETV6", "target": "ETV6"}}, {"data": {"id": "HDAC9"}}, {"data": {"id": "HDAC9--ETV6", "source": "ETV6", "target": "HDAC9"}}, {"data": {"id": "IRF8"}}, {"data": {"id": "IRF8--ETV6", "source": "ETV6", "target": "IRF8"}}, {"data": {"id": "LRP5"}}, {"data": {"id": "LRP5--ETV6", "source": "ETV6", "target": "LRP5"}}, {"data": {"id": "VPS26B"}}, {"data": {"id": "VPS26B--ETV6", "source": "ETV6", "target": "VPS26B"}}, {"data": {"id": "GRB2"}}, {"data": {"id": "GRB2--ETV6", "source": "ETV6", "target": "GRB2"}}, {"data": {"id": "HDAC6"}}, {"data": {"id": "HDAC6--ETV6", "source": "ETV6", "target": "HDAC6"}}, {"data": {"id": "SOCS1"}}, {"data": {"id": "SOCS1--ETV6", "source": "ETV6", "target": "SOCS1"}}, {"data": {"id": "ETV7"}}, {"data": {"id": "ETV7--ETV6", "source": "ETV6", "target": "ETV7"}}, {"data": {"id": "PDGFRB"}}, {"data": {"id": "PDGFRB--ETV6", "source": "ETV6", "target": "PDGFRB"}}, {"data": {"id": "RPTOR"}}, {"data": {"id": "RPTOR--NTRK3", "source": "NTRK3", "target": "RPTOR"}}, {"data": {"id": "IRAK3"}}, {"data": {"id": "IRAK3--NTRK3", "source": "NTRK3", "target": "IRAK3"}}, {"data": {"id": "EFR3A"}}, {"data": {"id": "EFR3A--NTRK3", "source": "NTRK3", "target": "EFR3A"}}, {"data": {"id": "CXCR4"}}, {"data": {"id": "CXCR4--NTRK3", "source": "NTRK3", "target": "CXCR4"}}, {"data": {"id": "HEATR6"}}, {"data": {"id": "HEATR6--NTRK3", "source": "NTRK3", "target": "HEATR6"}}, {"data": {"id": "TMEM11"}}, {"data": {"id": "TMEM11--NTRK3", "source": "NTRK3", "target": "TMEM11"}}, {"data": {"id": "PLCG1"}}, {"data": {"id": "PLCG1--NTRK3", "source": "NTRK3", "target": "PLCG1"}}, {"data": {"id": "TBC1D24"}}, {"data": {"id": "TBC1D24--NTRK3", "source": "NTRK3", "target": "TBC1D24"}}, {"data": {"id": "SHC1"}}, {"data": {"id": "SHC1--NTRK3", "source": "NTRK3", "target": "SHC1"}}, {"data": {"id": "PTCD2"}}, {"data": {"id": "PTCD2--NTRK3", "source": "NTRK3", "target": "PTCD2"}}, {"data": {"id": "GNB2"}}, {"data": {"id": "GNB2--NTRK3", "source": "NTRK3", "target": "GNB2"}}, {"data": {"id": "EHD4"}}, {"data": {"id": "EHD4--NTRK3", "source": "NTRK3", "target": "EHD4"}}, {"data": {"id": "INTS7"}}, {"data": {"id": "INTS7--NTRK3", "source": "NTRK3", "target": "INTS7"}}, {"data": {"id": "MYADM"}}, {"data": {"id": "MYADM--NTRK3", "source": "NTRK3", "target": "MYADM"}}, {"data": {"id": "NTF3"}}, {"data": {"id": "NTF3--NTRK3", "source": "NTRK3", "target": "NTF3"}}, {"data": {"id": "TMEM192"}}, {"data": {"id": "TMEM192--NTRK3", "source": "NTRK3", "target": "TMEM192"}}, {"data": {"id": "HRAS"}}, {"data": {"id": "HRAS--NTRK3", "source": "NTRK3", "target": "HRAS"}}, {"data": {"id": "FRS2"}}, {"data": {"id": "FRS2--NTRK3", "source": "NTRK3", "target": "FRS2"}}, {"data": {"id": "PAG1"}}, {"data": {"id": "PAG1--NTRK3", "source": "NTRK3", "target": "PAG1"}}, {"data": {"id": "SLC39A11"}}, {"data": {"id": "SLC39A11--NTRK3", "source": "NTRK3", "target": "SLC39A11"}}, {"data": {"id": "LGALS1"}}, {"data": {"id": "LGALS1--NTRK3", "source": "NTRK3", "target": "LGALS1"}}, {"data": {"id": "APP"}}, {"data": {"id": "APP--NTRK3", "source": "NTRK3", "target": "APP"}}, {"data": {"id": "FAM171A2"}}, {"data": {"id": "FAM171A2--NTRK3", "source": "NTRK3", "target": "FAM171A2"}}, {"data": {"id": "ACAD10"}}, {"data": {"id": "ACAD10--NTRK3", "source": "NTRK3", "target": "ACAD10"}}, {"data": {"id": "ATP7B"}}, {"data": {"id": "ATP7B--NTRK3", "source": "NTRK3", "target": "ATP7B"}}, {"data": {"id": "SQSTM1"}}, {"data": {"id": "SQSTM1--NTRK3", "source": "NTRK3", "target": "SQSTM1"}}, {"data": {"id": "MTOR"}}, {"data": {"id": "MTOR--NTRK3", "source": "NTRK3", "target": "MTOR"}}, {"data": {"id": "SH3BP4"}}, {"data": {"id": "SH3BP4--NTRK3", "source": "NTRK3", "target": "SH3BP4"}}, {"data": {"id": "C1GALT1"}}, {"data": {"id": "C1GALT1--NTRK3", "source": "NTRK3", "target": "C1GALT1"}}, {"data": {"id": "NTRK1"}}, {"data": {"id": "NTRK1--NTRK3", "source": "NTRK3", "target": "NTRK1"}}, {"data": {"id": "PTPN1"}}, {"data": {"id": "PTPN1--NTRK3", "source": "NTRK3", "target": "PTPN1"}}, {"data": {"id": "HSP90AA1"}}, {"data": {"id": "HSP90AA1--NTRK3", "source": "NTRK3", "target": "HSP90AA1"}}, {"data": {"id": "KIAA0391"}}, {"data": {"id": "KIAA0391--NTRK3", "source": "NTRK3", "target": "KIAA0391"}}, {"data": {"id": "GNB4"}}, {"data": {"id": "GNB4--NTRK3", "source": "NTRK3", "target": "GNB4"}}, {"data": {"id": "EPHA2"}}, {"data": {"id": "EPHA2--NTRK3", "source": "NTRK3", "target": "EPHA2"}}, {"data": {"id": "DENND4A"}}, {"data": {"id": "DENND4A--NTRK3", "source": "NTRK3", "target": "DENND4A"}}, {"data": {"id": "PTPRS"}}, {"data": {"id": "PTPRS--NTRK3", "source": "NTRK3", "target": "PTPRS"}}, {"data": {"id": "TNK2"}}, {"data": {"id": "TNK2--NTRK3", "source": "NTRK3", "target": "TNK2"}}, {"data": {"id": "C6orf120"}}, {"data": {"id": "C6orf120--NTRK3", "source": "NTRK3", "target": "C6orf120"}}]'>
 
 <script>
     var ppiObject = undefined;
@@ -1819,7 +1818,7 @@ var r=function(){function e(e){return-e.tension*e.x-e.friction*e.v}function t(t,
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("targeting_drugs_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("targeting_drugs_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>
@@ -1935,7 +1934,7 @@ var r=function(){function e(e){return-e.tension*e.x-e.friction*e.v}function t(t,
                 </div>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-primary mb-2" onclick='copy_table("related_diseases_table")'>
+                <button type="button" class="btn btn-primary mb-2" onclick='copyTable("related_diseases_table")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: #ffffff; vertical-align: sub;">
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"></path>
