@@ -1,4 +1,4 @@
-# ![fusion-report](https://raw.githubusercontent.com/matq007/fusion-report/master/docs/_src/_static/fusion-report.png)
+# ![fusion-report](https://raw.githubusercontent.com/matq007/fusion-report/master/fusion_report/assets/img/fusion-report.png)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/fusion-report/README.html)
 [![Build Status](https://travis-ci.org/matq007/fusion-report.svg?branch=master)](https://travis-ci.org/matq007/fusion-report)
@@ -26,7 +26,7 @@ This python script generates an interactive summary report from fusion detection
 ### Using Conda
 
 ```bash
-conda install -c bioconda fusion-report=1.1.0
+conda install -c bioconda fusion-report=2.0
 ```
 
 ### From source
@@ -47,12 +47,12 @@ fusion_report download --cosmic_usr '<username>' --cosmic_passwd '<password>' /p
 # Run the fusion-report
 fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/
   --arriba tests/test_data/arriba.tsv
-  --ericscript tests/test_data/ericscript.tsv
-  --starfusion tests/test_data/starfusion.tsv
-  --fusioncatcher tests/test_data/fusioncatcher.txt
-  --squid tests/test_data/squid.txt
-  --pizzly tests/test_data/pizzly.tsv
   --dragen tests/test_data/dragen.tsv
+  --ericscript tests/test_data/ericscript.tsv
+  --fusioncatcher tests/test_data/fusioncatcher.txt
+  --pizzly tests/test_data/pizzly.tsv
+  --squid tests/test_data/squid.txt
+  --starfusion tests/test_data/starfusion.tsv
 ```
 
 Or get help and list all possible parameters.
