@@ -20,7 +20,7 @@ jobs:
       before_script:
         - pip install -r requirements.txt
         - python setup.py install
-      if: type = push AND branch = master
+      if: type = pull_request AND branch = master
       script:
         - fusion_report download --cosmic_usr '$COSMIC_USERNAME' --cosmic_passwd '$COSMIC_PASSWORD' ./db/
         - fusion_report run "test" tests/example db/
@@ -33,7 +33,7 @@ jobs:
           --arriba tests/test_data/arriba.tsv
           --export csv
     - stage: publish-documentation
-      if: branch = master
+      if: type = push AND branch = master
       script: skip
       deploy:
         provider: pages
