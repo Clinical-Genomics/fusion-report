@@ -1,9 +1,11 @@
-# ![fusion-report](https://raw.githubusercontent.com/matq007/fusion-report/master/docs/_src/_static/fusion-report.png)
+# ![fusion-report](https://raw.githubusercontent.com/matq007/fusion-report/master/fusion_report/assets/img/fusion-report.png)
 
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/fusion-report/README.html)
 [![Build Status](https://travis-ci.org/matq007/fusion-report.svg?branch=master)](https://travis-ci.org/matq007/fusion-report)
 [![DOI](https://zenodo.org/badge/173453958.svg)](https://zenodo.org/badge/latestdoi/173453958)
 [![MIT License](https://img.shields.io/github/license/matq007/fusion-report.svg)](https://github.com/matq007/fusion-report/blob/master/LICENSE)
-[![Slack Status](https://nf-core-invite.herokuapp.com/badge.svg)](https://nf-core-invite.herokuapp.com)
+[![Slack Status](https://img.shields.io/badge/slack-join-brightgreen)](https://nf-co.re/join/slack)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/932dff8661394cc28448af7b22748bb5)](https://app.codacy.com/app/mproksik/fusion-report?utm_source=github.com&utm_medium=referral&utm_content=matq007/fusion-report&utm_campaign=Badge_Grade_Dashboard)
 
 This python script generates an interactive summary report from fusion detection tools. Fusion-report is part of a bigger project [nf-core/rnafusion](https://github.com/nf-core/rnafusion) which is designed to detect and report fusion genes from RNA-seq data.
 
@@ -15,9 +17,17 @@ This python script generates an interactive summary report from fusion detection
 * [EricScript](https://sites.google.com/site/bioericscript/)
 * [Pizzly](https://github.com/pmelsted/pizzly)
 * [Squid](https://github.com/Kingsford-Group/squid)
-* [Arriba](https://github.com/suhrig/arriba) (coming soon)
+* [Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
+* [Arriba](https://github.com/suhrig/arriba)
+* [Illumina Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
 
 ## Installation
+
+### Using Conda
+
+```bash
+conda install -c bioconda fusion-report=2.0
+```
 
 ### From source
 
@@ -35,12 +45,14 @@ python3 setup.py install
 fusion_report download --cosmic_usr '<username>' --cosmic_passwd '<password>' /path/to/db/
 
 # Run the fusion-report
-fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ 
-  --ericscript tests/test_data/ericscript.tsv 
-  --starfusion tests/test_data/starfusion.tsv 
+fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/
+  --arriba tests/test_data/arriba.tsv
+  --dragen tests/test_data/dragen.tsv
+  --ericscript tests/test_data/ericscript.tsv
   --fusioncatcher tests/test_data/fusioncatcher.txt
-  --squid tests/test_data/squid.txt 
   --pizzly tests/test_data/pizzly.tsv
+  --squid tests/test_data/squid.txt
+  --starfusion tests/test_data/starfusion.tsv
 ```
 
 Or get help and list all possible parameters.

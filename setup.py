@@ -1,16 +1,12 @@
-import os
-import sys
 from setuptools import find_packages, setup
 
-VERSION = '1.0'
+from fusion_report.app import __version__
+
 PACKAGE_DATA = {
     'fusion_report': [
-        'db/*.sql'
-        'templates/*/*',
-        '../docs/_src/_static/*',
-        '../LICENSE',
-        '../README.md',
-        '../requirements.txt'
+        'data/schema/*.sql'
+        'arguments.json',
+        'templates/*/*'
     ]
 }
 
@@ -22,7 +18,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='fusion_report',
-    version=VERSION,
+    version=__version__,
     python_requires='>=3.6.*',
     description='Tool for parsing outputs from fusion detection tools.',
     long_description=README,

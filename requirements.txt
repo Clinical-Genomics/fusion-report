@@ -1,3 +1,5 @@
+tqdm==4.33.0
+colorlog==4.0.2
 python-rapidjson==0.7.0
 pyyaml>=4.2b1
-Jinja2==2.9.5
+Jinja2==2.10.1
