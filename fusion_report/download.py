@@ -82,14 +82,8 @@ class Download:
             ctx.verify_mode = ssl.CERT_NONE
 
         if url.startswith('https') or url.startswith('ftp'):
-            req = urllib.request.Request(url)
-            req.add_header(
-                'User-Agent',
-                '''Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko)
-                Chrome/41.0.2228.0 Safari/537.3'''
-            )
             try:
-                with urllib.request.urlopen(req, context=ctx) as response:
+                with urllib.request.urlopen(url, context=ctx) as response:
                     file = url.split('/')[-1].split('?')[0]
                     Logger(__name__).info('Downloading %s', file)
                     # only download if file size doesn't match

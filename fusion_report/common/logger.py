@@ -19,43 +19,39 @@ class Logger(metaclass=Singleton):
     logger: Any = {}
 
     def __init__(self, name: str) -> None:
-        self.logger = logging.getLogger(name)
-        self.filename = 'fusion_report.log'
-        self.logger.setLevel(logging.INFO)
+        if not self.logger:
+            self.logger = logging.getLogger(name)
+            self.filename = 'fusion_report.log'
+            self.logger.setLevel(logging.INFO)
+            self.logger.addHandler(self.get_critical_handler(self.filename))
+            self.logger.addHandler(self.get_info_handler())
 
-    @staticmethod
-    def get_logger():
+    def get_logger(self):
         """Return logger."""
-        return logging.getLogger()
+        return self.logger
 
     def critical(self, msg: str, *args) -> None:
         """Critical logger."""
-        self.logger.addHandler(self.get_critical_handler(self.filename))
         self.logger.critical(msg, *args)
 
     def debug(self, msg: str, *args) -> None:
         """Debug logger."""
-        self.logger.addHandler(self.get_debug_handler())
         self.logger.debug(msg, *args)
 
     def error(self, msg: str, *args) -> None:
         """Error logger."""
-        self.logger.addHandler(self.get_critical_handler(self.filename))
         self.logger.error(msg, *args)
 
     def fatal(self, msg, *args, **kwargs):
         """Fatal logger."""
-        self.logger.addHandler(self.get_critical_handler(self.filename))
         self.logger.fatal(msg, *args, **kwargs)
 
     def info(self, msg: str, *args) -> None:
         """Info logger."""
-        self.logger.addHandler(self.get_info_handler())
         self.logger.info(msg, *args)
 
     def warning(self, msg: str, *args) -> None:
         """Warning logger."""
-        self.logger.addHandler(self.get_critical_handler(self.filename))
         self.logger.warning(msg, *args)
 
     @staticmethod
@@ -65,6 +61,7 @@ class Logger(metaclass=Singleton):
         file_handler.setFormatter(logging.Formatter(
             '%(asctime)s - %(levelname)s - %(name)s - %(message)s')
         )
+        file_handler.setLevel(logging.WARNING)
 
         return file_handler
 
@@ -76,15 +73,3 @@ class Logger(metaclass=Singleton):
         info_handler.setLevel(logging.INFO)
 
         return info_handler
-
-    @staticmethod
-    def get_debug_handler() -> logging.StreamHandler:
-        """Logging handler for level DEBUG."""
-        debug_handler = logging.StreamHandler(sys.stdout)
-        debug_handler.setFormatter(ColoredFormatter(
-            '%(log_color)s[%(levelname)s]%(reset)s %(log_color)s%(name)s%(reset)s - '
-            '%(log_color)s%(message)s%(reset)s')
-        )
-        debug_handler.setLevel(logging.DEBUG)
-
-        return debug_handler
