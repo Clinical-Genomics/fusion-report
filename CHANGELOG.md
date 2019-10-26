@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1](https://github.com/matq007/fusion-report/releases/tag/2.0.1)
+
+### FIX
+
+- Fixed missing Mitelman database file
+
 ## [2.0.0](https://github.com/matq007/fusion-report/releases/tag/2.0.0)
 
 This version of fusion-report has been completely rebuild from scratch following
