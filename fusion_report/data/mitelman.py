@@ -9,7 +9,7 @@ class MitelmanDB(Db, metaclass=Singleton):
     """Implementation of Mitelman Database. All core functionality is handled by parent class."""
 
     def __init__(self, path: str) -> None:
-        super().__init__(path, 'Mitelman', 'mitelman.sql')
+        super().__init__(path, 'Mitelman', 'Mitelman.sql')
 
     def get_all_fusions(self) -> List[str]:
         """Returns all fusions from database."""
