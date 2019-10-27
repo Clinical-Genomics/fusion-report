@@ -54,26 +54,31 @@ class Db:
         """
         try:
             # build database schema
-            with open(self.schema, 'r', encoding='utf-8') as schema:
-                self.connection.executescript(schema.read().lower())
+            self.create_database()
 
-            # import all data files
-            for file in files:
-                if not file.endswith('.sql'):
-                    with open(file, 'r', encoding=encoding) as resource:
-                        if skip_header:
-                            next(resource)
-                        rows: List[List[str]] = []
-                        for line in resource:
-                            rows.append(line.split(delimiter))
-                        self.connection.executemany(
-                            f'''INSERT INTO {file.split('.')[0].lower()}
-                                VALUES ({','.join(['?' for _ in range(0, len(max(rows)))])})''',
-                            rows
-                        )
-                        self.connection.commit()
+            # import all data files except .sql files
+            for file in filter(lambda x: not x.endswith('.sql'), files):
+                with open(file, 'r', encoding=encoding) as resource:
+                    if skip_header:
+                        next(resource)
+                    first_line: List[str] = resource.readline().split(delimiter)
+                    rows: List[List[str]] = [first_line]
+                    for line in resource:
+                        row = line.split(delimiter)
+                        rows.append(row + ['' for _ in range(len(row), len(first_line))])
+                    self.connection.executemany(
+                        f'''INSERT INTO {file.split('.')[0].lower()}
+                            VALUES ({','.join(['?' for _ in range(0, len(first_line))])})''',
+                        rows
+                    )
+                    self.connection.commit()
         except (IOError, sqlite3.Error) as ex:
             raise DbException(ex)
+
+    def create_database(self):
+        """ Build database from schema file."""
+        with open(self.schema, 'r', encoding='utf-8') as schema:
+            self.connection.executescript(schema.read().lower())
 
     def select(self, query: str, params: List[str] = None):
         """Select data from table.

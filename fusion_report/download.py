@@ -114,7 +114,7 @@ class Download:
         pool.close()
         pool.join()
         db = FusionGDB('.')
-        db.setup(files, delimiter='\t', skip_header=True)
+        db.setup(files, delimiter='\t', skip_header=False)
 
     def get_mitelman(self) -> None:
         """Method for download Mitelman database."""
