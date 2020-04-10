@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### FIX
 
 - `tool_cutoff` was not casted to `int` ([#25](https://github.com/matq007/fusion-report/issues/25))
+- csv export missing data ([#26](https://github.com/matq007/fusion-report/issues/26))
 
 ## [2.0.1](https://github.com/matq007/fusion-report/releases/tag/2.0.1)
 
