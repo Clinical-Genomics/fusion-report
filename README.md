@@ -1,7 +1,7 @@
 # ![fusion-report](https://raw.githubusercontent.com/matq007/fusion-report/master/fusion_report/templates/assets/img/fusion-report.png)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/fusion-report/README.html)
-[![Build Status](https://travis-ci.org/matq007/fusion-report.svg?branch=master)](https://travis-ci.org/matq007/fusion-report)
+![.github/workflows/release.yml](https://github.com/matq007/fusion-report/workflows/.github/workflows/release.yml/badge.svg)
 [![DOI](https://zenodo.org/badge/173453958.svg)](https://zenodo.org/badge/latestdoi/173453958)
 [![MIT License](https://img.shields.io/github/license/matq007/fusion-report.svg)](https://github.com/matq007/fusion-report/blob/master/LICENSE)
 [![Slack Status](https://img.shields.io/badge/slack-join-brightgreen)](https://nf-co.re/join/slack)
@@ -26,7 +26,7 @@ This python script generates an interactive summary report from fusion detection
 ### Using Conda
 
 ```bash
-conda install -c bioconda fusion-report=2.0.1
+conda install -c bioconda fusion-report=2.0.2
 ```
 
 ### From source
@@ -45,13 +45,13 @@ python3 setup.py install
 fusion_report download --cosmic_usr '<username>' --cosmic_passwd '<password>' /path/to/db/
 
 # Run the fusion-report
-fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/
-  --arriba tests/test_data/arriba.tsv
-  --dragen tests/test_data/dragen.tsv
-  --ericscript tests/test_data/ericscript.tsv
-  --fusioncatcher tests/test_data/fusioncatcher.txt
-  --pizzly tests/test_data/pizzly.tsv
-  --squid tests/test_data/squid.txt
+fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ \
+  --arriba tests/test_data/arriba.tsv \
+  --dragen tests/test_data/dragen.tsv \
+  --ericscript tests/test_data/ericscript.tsv \
+  --fusioncatcher tests/test_data/fusioncatcher.txt \
+  --pizzly tests/test_data/pizzly.tsv \
+  --squid tests/test_data/squid.txt \
   --starfusion tests/test_data/starfusion.tsv
 ```
 
@@ -67,4 +67,5 @@ For more info on how to run the script, please see the [documentation](https://m
 
 ## Credits
 
-DNA icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/).
+* Testing dataset copied from [ndaniel/fusioncatcher](https://github.com/ndaniel/fusioncatcher).
+* DNA icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/).

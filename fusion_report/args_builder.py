@@ -67,11 +67,13 @@ class ArgsBuilder:
             if len(optional['key']) > 1:
                 run_optional.add_argument(
                     optional['key'][0], optional['key'][1],
-                    default=optional['default'], help=optional['help']
+                    default=optional['default'], help=optional['help'],
+                    type=type(optional['default'])
                 )
             else:
                 run_optional.add_argument(
-                    optional['key'][0], default=optional['default'], help=optional['help']
+                    optional['key'][0], default=optional['default'], help=optional['help'],
+                    type=type(optional['default'])
                 )
 
     def download_args(self, args) -> None:

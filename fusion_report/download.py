@@ -9,7 +9,7 @@ import tarfile
 import urllib.error
 import urllib.request
 from argparse import Namespace
-from multiprocessing import Pool, Process
+from multiprocessing import Manager, Pool, Process
 from typing import List
 
 import rapidjson
@@ -55,11 +55,12 @@ class Download:
         """Parallel downloading of all databases."""
         # change to update directory
         os.chdir(params.output)
+        return_err: List[str] = Manager().list()
 
         processes = [
-            Process(target=self.get_fusiongdb),
-            Process(target=self.get_mitelman),
-            Process(target=self.get_cosmic)
+            Process(name='FusionGDB', target=self.get_fusiongdb, args=(return_err,)),
+            Process(name='Mitelman', target=self.get_mitelman, args=(return_err,)),
+            Process(name='COSMIC', target=self.get_cosmic, args=(return_err,))
         ]
 
         for process in processes:
@@ -67,6 +68,9 @@ class Download:
 
         for process in processes:
             process.join()
+
+        if len(return_err) > 0:
+            raise DownloadException(return_err)
 
         Logger(__name__).info('Cleaning up the mess')
         self.clean()
@@ -96,7 +100,7 @@ class Download:
         else:
             Logger(__name__).error('Downloading resources supports only HTTPS or FTP')
 
-    def get_fusiongdb(self) -> None:
+    def get_fusiongdb(self, return_err: List[str]) -> None:
         """Method for download FusionGDB database."""
 
         hostname: str = 'https://ccsm.uth.edu/FusionGDB/tables'
@@ -116,21 +120,23 @@ class Download:
         db = FusionGDB('.')
         db.setup(files, delimiter='\t', skip_header=False)
 
-    def get_mitelman(self) -> None:
+    def get_mitelman(self, return_err: List[str]) -> None:
         """Method for download Mitelman database."""
+        try:
+            file: str = 'mitelman.tar.gz'
+            url: str = f'ftp://ftp1.nci.nih.gov/pub/CGAP/{file}'
+            self.get_large_file(url)
 
-        file: str = 'mitelman.tar.gz'
-        url: str = f'ftp://ftp1.nci.nih.gov/pub/CGAP/{file}'
-        self.get_large_file(url)
+            with tarfile.open(file) as archive:
+                files = archive.getnames()
+                archive.extractall()
 
-        with tarfile.open(file) as archive:
-            files = archive.getnames()
-            archive.extractall()
+            db = MitelmanDB('.')
+            db.setup(files, delimiter='\t', skip_header=True, encoding='ISO-8859-1')
+        except DownloadException as ex:
+            return_err.append(f'Mitelman: {ex}')
 
-        db = MitelmanDB('.')
-        db.setup(files, delimiter='\t', skip_header=True, encoding='ISO-8859-1')
-
-    def get_cosmic(self) -> None:
+    def get_cosmic(self, return_err: List[str]) -> None:
         """Method for download COSMIC database."""
 
         files = []
@@ -145,16 +151,19 @@ class Download:
             '''Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko)
             Chrome/41.0.2228.0 Safari/537.3'''
         )
-        res = urllib.request.urlopen(req)
-        auth_url: str = rapidjson.loads(res.read().decode('utf-8'))['url']
-        self.get_large_file(auth_url)
+        try:
+            res = urllib.request.urlopen(req)
+            auth_url: str = rapidjson.loads(res.read().decode('utf-8'))['url']
+            self.get_large_file(auth_url)
 
-        files.append('.'.join(file.split('.')[:-1]))
-        with gzip.open(file, 'rb') as archive, open(files[0], 'wb') as out_file:
-            shutil.copyfileobj(archive, out_file)
+            files.append('.'.join(file.split('.')[:-1]))
+            with gzip.open(file, 'rb') as archive, open(files[0], 'wb') as out_file:
+                shutil.copyfileobj(archive, out_file)
 
-        db = CosmicDB('.')
-        db.setup(files, delimiter='\t', skip_header=True)
+            db = CosmicDB('.')
+            db.setup(files, delimiter='\t', skip_header=True)
+        except urllib.error.HTTPError as ex:
+            return_err.append(f'COSMIC: {ex}')
 
     @staticmethod
     def clean():

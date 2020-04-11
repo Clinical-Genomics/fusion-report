@@ -168,12 +168,14 @@ class App:
                         fusion.score_explained,
                     ]
                     for tool in sorted(self.manager.running_tools):
-                        if tool not in fusion.tools.keys():
-                            row.append('')
+                        if tool in fusion.tools.keys():
+                            row.append(
+                                ','.join([
+                                    f'{key}: {value}' for key, value in fusion.tools[tool].items()
+                                ])
+                            )
                         else:
-                            ';'.join([
-                                f'{key}: {value}' for key, value in fusion.tools[tool].items()
-                            ])
+                            row.append('')
                     csv_writer.writerow(row)
         else:
             Logger(__name__).error('Export output %s not supported', extension)
