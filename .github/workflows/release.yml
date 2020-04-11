@@ -31,15 +31,16 @@ jobs:
       run: fusion_report download --cosmic_usr "${{ secrets.USERNAME }}" --cosmic_passwd "${{ secrets.PASSWORD }}" ./db
     
     - name: Run application
-      run: fusion_report run "example-sample" ./example ./db/ \
-            --arriba tests/test_data/arriba.tsv \
-            --dragen tests/test_data/dragen.tsv \
-            --ericscript tests/test_data/ericscript.tsv \
-            --fusioncatcher tests/test_data/fusioncatcher.txt \
-            --pizzly tests/test_data/pizzly.tsv \
-            --squid tests/test_data/squid.txt \
-            --starfusion tests/test_data/starfusion.tsv \
-            --export csv
+      run: |
+        fusion_report run "example-sample" ./example ./db/ \
+          --arriba tests/test_data/arriba.tsv \
+          --dragen tests/test_data/dragen.tsv \
+          --ericscript tests/test_data/ericscript.tsv \
+          --fusioncatcher tests/test_data/fusioncatcher.txt \
+          --pizzly tests/test_data/pizzly.tsv \
+          --squid tests/test_data/squid.txt \
+          --starfusion tests/test_data/starfusion.tsv \
+          --export csv
     
     - name: Build example
       run: |
