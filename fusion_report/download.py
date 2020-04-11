@@ -55,7 +55,7 @@ class Download:
         """Parallel downloading of all databases."""
         # change to update directory
         os.chdir(params.output)
-        return_err = Manager().list()
+        return_err: List[str] = Manager().list()
 
         processes = [
             Process(name='FusionGDB', target=self.get_fusiongdb, args=(return_err,)),
@@ -100,7 +100,7 @@ class Download:
         else:
             Logger(__name__).error('Downloading resources supports only HTTPS or FTP')
 
-    def get_fusiongdb(self, return_err) -> None:
+    def get_fusiongdb(self, return_err: List[str]) -> None:
         """Method for download FusionGDB database."""
 
         hostname: str = 'https://ccsm.uth.edu/FusionGDB/tables'
@@ -120,7 +120,7 @@ class Download:
         db = FusionGDB('.')
         db.setup(files, delimiter='\t', skip_header=False)
 
-    def get_mitelman(self, return_err) -> None:
+    def get_mitelman(self, return_err: List[str]) -> None:
         """Method for download Mitelman database."""
         try:
             file: str = 'mitelman.tar.gz'
@@ -136,7 +136,7 @@ class Download:
         except DownloadException as ex:
             return_err.append(f'Mitelman: {ex}')
 
-    def get_cosmic(self, return_err) -> None:
+    def get_cosmic(self, return_err: List[str]) -> None:
         """Method for download COSMIC database."""
 
         files = []
