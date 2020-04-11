@@ -32,7 +32,7 @@ jobs:
     
     - name: Run application
       run: |
-        fusion_report run "example-sample" ./example ./db/ \
+        fusion_report run "example-sample" ./docs/example ./db/ \
           --arriba tests/test_data/arriba.tsv \
           --dragen tests/test_data/dragen.tsv \
           --ericscript tests/test_data/ericscript.tsv \
@@ -47,7 +47,7 @@ jobs:
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
         git add docs/example
-        git commit -m "docs: generate example (${{ GITHUB_SHA::7 }})"
+        git commit -m "docs: generate example ($(echo ${GITHUB_SHA} | cut -c1-7))"
         git push origin master
 
     - name: Publish documentation
