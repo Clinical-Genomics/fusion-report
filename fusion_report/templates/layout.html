@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>{{ report_title }}</title>
+
+  <!-- Import Bootstrap CSS, Main CSS -->
+  {% block head %}{% endblock %}
+
+  <!-- Additional CSS -->
+  {% for css in assets.css %}
+    {{ include_raw(css) | safe }}
+  {% endfor %}
+</head>
+
+<body>
+  <!-- Additional JS -->
+  {% for js in assets.js %}
+    {{ include_raw(js) | safe }}
+  {% endfor %}
+
+  {% block body %}{% endblock %}
+</body>
+
+</html>

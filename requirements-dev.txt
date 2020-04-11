@@ -1,0 +1,4 @@
+flake8
+mypy==0.701
+isort
+setuptools
