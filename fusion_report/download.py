@@ -6,6 +6,7 @@ import os
 import shutil
 import ssl
 import tarfile
+import time
 import urllib.error
 import urllib.request
 from argparse import Namespace
@@ -72,6 +73,7 @@ class Download:
         if len(return_err) > 0:
             raise DownloadException(return_err)
 
+        time.sleep(1)
         Logger(__name__).info('Cleaning up the mess')
         self.clean()
 
@@ -113,7 +115,7 @@ class Download:
             'fgene_disease_associations.txt'
         ]
 
-        pool = Pool(4)
+        pool = Pool(2)
         pool.starmap(self.get_large_file, [(f'{hostname}/{x}', True) for x in files])
         pool.close()
         pool.join()
