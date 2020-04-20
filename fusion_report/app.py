@@ -22,7 +22,7 @@ from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.mitelman import MitelmanDB
 from fusion_report.download import Download
 
-__version__ = 2.0
+__version__ = '2.0.3'
 
 
 class App:
