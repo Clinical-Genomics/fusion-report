@@ -19,10 +19,7 @@ class BasePage:
         self.title: str = title.strip()
         self.view: str = f'views/{view}.html'
         self.modules: Dict[str, Any] = {}
-        if filename:
-            self.filename: str = filename
-        else:
-            self.filename: str = title.replace('--', '_') + ".html"
+        self.filename: str = filename if filename else f'{title.replace("--", "_")}.html'
 
     def add_module(self, name: str, manager: FusionManager = None, params=None) -> None:
         """Add module to the list."""
