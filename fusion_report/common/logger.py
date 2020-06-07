@@ -1,6 +1,7 @@
 """ Application logger """
 import logging
 import sys
+
 from logging.handlers import TimedRotatingFileHandler
 from typing import Any
 
