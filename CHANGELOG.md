@@ -5,13 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0](https://github.com/matq007/fusion-report/releases/tag/2.1.0)
+
+### Added
+
+- `sync` option for downloading all databases
+
+### Changed
+
+- all databases except `COSMIC` are now versioned in [fusion-report-db](https://github.com/matq007/fusion-report-db)
+
+### Fixed
+
+- Issues with downloading too many stuff ([#28](https://github.com/matq007/fusion-report/issues/28))
+
 ## [2.0.2](https://github.com/matq007/fusion-report/releases/tag/2.0.2)
 
 ### Changed
 
 - moved from Travis to Github Actions
 
-### FIX
+### Fixed
 
 - `tool_cutoff` was not casted to `int` ([#25](https://github.com/matq007/fusion-report/issues/25))
 - csv export missing data ([#26](https://github.com/matq007/fusion-report/issues/26))
@@ -19,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.1](https://github.com/matq007/fusion-report/releases/tag/2.0.1)
 
-### FIX
+### Fixed
 
 - Fixed missing Mitelman database file
 
