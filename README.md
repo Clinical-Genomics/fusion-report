@@ -69,7 +69,3 @@ For more info on how to run the script, please see the [documentation](https://m
 
 * Testing dataset copied from [ndaniel/fusioncatcher](https://github.com/ndaniel/fusioncatcher).
 * DNA icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/).
-
-## TODO
-
-- [ ] documentation
