@@ -26,13 +26,13 @@ This python script generates an interactive summary report from fusion detection
 ### Using Conda
 
 ```bash
-conda install -c bioconda fusion-report=2.0.2
+conda install -c bioconda fusion-report=2.1.0
 ```
 
 ### From source
 
 ```bash
-sudo apt-get install sqlite3 wget
+sudo apt-get install sqlite3
 python3 setup.py install
 ```
 
@@ -61,6 +61,7 @@ Or get help and list all possible parameters.
 fusion_report --help
 fusion_report run --help
 fusion_report download --help
+fusion_report sync --help
 ```
 
 For more info on how to run the script, please see the [documentation](https://matq007.github.io/fusion-report/).
@@ -69,3 +70,7 @@ For more info on how to run the script, please see the [documentation](https://m
 
 * Testing dataset copied from [ndaniel/fusioncatcher](https://github.com/ndaniel/fusioncatcher).
 * DNA icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/).
+
+## TODO
+
+- [ ] documentation

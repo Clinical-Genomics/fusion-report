@@ -11,8 +11,7 @@ available variables which can be used in the report.
 * `modules: Dict[str, Any]`: Dictionary of modules and its variables
 * `menu`: List of menu items
 
-Each `Page` has an option to have a custom extra variables. Therefore, you can observe not mentioned variables like
-i.e: `sample`, `db_path`, `fusion` or `tooL_cutoff`.
+Each `Page` has an option to have a custom extra variables. Therefore, you can observe not mentioned variables like i.e: `sample`, `db_path`, `fusion` or `tooL_cutoff`.
 
 ## Functions
 
