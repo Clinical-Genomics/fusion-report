@@ -11,13 +11,13 @@ class FusionManager:
        individual parsed fusion.
 
     Attributes:
-        running_tools: List of executed fusion detection tools
         fusions: List of parsed fusions
+        running_tools: List of executed fusion detection tools
         supported_tools: List of all supported fusion detection tools
     """
     def __init__(self, supported_tools: List[str]) -> None:
-        self.running_tools: Set[str] = set()
         self.fusions: List[Fusion] = []
+        self.running_tools: Set[str] = set()
         self.supported_tools: List[str] = supported_tools
 
     def parse(self, tool: str, file: str) -> None:

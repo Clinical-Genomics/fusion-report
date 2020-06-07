@@ -1,5 +1,6 @@
 """FusionCatcher module"""
 from typing import Any, Dict, List, Tuple
+
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
 

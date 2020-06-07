@@ -1,5 +1,6 @@
 """ Template wrapper """
 import os
+
 from pathlib import Path
 from typing import Any, Dict
 
@@ -7,6 +8,7 @@ from jinja2 import Environment, FileSystemLoader, Markup
 
 from fusion_report.common.page import Page
 from fusion_report.config import Config
+from fusion_report.settings import Settings
 
 
 class Template:
@@ -20,8 +22,8 @@ class Template:
     def __init__(self, config_path: str, output_dir: str) -> None:
         self.j2_env = Environment(
             loader=FileSystemLoader([
-                os.path.join(os.path.dirname(__file__), '../templates/'),
-                os.path.join(os.path.dirname(__file__), '../modules/')
+                os.path.join(Settings.ROOT_DIR, 'templates/'),
+                os.path.join(Settings.ROOT_DIR, 'modules/')
             ]),
             trim_blocks=True,
             autoescape=True

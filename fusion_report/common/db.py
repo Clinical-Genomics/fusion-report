@@ -1,9 +1,11 @@
 """Database wrapper"""
 import os
 import sqlite3
+
 from typing import List
 
 from fusion_report.common.exceptions.db import DbException
+from fusion_report.settings import Settings
 
 
 class Db:
@@ -15,6 +17,7 @@ class Db:
         database: Database file *.db
         connection: Established connection to the database
     """
+
     def __init__(self, path: str, name: str, schema: str) -> None:
         self.name: str = name
         self._schema: str = schema
@@ -119,7 +122,7 @@ class Db:
     @property
     def schema(self):
         """Returns database schema."""
-        return f'{os.path.join(os.path.dirname(__file__))}/../data/schema/{self._schema}'
+        return os.path.join(Settings.ROOT_DIR, f'data/schema/{self._schema}')
 
     @classmethod
     def __dict_factory(cls, cursor, row):

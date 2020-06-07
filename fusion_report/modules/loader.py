@@ -1,4 +1,6 @@
 """Module loader"""
+import os
+
 from typing import Any, Dict
 
 from fusion_report.common.exceptions.module import ModuleException
@@ -22,7 +24,7 @@ class ModuleLoader:
         """
         try:
             variables = self.__build_factory(name, self.manager, self.params).load()
-            variables['partial'] = f'{name.replace(".", "/")}/partial.html'
+            variables['partial'] = os.path.join(f'{name.replace(".", "/")}', 'partial.html')
             return variables
         except AttributeError as ex:
             raise ModuleException(ex)

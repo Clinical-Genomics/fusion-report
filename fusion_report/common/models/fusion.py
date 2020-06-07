@@ -58,5 +58,5 @@ class Fusion:
             'Score': self.score,
             'Explained score': self.score_explained,
         }
-        json.update(self.tools)
-        return json
+
+        return {**json, **self.tools}

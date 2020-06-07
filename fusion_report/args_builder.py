@@ -1,9 +1,12 @@
 """Command-line argument wrapper"""
 import os
+
 from argparse import ArgumentParser, Namespace, _SubParsersAction
 from typing import Any, Dict
 
 import rapidjson
+
+from fusion_report.settings import Settings
 
 
 class ArgsBuilder:
@@ -15,9 +18,8 @@ class ArgsBuilder:
         command_parser: Command argument
     """
 
-    def __init__(self, version: float):
-        cwd = os.path.dirname(os.path.abspath(__file__))
-        configuration = os.path.join(cwd, 'arguments.json')
+    def __init__(self):
+        configuration = os.path.join(Settings.ROOT_DIR, 'arguments.json')
         self.arguments: Dict[str, Any] = rapidjson.loads(open(configuration, 'r').read())
         self.arguments['weight'] = float(100 / len(self.supported_tools))
         self.parser = ArgumentParser(
@@ -26,7 +28,7 @@ class ArgsBuilder:
         self.parser.add_argument(
             '--version', '-v',
             action='version',
-            version=f'fusion-report {version}'
+            version=f'fusion-report {Settings.VERSION}'
         )
         self.command_parser: _SubParsersAction = self.parser.add_subparsers(dest='command')
 
@@ -39,6 +41,7 @@ class ArgsBuilder:
         """Build command-line arguments."""
         self.run_args(self.arguments['args']['run'], self.arguments['weight'])
         self.download_args(self.arguments['args']['download'])
+        self.sync_args(self.arguments['args']['download'])
 
     def run_args(self, args, weight) -> None:
         """Build run command-line arguments."""
@@ -76,14 +79,27 @@ class ArgsBuilder:
                     type=type(optional['default'])
                 )
 
-    def download_args(self, args) -> None:
+    def download_args(self, args: Dict[str, Any]) -> None:
         """Build download command-line arguments."""
         download_parser = self.command_parser.add_parser('download',
                                                          help='Download required databases')
         for mandatory in args['mandatory']:
             download_parser.add_argument(mandatory['key'], help=mandatory['help'], type=str)
-        # COSMIC
-        download_cosmic = download_parser.add_argument_group(
+
+        self._cosmic(args, download_parser)
+
+    def sync_args(self, args: Dict[str, Any]) -> None:
+        """Build sync command-line arguments."""
+        download_parser = self.command_parser.add_parser('sync',
+                                                         help='Synchronize databases')
+        for mandatory in args['mandatory']:
+            download_parser.add_argument(mandatory['key'], help=mandatory['help'], type=str)
+
+        self._cosmic(args, download_parser)
+
+    def _cosmic(self, args: Dict[str, Any], parser) -> None:
+        """Build COSMIC command-line arguments."""
+        download_cosmic = parser.add_argument_group(
             'COSMIC', '''Option credential parameters. You can either provide username and password
             which will be used to generate base64 token or the token itself.'''
         )

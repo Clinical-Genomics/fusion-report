@@ -1,6 +1,7 @@
 from setuptools import find_packages, setup
 
-from fusion_report.app import __version__
+from fusion_report.settings import Settings
+
 
 PACKAGE_DATA = {
     'fusion_report': [
@@ -18,7 +19,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='fusion_report',
-    version=__version__,
+    version=Settings.VERSION,
     python_requires='>=3.6.*',
     description='Tool for parsing outputs from fusion detection tools.',
     long_description=README,
