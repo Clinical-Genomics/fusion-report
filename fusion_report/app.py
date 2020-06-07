@@ -3,10 +3,13 @@ import csv
 import os
 import sys
 import time
+
 from argparse import Namespace
+from collections import defaultdict
 from typing import Any, Dict, List
 
 import rapidjson
+
 from tqdm import tqdm
 
 from fusion_report.args_builder import ArgsBuilder
@@ -21,8 +24,8 @@ from fusion_report.data.cosmic import CosmicDB
 from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.mitelman import MitelmanDB
 from fusion_report.download import Download
-
-__version__ = '2.0.3'
+from fusion_report.settings import Settings
+from fusion_report.sync import Sync
 
 
 class App:
@@ -35,7 +38,7 @@ class App:
 
     def __init__(self) -> None:
         try:
-            self.args = ArgsBuilder(__version__)
+            self.args = ArgsBuilder()
             self.manager = FusionManager(self.args.supported_tools)
         except IOError as ex:
             raise AppException(ex)
@@ -65,6 +68,9 @@ class App:
             elif params.command == 'download':
                 Logger(__name__).info('Downloading resources...')
                 Download(params)
+            elif params.command == 'sync':
+                Logger(__name__).info('Synchronizing databases...')
+                Sync(params)
             else:
                 sys.exit(f'Command {params.command} not recognized!')
         except (AppException, DbException, DownloadException, IOError) as ex:
@@ -144,12 +150,10 @@ class App:
         """Export results.
         Currently supporting file types: JSON and CSV
         """
-        results = []
         dest = f"{os.path.join(path, 'fusions')}.{extension}"
         if extension == 'json':
             with open(dest, 'w', encoding='utf-8') as output:
-                for fusion in self.manager.fusions:
-                    results.append(fusion.json_serialize())
+                results = [fusion.json_serialize() for fusion in self.manager.fusions]
                 output.write(rapidjson.dumps(results))
         elif extension == 'csv':
             with open(dest, "w", encoding='utf-8') as output:
@@ -210,23 +214,23 @@ class App:
         for fusion in self.manager.fusions:
 
             # tool estimation
-            tool_score = 0.0
-            tmp_explained = []
-            for tool, _ in fusion.tools.items():
-                tool_score += params[f'{tool.lower()}_weight'] / 100.0
-                tmp_explained.append(format((params[f'{tool}_weight'] / 100.0), '.3f'))
-            score_explained: str = f'0.5 * ({" + ".join(tmp_explained)})'
+            tool_score: float = sum(
+                [params[f'{tool.lower()}_weight'] / 100.0 for tool, _ in fusion.tools.items()]
+            )
+            tool_score_expl: List[str] = [
+                format((params[f'{tool}_weight'] / 100.0), '.3f') for tool, _ in fusion.tools.items()
+            ]
 
             # database estimation
-            db_score = 0.0
-            tmp_explained = []
-            weights = {'fusiongdb': 0.20, 'cosmic': 0.40, 'mitelman': 0.40}
-            for db_name in fusion.dbs:
-                db_score += 1.0 * weights[db_name.lower()]
-                tmp_explained.append(format(weights[db_name.lower()], '.3f'))
-            score_explained += f' + 0.5 * ({" + ".join(tmp_explained)})'
+            db_score: float = sum(
+                float(Settings.FUSION_WEIGHTS[db_name.lower()]) for db_name in fusion.dbs
+            )
+            db_score_expl: List[str] = [
+                format(Settings.FUSION_WEIGHTS[db_name.lower()], '.3f') for db_name in fusion.dbs
+            ]
 
             score: float = float('%0.3f' % (0.5 * tool_score + 0.5 * db_score))
+            score_explained = f'0.5 * ({" + ".join(tool_score_expl)}) + 0.5 * ({" + ".join(db_score_expl)})'
             fusion.score, fusion.score_explained = score, score_explained
 
     @staticmethod
@@ -234,16 +238,13 @@ class App:
                          sample_name: str, running_tools_count: int) -> None:
         """Helper function that generates MultiQC Fusion section (`fusion_genes_mqc.json`)."""
 
-        counts: Dict[str, int] = {'together': 0}
+        counts: Dict[str, int] = defaultdict(lambda: 0)
         for fusion in fusions:
             tools = fusion.dbs
             if len(tools) == running_tools_count:
                 counts['together'] += 1
             for tool in tools:
-                if tool not in counts.keys():
-                    counts[tool] = 1
-                else:
-                    counts[tool] += 1
+                counts[tool] += 1
 
         configuration = {
             'id': 'fusion_genes',

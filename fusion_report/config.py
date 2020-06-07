@@ -1,19 +1,20 @@
 """Configuration module"""
 import base64
 import os
+
 from datetime import datetime
 from typing import Any, Dict, List
 
-from yaml import safe_load, YAMLError
+from yaml import YAMLError, safe_load
 
 from fusion_report.common.exceptions.config import ConfigException
+from fusion_report.settings import Settings
 
 
 class Config:
     """Class for adjusting report defined in configuration file.
 
     Attributes:
-        current_path: current working directory
         report_title: Title of the report
         logos: Dictionary of logos: fusion-report and nf-core/rnafusion
         institution: Institution name
@@ -23,17 +24,16 @@ class Config:
 
     def __init__(self) -> None:
         self._report_title = 'nfcore/rnafusion summary report'
-        self.current_path: str = os.path.dirname(os.path.abspath(__file__))
         self.logos: Dict[str, str] = {
             'main': base64.b64encode(open(
-                os.path.join(self.current_path, 'templates/assets/img/fusion-report.png'), 'rb'
+                os.path.join(Settings.ROOT_DIR, 'templates/assets/img/fusion-report.png'), 'rb'
             ).read()).decode('utf-8'),
             'rnafusion': base64.b64encode(open(
-                os.path.join(self.current_path, 'templates/assets/img/rnafusion_logo.png'), 'rb'
+                os.path.join(Settings.ROOT_DIR, 'templates/assets/img/rnafusion_logo.png'), 'rb'
             ).read()).decode('utf-8')
         }
         self._institution: Dict[str, Any] = {}
-        self._date: str = datetime.now().strftime('%d/%m/%Y')
+        self._date: str = datetime.now().strftime(Settings.DATE_FORMAT)
         self._assets: Dict[str, List[str]] = {}
 
     @property
@@ -57,7 +57,7 @@ class Config:
             self._institution['name'] = institution['name']
 
         if 'img' in institution.keys() and os.path.exists(institution['img']):
-            image = os.path.join(self.current_path, institution['img'])
+            image = os.path.join(Settings.ROOT_DIR, institution['img'])
             self._institution['img'] = base64.b64encode(
                 open(image, 'rb').read()
             ).decode('utf-8')

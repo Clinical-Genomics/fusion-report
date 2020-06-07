@@ -3,13 +3,14 @@ from typing import List
 
 from fusion_report.common.db import Db
 from fusion_report.common.singleton import Singleton
+from fusion_report.settings import Settings
 
 
 class FusionGDB(Db, metaclass=Singleton):
     """Implementation of FusionGDB Database. All core functionality is handled by parent class."""
 
     def __init__(self, path: str) -> None:
-        super().__init__(path, 'FusionGDB', 'FusionGDB.sql')
+        super().__init__(path, Settings.FUSIONGDB['NAME'], Settings.FUSIONGDB['SCHEMA'])
 
     def setup(self, files: List[str], delimiter: str = '', skip_header=False, encoding='utf-8'):
         super().setup(files, delimiter)
