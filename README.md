@@ -1,11 +1,10 @@
 # ![fusion-report](https://raw.githubusercontent.com/matq007/fusion-report/master/fusion_report/templates/assets/img/fusion-report.png)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/fusion-report/README.html)
-![.github/workflows/release.yml](https://github.com/matq007/fusion-report/workflows/.github/workflows/release.yml/badge.svg)
-[![DOI](https://zenodo.org/badge/173453958.svg)](https://zenodo.org/badge/latestdoi/173453958)
-[![MIT License](https://img.shields.io/github/license/matq007/fusion-report.svg)](https://github.com/matq007/fusion-report/blob/master/LICENSE)
-[![Slack Status](https://img.shields.io/badge/slack-join-brightgreen)](https://nf-co.re/join/slack)
+![build](https://github.com/matq007/fusion-report/workflows/CI%20%5Bmaster%5D/badge.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/932dff8661394cc28448af7b22748bb5)](https://app.codacy.com/app/mproksik/fusion-report?utm_source=github.com&utm_medium=referral&utm_content=matq007/fusion-report&utm_campaign=Badge_Grade_Dashboard)
+[![DOI](https://zenodo.org/badge/173453958.svg)](https://zenodo.org/badge/latestdoi/173453958)
+[![Slack Status](https://img.shields.io/badge/slack-join-brightgreen)](https://nf-co.re/join/slack)
 
 This python script generates an interactive summary report from fusion detection tools. Fusion-report is part of a bigger project [nf-core/rnafusion](https://github.com/nf-core/rnafusion) which is designed to detect and report fusion genes from RNA-seq data.
 
@@ -70,7 +69,3 @@ For more info on how to run the script, please see the [documentation](https://m
 
 * Testing dataset copied from [ndaniel/fusioncatcher](https://github.com/ndaniel/fusioncatcher).
 * DNA icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/).
-
-## TODO
-
-- [ ] documentation
