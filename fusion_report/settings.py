@@ -6,7 +6,7 @@ from typing import Any, Dict
 class Settings:
 
     ROOT_DIR: str = os.path.dirname(os.path.abspath(__file__))
-    VERSION: str = '2.1.0'
+    VERSION: str = '2.1.1'
     DATE_FORMAT: str = '%d/%m/%Y'
     THREAD_NUM: int = 2
     FUSION_WEIGHTS: Dict[str, float] = {
@@ -43,7 +43,7 @@ class Settings:
         'FILE': 'mitelman.tar.gz'
     }
 
-    GITHUB: Dict[str, str] = {
-        'HOSTNAME': 'https://github.com/matq007/fusion-report-db/raw/20-04-2020',
+    SOURCEFORGE: Dict[str, str] = {
+        'HOSTNAME': 'https://downloads.sourceforge.net/project/fusion-report-db/20-04-2020/',
         'FILE': 'db.tar.gz'
     }

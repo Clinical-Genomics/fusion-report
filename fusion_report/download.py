@@ -37,10 +37,10 @@ class Download:
         return_err: List[str] = []
         os.chdir(params.output)
 
-        # GitHub databases
-        url: str = f'{Settings.GITHUB["HOSTNAME"]}/{Settings.GITHUB["FILE"]}'
+        # SOURCEFORGE databases
+        url: str = f'{Settings.SOURCEFORGE["HOSTNAME"]}/{Settings.SOURCEFORGE["FILE"]}'
         Net.get_large_file(url, ignore_ssl=False)
-        shutil.unpack_archive(Settings.GITHUB['FILE'])
+        shutil.unpack_archive(Settings.SOURCEFORGE['FILE'])
 
         # COSMIC
         Net.get_cosmic(self.cosmic_token, return_err)
