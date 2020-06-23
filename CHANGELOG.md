@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Case when fusion gene symbol can't be uniquely determined and multiple fusion options are provided ([#30](https://github.com/matq007/fusion-report/issues/30))
 
+### Changed
+
+- renamed `tool_cutoff` to `tool-cutoff`
+
 ## [2.1.1](https://github.com/matq007/fusion-report/releases/tag/2.1.1)
 
 ### Changed
