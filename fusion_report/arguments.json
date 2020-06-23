@@ -47,12 +47,17 @@
             ],
             "optionals": [
                 {
+                    "key": ["--allow-multiple-gene-symbols"],
+                    "help": "Case when fusion gene symbol can't be determined and multiple fusion options are provided. By default provide the fist proposed fusion.",
+                    "action": "store_true"
+                },
+                {
                     "key": ["-c", "--config"],
                     "help": "Input config file",
                     "default": ""
                 },
                 {
-                    "key": ["-t", "--tool_cutoff"],
+                    "key": ["-t", "--tool-cutoff"],
                     "help": "Number of tools required to detect a fusion",
                     "default": 2
                 },

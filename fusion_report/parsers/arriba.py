@@ -7,9 +7,19 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Arriba(AbstractFusionTool):
     """Arriba tool parser."""
 
-    def parse(self, line, delimiter='\t') -> Tuple[str, Dict[str, Any]]:
+    def parse_multiple(self, left_fusion: str, right_fusion: str, delimiter: str) -> List[str]:
+        if delimiter not in left_fusion and delimiter not in right_fusion:
+            return [f'{left_fusion}--{right_fusion}']
+
+        left: List[str] = [x.split('(')[0] for x in left_fusion.split(delimiter)]
+        right: List[str] = [x.split('(')[0] for x in right_fusion.split(delimiter)]
+        fusions = [f'{a}--{b}' for a in left for b in right]
+
+        return fusions
+
+    def parse(self, line, delimiter='\t') -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = line.strip().split(delimiter)
-        fusion: str = f"{col[0]}--{col[1]}"
+        fusions = self.parse_multiple(col[0], col[1], ',')
         details: Dict[str, Any] = {
             'position': f"{col[4]}#{col[5]}",
             'reading-frame': f'{col[21]}',
@@ -22,4 +32,4 @@ class Arriba(AbstractFusionTool):
             'confidence': f'{col[16]}',
         }
 
-        return fusion, details
+        return [(fusion, details) for fusion in fusions]

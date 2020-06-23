@@ -26,7 +26,7 @@ This python script generates an interactive summary report from fusion detection
 ### Using Conda
 
 ```bash
-conda install -c bioconda fusion-report=2.1.1
+conda install -c bioconda fusion-report=2.1.2
 ```
 
 ### From source
@@ -52,7 +52,8 @@ fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ \
   --fusioncatcher tests/test_data/fusioncatcher.txt \
   --pizzly tests/test_data/pizzly.tsv \
   --squid tests/test_data/squid.txt \
-  --starfusion tests/test_data/starfusion.tsv
+  --starfusion tests/test_data/starfusion.tsv \
+  --allow-multiple-gene-symbols # in case gene symbol in fusion can't be determined, treat each provided fusion as a separate one.
 ```
 
 Or get help and list all possible parameters.
@@ -70,7 +71,3 @@ For more info on how to run the script, please see the [documentation](https://m
 
 * Testing dataset copied from [ndaniel/fusioncatcher](https://github.com/ndaniel/fusioncatcher).
 * DNA icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/).
-
-## TODO
-
-- [ ] documentation

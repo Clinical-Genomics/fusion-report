@@ -7,7 +7,7 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Starfusion(AbstractFusionTool):
     """Star-Fusion tool parser."""
 
-    def parse(self, line, delimiter='\t') -> Tuple[str, Dict[str, Any]]:
+    def parse(self, line, delimiter='\t') -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = line.strip().split(delimiter)
         fusion: str = f"{col[0]}"
         details: Dict[str, Any] = {
@@ -17,4 +17,4 @@ class Starfusion(AbstractFusionTool):
             'ffmp': float(col[11])
         }
 
-        return fusion, details
+        return [(fusion, details)]
