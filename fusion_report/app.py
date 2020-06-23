@@ -132,7 +132,7 @@ class App:
             if param in self.manager.supported_tools and value:
                 # param: fusion tool
                 # value: fusion tool output
-                self.manager.parse(param, value)
+                self.manager.parse(param, value, params['allow_multiple_gene_symbols'])
 
     def enrich(self, path: str) -> None:
         """Enrich fusion with all relevant information from local databases."""

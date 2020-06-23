@@ -1,5 +1,5 @@
 """ Fusion Manager """
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Set, Tuple
 
 from fusion_report.common.exceptions.app import AppException
 from fusion_report.common.logger import Logger
@@ -20,7 +20,7 @@ class FusionManager:
         self.running_tools: Set[str] = set()
         self.supported_tools: List[str] = supported_tools
 
-    def parse(self, tool: str, file: str) -> None:
+    def parse(self, tool: str, file: str, allow_multiple_genes: bool) -> None:
         """Loads a parser for specific tool by its name and stored the results.
 
         Raises:
@@ -33,8 +33,11 @@ class FusionManager:
                 with open(file, 'r', encoding='utf-8') as fusion_output:
                     next(fusion_output)  # skip header line
                     for line in fusion_output:
-                        fusion_name, details = factory_parser.parse(line)
-                        self.add(fusion_name, tool, details)
+                        fusion_list: List[Tuple[str, Dict[str, Any]]] = factory_parser.parse(line)
+                        if allow_multiple_genes is None and len(fusion_list) > 1:
+                            fusion_list = [fusion_list[0]]
+                        for fusion_name, details in fusion_list:
+                            self.add(fusion_name, tool, details)
             except IOError as ex:
                 raise AppException(ex)
         else:

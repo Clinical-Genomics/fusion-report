@@ -68,16 +68,29 @@ class ArgsBuilder:
         )
         for optional in args['optionals']:
             if len(optional['key']) > 1:
-                run_optional.add_argument(
-                    optional['key'][0], optional['key'][1],
-                    default=optional['default'], help=optional['help'],
-                    type=type(optional['default'])
-                )
+                if optional.get('action'):
+                    run_optional.add_argument(
+                        optional['key'][0], optional['key'][1],
+                        help=optional.get('help'),
+                        action=optional.get('action')
+                    )
+                else:    
+                    run_optional.add_argument(
+                        optional['key'][0], optional['key'][1],
+                        default=optional.get('default'), help=optional.get('help'),
+                        type=type(optional.get('default'))
+                    )
             else:
-                run_optional.add_argument(
-                    optional['key'][0], default=optional['default'], help=optional['help'],
-                    type=type(optional['default'])
-                )
+                if optional.get('action'):
+                    run_optional.add_argument(
+                        optional['key'][0], default=optional.get('default'), help=optional.get('help'),
+                        action=optional.get('action')
+                    )
+                else:
+                    run_optional.add_argument(
+                        optional['key'][0], default=optional.get('default'), help=optional.get('help'),
+                        type=type(optional.get('default'))
+                    )
 
     def download_args(self, args: Dict[str, Any]) -> None:
         """Build download command-line arguments."""

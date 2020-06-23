@@ -12,8 +12,21 @@ fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ \
   --fusioncatcher tests/test_data/fusioncatcher.txt \
   --squid tests/test_data/squid.txt \
   --pizzly tests/test_data/pizzly.tsv \
-  --dragen tests/test_data/dragen.tsv
+  --dragen tests/test_data/dragen.tsv \
+  --allow-multiple-gene-symbols
 ```
+
+## Multiple gene symbols
+
+In case fusion gene symbol can't be uniquely determined some tools provide possible list of fusions. Each fusion tool handles this differently.
+There are two options:
+
+### Example case
+
+Dummy fusion detected by Squid: `15	34347968	34348134	19	15254151	15254264	.	9	-	-	fusion-gene	BRD4:NUTM1,BRD4-1:NUTM1`.
+
+1. Omitting `--allow-multiple-gene-symbols` will report **only** first fusion: `BRD4:NUTM1`.
+2. Adding `--allow-multiple-gene-symbols` will treat each fusion as unique and report `BRD4:NUTM1` and `BRD4-1:NUTM1`.
 
 ## Set a custom weight for tool
 
