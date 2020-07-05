@@ -19,7 +19,7 @@ class BasePage:
         self.title: str = title.strip()
         self.view: str = f'views/{view}.html'
         self.modules: Dict[str, Any] = {}
-        self.filename: str = filename if filename else f'{title.replace("--", "_")}.html'
+        self.filename: str = filename if filename else self._set_filename(title)
 
     def add_module(self, name: str, manager: FusionManager = None, params=None) -> None:
         """Add module to the list."""
@@ -35,3 +35,19 @@ class BasePage:
             'filename': self.filename,
             'view': self.view
         }
+
+    @staticmethod
+    def _set_filename(fusion: str) -> str:
+        """Helper function for setting proper filename.
+
+        Args:
+            fusion ([str]): Fusion name
+
+        Returns:
+            str: filename of the fusion
+        """
+        for char in ['/', '\\', '--']:
+            if char in fusion:
+                fusion = fusion.replace(char, '_')
+
+        return f'{fusion}.html'
