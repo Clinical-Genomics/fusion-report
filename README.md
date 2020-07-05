@@ -25,7 +25,7 @@ This python script generates an interactive summary report from fusion detection
 ### Using Conda
 
 ```bash
-conda install -c bioconda fusion-report=2.1.2
+conda install -c bioconda fusion-report=2.1.3
 ```
 
 ### From source
