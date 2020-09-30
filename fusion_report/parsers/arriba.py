@@ -7,6 +7,9 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Arriba(AbstractFusionTool):
     """Arriba tool parser."""
 
+    def set_header(self, header: str, delimiter: str = '\t') -> str:
+        self.header: List[str] = header.strip().split(delimiter)
+
     def parse_multiple(self, left_fusion: str, right_fusion: str, delimiter: str) -> List[str]:
         if delimiter not in left_fusion and delimiter not in right_fusion:
             return [f'{left_fusion}--{right_fusion}']
@@ -19,17 +22,24 @@ class Arriba(AbstractFusionTool):
 
     def parse(self, line, delimiter='\t') -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = line.strip().split(delimiter)
-        fusions = self.parse_multiple(col[0], col[1], ',')
+        fusions = self.parse_multiple(
+            col[self.header.index('#gene1')], 
+            col[self.header.index('gene2')], 
+            ','
+        )
         details: Dict[str, Any] = {
-            'position': f"{col[4]}#{col[5]}",
-            'reading-frame': f'{col[21]}',
-            'type': f'{col[8]}',
-            'split_reads1': f'{col[11]}',
-            'split_reads2': f'{col[12]}',
-            'discordant_mates': f'{col[13]}',
-            'coverage1': f'{col[14]}',
-            'coverage2': f'{col[15]}',
-            'confidence': f'{col[16]}',
+            'position': "#".join([
+                col[self.header.index('breakpoint1')],
+                col[self.header.index('breakpoint2')]
+            ]),
+            'reading-frame': col[self.header.index('reading_frame')],
+            'type': col[self.header.index('type')],
+            'split_reads1': col[self.header.index('split_reads1')],
+            'split_reads2': col[self.header.index('split_reads2')],
+            'discordant_mates': col[self.header.index('discordant_mates')],
+            'coverage1': col[self.header.index('coverage1')],
+            'coverage2': col[self.header.index('coverage2')],
+            'confidence': col[self.header.index('confidence')],
         }
 
         return [(fusion, details) for fusion in fusions]

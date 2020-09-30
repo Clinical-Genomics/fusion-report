@@ -7,14 +7,19 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Starfusion(AbstractFusionTool):
     """Star-Fusion tool parser."""
 
-    def parse(self, line, delimiter='\t') -> List[Tuple[str, Dict[str, Any]]]:
+    def set_header(self, header: str, delimiter: str = '\t') -> str:
+        self.header: List[str] = header.strip().split(delimiter)
+
+    def parse(self, line: str, delimiter: str = '\t') -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = line.strip().split(delimiter)
-        fusion: str = f"{col[0]}"
+        fusion: str = f"{col[self.header.index('#FusionName')]}"
         details: Dict[str, Any] = {
-            'position': f"{col[5]}#{col[7]}",
-            'junction_reads': int(col[1]),
-            'spanning_reads': int(col[2]),
-            'ffmp': float(col[11])
+            'position': '#'.join([
+                col[self.header.index('LeftBreakpoint')], col[self.header.index('RightBreakpoint')]]
+            ),
+            'junction_reads': int(col[self.header.index('JunctionReadCount')]),
+            'spanning_reads': int(col[self.header.index('SpanningFragCount')]),
+            'ffmp': float(col[self.header.index('FFPM')])
         }
 
         return [(fusion, details)]

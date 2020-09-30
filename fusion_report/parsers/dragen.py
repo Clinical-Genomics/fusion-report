@@ -7,12 +7,18 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Dragen(AbstractFusionTool):
     """Dragen tool parser."""
 
-    def parse(self, line, delimiter='\t') -> List[Tuple[str, Dict[str, Any]]]:
+    def set_header(self, header: str, delimiter: str = '\t') -> str:
+        self.header: List[str] = header.strip().split(delimiter)
+
+    def parse(self, line: str, delimiter: str = '\t') -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = line.strip().split(delimiter)
-        fusion: str = f'{col[0]}'
+        fusion: str = col[self.header.index('#FusionGene')]
         details: Dict[str, Any] = {
-            'position': f'{col[2]}#{col[3]}'.replace('chr', ''),
-            'score': int(col[1]),
+            'position': "#".join([
+                col[self.header.index('LeftBreakpoint')],
+                col[self.header.index('RightBreakpoint')]
+            ]).replace('chr', ''),
+            'score': int(col[self.header.index('Score')]),
         }
 
         return [(fusion, details)]

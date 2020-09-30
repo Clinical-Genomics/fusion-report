@@ -7,16 +7,25 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Fusioncatcher(AbstractFusionTool):
     """FusionCatcher tool parser."""
 
-    def parse(self, line, delimiter='\t') -> List[Tuple[str, Dict[str, Any]]]:
+    def set_header(self, header: str, delimiter: str = '\t') -> str:
+        self.header: List[str] = header.strip().split(delimiter)
+
+    def parse(self, line: str, delimiter: str = '\t') -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = line.strip().split(delimiter)
-        fusion: str = f"{col[0]}--{col[1]}"
+        fusion: str = '--'.join([
+            col[self.header.index('Gene_1_symbol(5end_fusion_partner)')].strip(),
+            col[self.header.index('Gene_2_symbol(3end_fusion_partner)')].strip()
+        ])
         details: Dict[str, Any] = {
-            'position': f"{col[8]}#{col[9]}",
-            'common_mapping_reads': int(col[3]),
-            'spanning_pairs': int(col[4]),
-            'spanning_unique_reads': int(col[5]),
-            'longest_anchor': int(col[6]),
-            'fusion_type': col[15].strip()
+            'position': "#".join([
+                col[self.header.index('Fusion_point_for_gene_1(5end_fusion_partner)')],
+                col[self.header.index('Fusion_point_for_gene_2(3end_fusion_partner)')]
+            ]),
+            'common_mapping_reads': int(col[self.header.index('Counts_of_common_mapping_reads')]),
+            'spanning_pairs': int(col[self.header.index('Spanning_pairs')]),
+            'spanning_unique_reads': int(col[self.header.index('Spanning_unique_reads')]),
+            'longest_anchor': int(col[self.header.index('Longest_anchor_found')]),
+            'fusion_type': col[self.header.index('Predicted_effect')].strip()
         }
 
         return [(fusion, details)]
