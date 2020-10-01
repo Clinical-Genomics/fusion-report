@@ -31,7 +31,7 @@ class FusionManager:
             factory_parser = self.__build_factory(tool)
             try:
                 with open(file, 'r', encoding='utf-8') as fusion_output:
-                    next(fusion_output)  # skip header line
+                    factory_parser.set_header(fusion_output.readline())
                     for line in fusion_output:
                         fusion_list: List[Tuple[str, Dict[str, Any]]] = factory_parser.parse(line)
                         if allow_multiple_genes is None and len(fusion_list) > 1:
