@@ -23,8 +23,8 @@ class Arriba(AbstractFusionTool):
     def parse(self, line: str, delimiter: Optional[str] = '\t') -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = [x.strip() for x in line.split(delimiter)]
         fusions = self.parse_multiple(
-            col[self.header.index('#gene1')], 
-            col[self.header.index('gene2')], 
+            col[self.header.index('#gene1')],
+            col[self.header.index('gene2')],
             ','
         )
         details: Dict[str, Any] = {

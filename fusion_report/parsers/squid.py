@@ -31,7 +31,7 @@ class Squid(AbstractFusionTool):
         ).replace('chr', '')
         details: Dict[str, Any] = {
             'position': f"{left_breakpoint}#{right_breakpoint}"
-                        if col[self.header.index('strand1')] == '+' 
+                        if col[self.header.index('strand1')] == '+'
                         else f"{right_breakpoint}#{left_breakpoint}",
             'score': int(col[self.header.index('score')])
         }
