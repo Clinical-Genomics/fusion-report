@@ -4,10 +4,11 @@ build/
 dist/
 *.egg-info
 *__pycache__*
-tests/test_data_real
 .mypy_cache/*
 NOTES.md
 .idea
-tests/sss
+tests/
+!tests/test_data
 *.log
 .tox/
+.DS_Store

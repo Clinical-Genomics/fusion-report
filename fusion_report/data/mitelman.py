@@ -17,4 +17,7 @@ class MitelmanDB(Db, metaclass=Singleton):
         query: str = 'SELECT DISTINCT geneshort FROM molbiolclinassoc WHERE geneshort LIKE "%/%"'
         res = self.select(query)
 
-        return [fusion['geneshort'].strip().replace('/', '--') for fusion in res]
+        return [
+            fusion.get('geneshort').strip().replace('/', '--') 
+            for fusion in res if fusion.get('geneshort')
+        ]

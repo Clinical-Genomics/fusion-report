@@ -21,4 +21,7 @@ class CosmicDB(Db, metaclass=Singleton):
                         WHERE translocation_name != ""'''
         res = self.select(query)
 
-        return ['--'.join(re.findall(r'[A-Z0-9]+(?={)', x['translocation_name'])) for x in res]
+        return [
+            '--'.join(re.findall(r'[A-Z0-9]+(?={)', fusion.get('translocation_name')))
+            for fusion in res if fusion.get('translocation_name')
+        ]
