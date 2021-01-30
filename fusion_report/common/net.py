@@ -1,6 +1,7 @@
 import base64
 import glob
 import gzip
+import json
 import os
 import shutil
 import ssl
@@ -9,8 +10,6 @@ import urllib.request
 
 from argparse import Namespace
 from typing import List
-
-import rapidjson
 
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
@@ -77,7 +76,7 @@ class Net:
         )
         try:
             res = urllib.request.urlopen(req)
-            auth_url: str = rapidjson.loads(res.read().decode('utf-8'))['url']
+            auth_url: str = json.loads(res.read().decode('utf-8'))['url']
             Net.get_large_file(auth_url)
 
             files.append('.'.join(file.split('.')[:-1]))

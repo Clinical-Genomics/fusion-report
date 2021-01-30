@@ -1,5 +1,6 @@
 """Main app module"""
 import csv
+import json
 import os
 import sys
 import time
@@ -7,8 +8,6 @@ import time
 from argparse import Namespace
 from collections import defaultdict
 from typing import Any, Dict, List
-
-import rapidjson
 
 from tqdm import tqdm
 
@@ -154,7 +153,7 @@ class App:
         if extension == 'json':
             with open(dest, 'w', encoding='utf-8') as output:
                 results = [fusion.json_serialize() for fusion in self.manager.fusions]
-                output.write(rapidjson.dumps(results))
+                output.write(json.dumps(results))
         elif extension == 'csv':
             with open(dest, "w", encoding='utf-8') as output:
                 csv_writer = csv.writer(
@@ -263,4 +262,4 @@ class App:
 
         dest = f"{os.path.join(path, 'fusion_genes_mqc.json')}"
         with open(dest, 'w', encoding='utf-8') as output:
-            output.write(rapidjson.dumps(configuration))
+            output.write(json.dumps(configuration))
