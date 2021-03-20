@@ -1,10 +1,9 @@
 """Command-line argument wrapper"""
 import os
+import json
 
 from argparse import ArgumentParser, Namespace, _SubParsersAction
 from typing import Any, Dict
-
-import rapidjson
 
 from fusion_report.settings import Settings
 
@@ -20,7 +19,7 @@ class ArgsBuilder:
 
     def __init__(self):
         configuration = os.path.join(Settings.ROOT_DIR, 'arguments.json')
-        self.arguments: Dict[str, Any] = rapidjson.loads(open(configuration, 'r').read())
+        self.arguments: Dict[str, Any] = json.loads(open(configuration, 'r').read())
         self.arguments['weight'] = float(100 / len(self.supported_tools))
         self.parser = ArgumentParser(
             description='''Tool for generating friendly UI custom report.'''

@@ -26,4 +26,7 @@ class FusionGDB(Db, metaclass=Singleton):
                         FROM tcga_chitars_combined_fusion_information_on_hg19'''
         res = self.select(query)
 
-        return [fusion['fusion_pair'] for fusion in res]
+        return [
+            fusion.get('fusion_pair').strip().replace('/', '--') 
+            for fusion in res if fusion.get('fusion_pair')
+        ]
