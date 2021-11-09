@@ -11,3 +11,4 @@ NOTES.md
 tests/sss
 *.log
 .tox/
+.DS_Store
