@@ -1,0 +1,13 @@
+sample,fusion genes,chrom1,base1,strand1,chrom2,base2,strand2,gap (kb),spanning pairs,spanning reads,inframe,aligns,rearrangement,contig,contig break,classification,known
+reads,GOPC:ROS1,chr6,117566854,-,chr6,117321394,-,245.461,65,11,TRUE,TRUE,FALSE,9HL/1,48,HighConfidence,Yes
+reads,GOPC:ROS1,chr6,117566854,-,chr6,117320030,-,246.826,65,1,FALSE,TRUE,FALSE,9JI/1,60,HighConfidence,Yes
+reads,AKAP9:BRAF,chr7,92003235,+,chr7,140787584,-,48784.349,7,8,TRUE,TRUE,TRUE,0ZW/1,70,HighConfidence,Yes
+reads,ETV6:NTRK3,chr12,11869969,+,chr15,87940753,-,Inf,6,6,TRUE,TRUE,TRUE,2DM/1,49,HighConfidence,Yes
+reads,EWSR1:FLI1,chr22,29287134,+,chr11,128807180,+,Inf,4,8,TRUE,TRUE,TRUE,0IO/1,35,HighConfidence,Yes
+reads,BRD4:NUTM1,chr19,15254152,-,chr15,34347969,+,Inf,3,8,TRUE,TRUE,TRUE,0BK/2,68,HighConfidence,Yes
+reads,EWSR1:ATF1,chr22,29287134,+,chr12,50814280,+,Inf,4,6,TRUE,TRUE,TRUE,1GL/1,59,HighConfidence,Yes
+reads,CD74:ROS1,chr5,150404680,-,chr6,117324415,-,Inf,1,2,TRUE,TRUE,TRUE,0HO/1,67,HighConfidence,Yes
+reads,FGFR3:TACC3,chr4,1806933,+,chr4,1727978,+,78.955,832,65,NA,FALSE,TRUE,8HT/2,40,LowConfidence,Yes
+reads,FGFR3:TACC3,chr4,1806933,+,chr4,1727982,+,78.951,832,7,NA,FALSE,TRUE,8NL/1,62,LowConfidence,Yes
+reads,FGFR3:TACC3,chr4,1806930,+,chr4,1727978,+,78.952,832,1,NA,FALSE,TRUE,90F/1,58,LowConfidence,Yes
+reads,TMPRSS2:ETV1,chr21,41494381,-,chr7,13935838,-,Inf,4,9,NA,FALSE,TRUE,0TV/1,68,LowConfidence,Yes

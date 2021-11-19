@@ -43,6 +43,10 @@
                 {
                     "key": "--arriba",
                     "help": "Arriba output file"
+                },
+                {
+                    "key": "--jaffa",
+                    "help": "Jaffa output file"
                 }
             ],
             "optionals": [
