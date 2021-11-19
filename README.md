@@ -19,6 +19,7 @@ This python script generates an interactive summary report from fusion detection
 * [Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
 * [Arriba](https://github.com/suhrig/arriba)
 * [Illumina Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
+* [Jaffa](https://github.com/Oshlack/JAFFA)
 
 ## Installation
 
@@ -52,6 +53,7 @@ fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ \
   --pizzly tests/test_data/pizzly.tsv \
   --squid tests/test_data/squid.txt \
   --starfusion tests/test_data/starfusion.tsv \
+  --jaffa tests/test_data/jaffa.csv \
   --allow-multiple-gene-symbols # in case gene symbol in fusion can't be determined, treat each provided fusion as a separate one.
 ```
 
