@@ -1,7 +1,6 @@
 """Jaffa module"""
 from typing import Any, Dict, List, Optional, Tuple
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
-import csv
 
 class Jaffa(AbstractFusionTool):
     """Jaffa tool parser."""
@@ -44,5 +43,5 @@ class Jaffa(AbstractFusionTool):
             'classification': col[self.header.index('classification')].strip(),
             'known': col[self.header.index('known')].strip()
         }
-        
+
         return [(fusion, details)]
