@@ -13,6 +13,7 @@ fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ \
   --squid tests/test_data/squid.txt \
   --pizzly tests/test_data/pizzly.tsv \
   --dragen tests/test_data/dragen.tsv \
+  --jaffa tests/test_data/jaffa.csv \
   --allow-multiple-gene-symbols
 ```
 
