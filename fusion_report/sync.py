@@ -65,7 +65,7 @@ class Sync:
             url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
             Net.get_large_file(url)
 
-            with zipfile.open(Settings.MITELMAN['FILE']) as archive:
+            with zipfile(Settings.MITELMAN['FILE']) as archive:
                 files = [ x for x in archive.getnames() if ".TXT.DATA" in x ]
                 archive.extractall()
 
