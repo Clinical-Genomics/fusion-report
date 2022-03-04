@@ -71,6 +71,6 @@ class Sync:
 
 
             db = MitelmanDB('.')
-            db.setup(files, delimiter='\t', skip_header=True, encoding='ISO-8859-1')
+            db.setup(files, delimiter='\t', skip_header=True)
         except DownloadException as ex:
             return_err.append(f'Mitelman: {ex}')
