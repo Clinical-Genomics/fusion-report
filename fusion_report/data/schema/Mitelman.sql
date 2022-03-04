@@ -117,7 +117,7 @@ CREATE TABLE KODER (
 )
 ;
 
-CREATE TABLE MBCA
+CREATE TABLE MBCA (
 	MolClin char (1) NOT NULL ,
 	RefNo int NOT NULL ,
 	InvNo smallint NOT NULL ,
