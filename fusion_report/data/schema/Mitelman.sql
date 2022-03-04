@@ -106,13 +106,13 @@ CREATE TABLE KODER (
 	Intern char (1) NULL ,
 	Benamning varchar2 (255) NOT NULL ,
 	Kortnamn varchar2 (30) NULL ,
-	Notering varchar2 (255) NULL 
-	Inregdatum varchar2 (255) NULL 
-	GiltigFran varchar2 (255) NULL 
-	GiltigTill varchar2 (255) NULL 
-	Flagga1 varchar2 (255) NULL 
-	Flagga2 varchar2 (255) NULL 
-	Flagga3 varchar2 (255) NULL 
+	Notering varchar2 (255) NULL ,
+	Inregdatum varchar2 (255) NULL ,
+	GiltigFran varchar2 (255) NULL ,
+	GiltigTill varchar2 (255) NULL ,
+	Flagga1 varchar2 (255) NULL ,
+	Flagga2 varchar2 (255) NULL ,
+	Flagga3 varchar2 (255) NULL ,
 	Flagga4 varchar2 (255) NULL 
 )
 ;
