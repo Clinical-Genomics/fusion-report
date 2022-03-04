@@ -1,6 +1,6 @@
 """ Sync module """
 import os
-import tarfile
+import zipfile
 import time
 
 from argparse import Namespace
@@ -65,9 +65,10 @@ class Sync:
             url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
             Net.get_large_file(url)
 
-            with tarfile.open(Settings.MITELMAN['FILE']) as archive:
-                files = archive.getnames()
+            with zipfile.open(Settings.MITELMAN['FILE']) as archive:
+                files = [ x for x in archive.getnames() if ".TXT.DATA" in x ]
                 archive.extractall()
+
 
             db = MitelmanDB('.')
             db.setup(files, delimiter='\t', skip_header=True, encoding='ISO-8859-1')

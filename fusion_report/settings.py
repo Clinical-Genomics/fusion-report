@@ -39,8 +39,8 @@ class Settings:
     MITELMAN: Dict[str, str] = {
         'NAME': 'Mitelman',
         'SCHEMA': 'Mitelman.sql',
-        'HOSTNAME': 'ftp://ftp1.nci.nih.gov/pub/CGAP',
-        'FILE': 'mitelman.tar.gz'
+        'HOSTNAME': 'https://storage.googleapis.com/mitelman-data-files/prod',
+        'FILE': 'mitelman_db.zip'
     }
 
     SOURCEFORGE: Dict[str, str] = {
