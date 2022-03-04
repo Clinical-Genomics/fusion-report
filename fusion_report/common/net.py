@@ -92,5 +92,7 @@ class Net:
     @staticmethod
     def clean():
         """Remove all files except *db."""
+        for temp in glob.glob('__MACOSX'):
+            shutil.rmtree(temp)
         for temp in glob.glob('*[!db]'):
             os.remove(temp)
