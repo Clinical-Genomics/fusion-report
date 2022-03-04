@@ -66,7 +66,7 @@ class Sync:
             Net.get_large_file(url)
 
             with ZipFile(Settings.MITELMAN['FILE'], 'r') as archive:
-                files = [ x for x in archive.namelist() if ".TXT.DATA" in x ]
+                files = [ x for x in archive.namelist() if "MCBA.TXT.DATA" in x ]
                 archive.extractall()
 
 
