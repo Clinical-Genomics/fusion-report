@@ -58,7 +58,7 @@ class App:
             if params.command == 'run':
                 Logger(__name__).info('Running application...')
                 self.preprocess(params)
-                self.generate_report(params, params.tools_cutoff)
+                self.generate_report(params)
                 self.export_results(params.output, params.export)
                 self.generate_multiqc(
                     params.output, self.manager.fusions,
@@ -82,10 +82,10 @@ class App:
         self.enrich(params.db_path)
         self.score(vars(params))
 
-    def generate_report(self, params: Namespace, cutoff: int) -> None:
+    def generate_report(self, params: Namespace) -> None:
         """Generate fusion report with all pages."""
         report = Report(params.config, params.output)
-        fusions = [ len(fusion.tools) >= cutoff for fusion in self.manager.fusions ]
+        fusions = [ len(fusion.tools) >= params.tool_cutoff for fusion in self.manager.fusions ]
 
         index_page = report.create_page(
             'Summary', filename='index.html', page_variables={'sample': params.sample}
