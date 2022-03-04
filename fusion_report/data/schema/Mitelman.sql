@@ -87,7 +87,7 @@ CREATE TABLE KBREAK (
 
 CREATE TABLE KCLONE (
 	RefNo int NOT NULL ,
-	CaseNo varchar2 (14) NOT NULL ,:q
+	CaseNo varchar2 (14) NOT NULL ,
 	InvNo smallint NOT NULL ,
 	CloneNo smallint NOT NULL ,
 	ChromoMin smallint NOT NULL ,
