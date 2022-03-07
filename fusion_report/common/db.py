@@ -1,4 +1,5 @@
 """Database wrapper"""
+from distutils.command.build_scripts import first_line_re
 import os
 import sqlite3
 
@@ -58,7 +59,6 @@ class Db:
         try:
             # build database schema
             self.create_database()
-
             # import all data files except .sql files
             for file in filter(lambda x: not x.endswith('.sql'), files):
                 with open(file, 'r', encoding=encoding) as resource:
@@ -70,7 +70,7 @@ class Db:
                         row = line.split(delimiter)
                         rows.append(row + ['' for _ in range(len(row), len(first_line))])
                     self.connection.executemany(
-                        f'''INSERT INTO {file.split('.')[0].lower()}
+                        f'''INSERT INTO {file.split('/')[-1].split('.')[0].lower()}
                             VALUES ({','.join(['?' for _ in range(0, len(first_line))])})''',
                         rows
                     )

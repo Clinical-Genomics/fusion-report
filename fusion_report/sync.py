@@ -64,13 +64,12 @@ class Sync:
         try:
             url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
             Net.get_large_file(url)
-
             with ZipFile(Settings.MITELMAN['FILE'], 'r') as archive:
-                files = [ x for x in archive.namelist() if "MCBA.TXT.DATA" in x ]
+                files = [ x for x in archive.namelist() if "mitelman_db/MBCA.TXT.DATA" in x ]
                 archive.extractall()
 
 
             db = MitelmanDB('.')
-            db.setup(files, delimiter='\t', skip_header=True)
+            db.setup(files, delimiter='\t', skip_header=False, encoding='ISO-8859-1')
         except DownloadException as ex:
             return_err.append(f'Mitelman: {ex}')

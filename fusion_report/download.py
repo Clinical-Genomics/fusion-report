@@ -40,7 +40,7 @@ class Download:
         Sync.get_mitelman(self, return_err)
 
         # FusionGDB
-        # Sync.get_fusiongdb(self, return_err)
+        Sync.get_fusiongdb(self, return_err)
 
         # COSMIC
         Net.get_cosmic(self.cosmic_token, return_err)

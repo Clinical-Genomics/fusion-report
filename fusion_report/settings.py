@@ -42,8 +42,3 @@ class Settings:
         'HOSTNAME': 'https://storage.googleapis.com/mitelman-data-files/prod',
         'FILE': 'mitelman_db.zip'
     }
-
-    SOURCEFORGE: Dict[str, str] = {
-        'HOSTNAME': 'https://downloads.sourceforge.net/project/fusion-report-db/20-04-2020/',
-        'FILE': 'db.tar.gz'
-    }

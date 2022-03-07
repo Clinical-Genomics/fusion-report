@@ -1,14 +1,14 @@
 CREATE TABLE "MBCA" (
-	"MolClin" char (1) NOT NULL ,
-	"RefNo" int NOT NULL ,
-	"InvNo" smallint NOT NULL ,
-	"Morph" varchar (20) NULL ,
-	"Topo" varchar (20) NULL ,
-	"Immunology" char (1) NULL ,
-	"GeneLength" smallint NULL ,
-	"GeneShort" varchar (255) NULL ,
-	"GeneLong" varchar2(4000) NULL ,
-	"KaryLength" smallint NULL ,
-	"KaryShort" varchar (255) NULL ,
-	"KaryLong" varchar2(4000) NULL 
+	"molclin" char (1) NOT NULL ,
+	"refno" int NOT NULL ,
+	"invno" smallint NOT NULL ,
+	"morph" varchar (20) NULL ,
+	"topo" varchar (20) NULL ,
+	"immunology" char (1) NULL ,
+	"geneLength" smallint NULL ,
+	"geneshort" varchar (255) NULL ,
+	"genelong" varchar2(4000) NULL ,
+	"karylength" smallint NULL ,
+	"karyshort" varchar (255) NULL ,
+	"karylong" varchar2(4000) NULL
 );
