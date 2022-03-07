@@ -12,7 +12,8 @@ class Settings:
     FUSION_WEIGHTS: Dict[str, float] = {
         'fusiongdb': 0.20, 
         'cosmic': 0.40, 
-        'mitelman': 0.40
+        'mitelman': 0.40,
+        'fusiongdb' : 0.0
     }
 
     COSMIC: Dict[str, str] = {

@@ -32,7 +32,8 @@ class Sync:
         processes = [
             Process(name=Settings.FUSIONGDB['NAME'], target=self.get_fusiongdb, args=(return_err,)),
             Process(name=Settings.MITELMAN['NAME'], target=self.get_mitelman, args=(return_err,)),
-            Process(name=Settings.COSMIC['NAME'], target=Net.get_cosmic, args=(self.cosmic_token, return_err,))
+            Process(name=Settings.COSMIC['NAME'], target=Net.get_cosmic, args=(self.cosmic_token, return_err,)),
+            Process(name=Settings.FUSIONGDB2['NAME'], target=self.get_fusiongdb2, args=(return_err,))
         ]
 
         for process in processes:
