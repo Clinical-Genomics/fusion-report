@@ -5,3 +5,4 @@ pyyaml>=4.2b1
 Jinja2==2.10
 MarkupSafe==2.0.1
 pandas==1.4.1
+openpyxl==3.0.9
