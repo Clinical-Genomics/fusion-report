@@ -22,6 +22,7 @@ from fusion_report.common.models.fusion import Fusion
 from fusion_report.common.report import Report
 from fusion_report.data.cosmic import CosmicDB
 from fusion_report.data.fusiongdb import FusionGDB
+from fusion_report.data.fusiongdb2 import FusionGDB2
 from fusion_report.data.mitelman import MitelmanDB
 from fusion_report.download import Download
 from fusion_report.settings import Settings
@@ -138,6 +139,7 @@ class App:
         """Enrich fusion with all relevant information from local databases."""
         local_fusions: Dict[str, List[str]] = {
             FusionGDB(path).name: FusionGDB(path).get_all_fusions(),
+            FusionGDB2(path).name: FusionGDB2(path).get_all_fusions(),
             MitelmanDB(path).name: MitelmanDB(path).get_all_fusions(),
             CosmicDB(path).name: CosmicDB(path).get_all_fusions()
         }

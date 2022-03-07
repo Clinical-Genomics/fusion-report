@@ -2,6 +2,7 @@
 import os
 from zipfile import ZipFile
 import time
+import pandas as pd
 
 from argparse import Namespace
 from multiprocessing import Manager, Pool, Process
@@ -11,6 +12,7 @@ from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.common.net import Net
 from fusion_report.data.fusiongdb import FusionGDB
+from fusion_report.data.fusiongdb2 import FusionGDB2
 from fusion_report.data.mitelman import MitelmanDB
 from fusion_report.settings import Settings
 
@@ -58,6 +60,24 @@ class Sync:
         pool.join()
         db = FusionGDB('.')
         db.setup(Settings.FUSIONGDB['FILES'], delimiter='\t', skip_header=False)
+
+    def get_fusiongdb2(self, return_err: List[str]) -> None:
+        """Method for download FusionGDB2 database."""
+        try:
+            url: str = f'{Settings.FUSIONGDB2["HOSTNAME"]}/{Settings.FUSIONGDB2["FILE"]}'
+            Net.get_large_file(url)
+            file : str = f'{Settings.FUSIONGDB2["FILE"]}'
+            df = pd.read_excel(file)
+            file_csv = 'fusionGDB2.csv'
+            df.to_csv(file_csv, header=True, index=False, sep = '\t')
+
+            db = FusionGDB2('.')
+            print(file_csv)
+            db.setup([file_csv], delimiter='\t', skip_header=True)
+
+        except DownloadException as ex:
+            return_err.append(f'FusionGDB2: {ex}')
+
 
     def get_mitelman(self, return_err: List[str]) -> None:
         """Method for download Mitelman database."""

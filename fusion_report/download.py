@@ -42,6 +42,9 @@ class Download:
         # FusionGDB
         Sync.get_fusiongdb(self, return_err)
 
+        # FusionGDB2
+        Sync.get_fusiongdb2(self, return_err)
+
         # COSMIC
         Net.get_cosmic(self.cosmic_token, return_err)
 

@@ -36,6 +36,14 @@ class Settings:
         ]
     }
 
+    FUSIONGDB2: Dict[str, Any] = {
+        'NAME': 'FusionGDB2',
+        'SCHEMA': 'FusionGDB2.sql',
+        'HOSTNAME': 'https://compbio.uth.edu/FusionGDB2/tables',
+        'FILE':
+            'FusionGDB2_id.xlsx'
+    }
+
     MITELMAN: Dict[str, str] = {
         'NAME': 'Mitelman',
         'SCHEMA': 'Mitelman.sql',
