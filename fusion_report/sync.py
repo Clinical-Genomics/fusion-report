@@ -69,12 +69,12 @@ class Sync:
             Net.get_large_file(url)
             file : str = f'{Settings.FUSIONGDB2["FILE"]}'
             df = pd.read_excel(file)
+            df["fusion"] = df["5'-gene (text format)"] + "--" + df["3'-gene (text format)"]
             file_csv = 'fusionGDB2.csv'
-            df.to_csv(file_csv, header=True, index=False, sep = '\t')
+            df['fusion'].to_csv(file_csv, header=False, index=False, sep = ',', encoding='utf-8')
 
             db = FusionGDB2('.')
-            print(file_csv)
-            db.setup([file_csv], delimiter='\t', skip_header=True)
+            db.setup([file_csv], delimiter=',', skip_header=False)
 
         except DownloadException as ex:
             return_err.append(f'FusionGDB2: {ex}')

@@ -138,10 +138,10 @@ class App:
     def enrich(self, path: str) -> None:
         """Enrich fusion with all relevant information from local databases."""
         local_fusions: Dict[str, List[str]] = {
-            FusionGDB(path).name: FusionGDB(path).get_all_fusions(),
-            FusionGDB2(path).name: FusionGDB2(path).get_all_fusions(),
+            CosmicDB(path).name: CosmicDB(path).get_all_fusions(),
             MitelmanDB(path).name: MitelmanDB(path).get_all_fusions(),
-            CosmicDB(path).name: CosmicDB(path).get_all_fusions()
+            FusionGDB(path).name: FusionGDB(path).get_all_fusions(),
+            FusionGDB2(path).name: FusionGDB2(path).get_all_fusions()
         }
         for fusion in self.manager.fusions:
             for db_name, db_list in local_fusions.items():

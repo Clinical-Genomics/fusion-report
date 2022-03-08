@@ -15,8 +15,8 @@ class FusionGDB2(Db, metaclass=Singleton):
 
     def get_all_fusions(self) -> List[str]:
         """Returns all fusions from database."""
-        query: str = '''SELECT DISTINCT ("5'-gene" || "--" || "3'-gene") as fusion_pair
+        query: str = '''SELECT DISTINCT fusions
                         FROM fusiongdb2'''
         res = self.select(query)
 
-        return [fusion['fusion_pair'] for fusion in res]
+        return [fusion['fusions'].strip() for fusion in res]

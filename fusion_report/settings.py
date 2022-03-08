@@ -6,14 +6,14 @@ from typing import Any, Dict
 class Settings:
 
     ROOT_DIR: str = os.path.dirname(os.path.abspath(__file__))
-    VERSION: str = '2.1.4'
+    VERSION: str = '2.1.5u'
     DATE_FORMAT: str = '%d/%m/%Y'
     THREAD_NUM: int = 2
     FUSION_WEIGHTS: Dict[str, float] = {
         'fusiongdb': 0.20, 
         'cosmic': 0.40, 
         'mitelman': 0.40,
-        'fusiongdb' : 0.0
+        'fusiongdb2' : 0.0
     }
 
     COSMIC: Dict[str, str] = {
@@ -37,7 +37,7 @@ class Settings:
         ]
     }
 
-    FUSIONGDB2: Dict[str, Any] = {
+    FUSIONGDB2: Dict[str, str] = {
         'NAME': 'FusionGDB2',
         'SCHEMA': 'FusionGDB2.sql',
         'HOSTNAME': 'https://compbio.uth.edu/FusionGDB2/tables',
