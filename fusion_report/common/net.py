@@ -6,6 +6,7 @@ import shutil
 import ssl
 import urllib.error
 import urllib.request
+import time
 
 from argparse import Namespace
 from typing import List
@@ -97,3 +98,12 @@ class Net:
         for temp in glob.glob('*[!.db]'):
             if not os.path.isdir(temp):
                 os.remove(temp)
+
+    @staticmethod
+    def timestamp():
+        """Create a timestamp file at DB creation"""
+        timestr = time.strftime("%Y-%m-%d/%H:%M")
+        text_file = open("DB-timestamp.txt", "w")
+        text_file.write(timestr)
+        text_file.close()
+

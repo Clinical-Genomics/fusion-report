@@ -1,6 +1,7 @@
 """ Download module """
 import os
 import shutil
+import time
 
 from argparse import Namespace
 from typing import List
@@ -53,3 +54,6 @@ class Download:
 
         Logger(__name__).info('Downloading finished')
         Net.clean()
+
+        # Create timestamp:
+        Net.timestamp()
