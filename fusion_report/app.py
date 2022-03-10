@@ -86,7 +86,7 @@ class App:
     def generate_report(self, params: Namespace) -> None:
         """Generate fusion report with all pages."""
         report = Report(params.config, params.output)
-        fusions = [ fusion for fusion in self.manager.fusions if len(fusion.tools) >= params.tool_cutoff ]
+        fusions = [fusion for fusion in self.manager.fusions if len(fusion.tools) >= params.tool_cutoff]
 
         index_page = report.create_page(
             'Summary', filename='index.html', page_variables={'sample': params.sample}

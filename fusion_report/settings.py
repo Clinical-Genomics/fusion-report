@@ -13,7 +13,7 @@ class Settings:
         'fusiongdb': 0.20, 
         'cosmic': 0.40, 
         'mitelman': 0.40,
-        'fusiongdb2' : 0.0
+        'fusiongdb2': 0.0
     }
 
     COSMIC: Dict[str, str] = {

@@ -1,5 +1,4 @@
 """Database wrapper"""
-from distutils.command.build_scripts import first_line_re
 import os
 import sqlite3
 

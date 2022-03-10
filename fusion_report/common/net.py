@@ -106,4 +106,3 @@ class Net:
         text_file = open("DB-timestamp.txt", "w")
         text_file.write(timestr)
         text_file.close()
-

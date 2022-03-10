@@ -67,11 +67,11 @@ class Sync:
         try:
             url: str = f'{Settings.FUSIONGDB2["HOSTNAME"]}/{Settings.FUSIONGDB2["FILE"]}'
             Net.get_large_file(url)
-            file : str = f'{Settings.FUSIONGDB2["FILE"]}'
+            file: str = f'{Settings.FUSIONGDB2["FILE"]}'
             df = pd.read_excel(file)
             df["fusion"] = df["5'-gene (text format)"] + "--" + df["3'-gene (text format)"]
             file_csv = 'fusionGDB2.csv'
-            df['fusion'].to_csv(file_csv, header=False, index=False, sep = ',', encoding='utf-8')
+            df['fusion'].to_csv(file_csv, header=False, index=False, sep=',', encoding='utf-8')
 
             db = FusionGDB2('.')
             db.setup([file_csv], delimiter=',', skip_header=False)
@@ -79,16 +79,14 @@ class Sync:
         except DownloadException as ex:
             return_err.append(f'FusionGDB2: {ex}')
 
-
     def get_mitelman(self, return_err: List[str]) -> None:
         """Method for download Mitelman database."""
         try:
             url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
             Net.get_large_file(url)
             with ZipFile(Settings.MITELMAN['FILE'], 'r') as archive:
-                files = [ x for x in archive.namelist() if "mitelman_db/MBCA.TXT.DATA" in x ]
+                files = [x for x in archive.namelist() if "mitelman_db/MBCA.TXT.DATA" in x]
                 archive.extractall()
-
 
             db = MitelmanDB('.')
             db.setup(files, delimiter='\t', skip_header=False, encoding='ISO-8859-1')

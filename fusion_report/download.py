@@ -1,7 +1,5 @@
 """ Download module """
 import os
-import shutil
-import time
 
 from argparse import Namespace
 from typing import List
