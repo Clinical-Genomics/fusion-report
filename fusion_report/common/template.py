@@ -48,6 +48,7 @@ class Template:
         ) as file_out:
             file_out.write(view)
 
+    @staticmethod
     def include_raw(self, filename: str) -> Markup:
         """Helper fusion for including raw content in Jinja2, mostly used to include custom
         or vendor javascript and custom css"""

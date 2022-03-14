@@ -1,19 +1,15 @@
 """ Sync module """
 import os
-from zipfile import ZipFile
 import time
-import pandas as pd
 
 from argparse import Namespace
-from multiprocessing import Manager, Pool, Process
+from multiprocessing import Manager, Process
 from typing import List
 
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.common.net import Net
-from fusion_report.data.fusiongdb import FusionGDB
-from fusion_report.data.fusiongdb2 import FusionGDB2
-from fusion_report.data.mitelman import MitelmanDB
+
 from fusion_report.settings import Settings
 
 
@@ -30,10 +26,10 @@ class Sync:
         return_err: List[str] = Manager().list()
 
         processes = [
-            Process(name=Settings.FUSIONGDB['NAME'], target=self.get_fusiongdb, args=(return_err,)),
-            Process(name=Settings.MITELMAN['NAME'], target=self.get_mitelman, args=(return_err,)),
+            Process(name=Settings.FUSIONGDB['NAME'], target=Net.get_fusiongdb, args=(return_err,)),
+            Process(name=Settings.MITELMAN['NAME'], target=Net.get_mitelman, args=(return_err,)),
             Process(name=Settings.COSMIC['NAME'], target=Net.get_cosmic, args=(self.cosmic_token, return_err,)),
-            Process(name=Settings.FUSIONGDB2['NAME'], target=self.get_fusiongdb2, args=(return_err,))
+            Process(name=Settings.FUSIONGDB2['NAME'], target=Net.get_fusiongdb2, args=(return_err,))
         ]
 
         for process in processes:
@@ -48,47 +44,3 @@ class Sync:
         time.sleep(1)
         Logger(__name__).info('Cleaning up the mess')
         Net.clean()
-
-    def get_fusiongdb(self, return_err: List[str]) -> None:
-        """Method for download FusionGDB database."""
-
-        pool_params = [
-            (f'{Settings.FUSIONGDB["HOSTNAME"]}/{x}', True) for x in Settings.FUSIONGDB["FILES"]
-        ]
-        pool = Pool(Settings.THREAD_NUM)
-        pool.starmap(Net.get_large_file, pool_params)
-        pool.close()
-        pool.join()
-        db = FusionGDB('.')
-        db.setup(Settings.FUSIONGDB['FILES'], delimiter='\t', skip_header=False)
-
-    def get_fusiongdb2(self, return_err: List[str]) -> None:
-        """Method for download FusionGDB2 database."""
-        try:
-            url: str = f'{Settings.FUSIONGDB2["HOSTNAME"]}/{Settings.FUSIONGDB2["FILE"]}'
-            Net.get_large_file(url)
-            file: str = f'{Settings.FUSIONGDB2["FILE"]}'
-            df = pd.read_excel(file)
-            df["fusion"] = df["5'-gene (text format)"] + "--" + df["3'-gene (text format)"]
-            file_csv = 'fusionGDB2.csv'
-            df['fusion'].to_csv(file_csv, header=False, index=False, sep=',', encoding='utf-8')
-
-            db = FusionGDB2('.')
-            db.setup([file_csv], delimiter=',', skip_header=False)
-
-        except DownloadException as ex:
-            return_err.append(f'FusionGDB2: {ex}')
-
-    def get_mitelman(self, return_err: List[str]) -> None:
-        """Method for download Mitelman database."""
-        try:
-            url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
-            Net.get_large_file(url)
-            with ZipFile(Settings.MITELMAN['FILE'], 'r') as archive:
-                files = [x for x in archive.namelist() if "mitelman_db/MBCA.TXT.DATA" in x]
-                archive.extractall()
-
-            db = MitelmanDB('.')
-            db.setup(files, delimiter='\t', skip_header=False, encoding='ISO-8859-1')
-        except DownloadException as ex:
-            return_err.append(f'Mitelman: {ex}')
