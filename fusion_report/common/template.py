@@ -10,7 +10,6 @@ from fusion_report.common.page import Page
 from fusion_report.config import Config
 from fusion_report.settings import Settings
 
-
 class Template:
     """The class implements core methods.
 
@@ -48,11 +47,12 @@ class Template:
         ) as file_out:
             file_out.write(view)
 
-    @staticmethod
     def include_raw(self, filename: str) -> Markup:
         """Helper fusion for including raw content in Jinja2, mostly used to include custom
         or vendor javascript and custom css"""
         file_extension = Path(filename).suffix
+        assert isinstance(self.j2_env.loader, FileSystemLoader)
+
         if file_extension == '.css':
             return Markup(
                 '<style type="text/css">{css}</style>'.format(

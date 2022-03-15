@@ -6,3 +6,4 @@ Jinja2>=2.10
 MarkupSafe
 pandas
 openpyxl
+xlrd >= 1.0.0
