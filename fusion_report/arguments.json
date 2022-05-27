@@ -13,6 +13,30 @@
                 {
                     "key": "db_path",
                     "help": "Path to folder where all databases are stored."
+                },
+                {
+                    "key": "--use_cosmic",
+                    "help": "Use cosmic database",
+                    "type": "bool",
+                    "default": false
+                },
+                {
+                    "key": "--use_mitelman",
+                    "help": "Use Mitelman database",
+                    "type": "bool",
+                    "default": false
+                },
+                {
+                    "key": "--use_fusiongdb",
+                    "help": "Use FusionGDB",
+                    "type": "bool",
+                    "default": false
+                },
+                {
+                    "key": "--use_fusiongdb2",
+                    "help": "Use FusionGDB2",
+                    "type": "bool",
+                    "default": false
                 }
             ],
             "tools": [
