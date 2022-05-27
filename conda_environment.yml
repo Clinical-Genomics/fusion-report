@@ -1,0 +1,14 @@
+name: fusionreport
+
+channels:
+  - conda-forge
+  - defaults
+  - anaconda
+  - bioconda
+
+
+dependencies:
+  - notebook=6.4.8
+  - nb_conda_kernels=2.3.1
+  - openpyxl=3.0.9
+  - fusion-report=2.1.5

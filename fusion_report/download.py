@@ -23,11 +23,14 @@ class Download:
 
     def validate(self, params: Namespace) -> None:
         """Method validating required input. In this case COSMIC credentials."""
-        self.cosmic_token = Net.get_cosmic_token(params)
+        
 
         # making sure output directory exists
         if not os.path.exists(params.output):
-            os.makedirs(params.output, 0o755)
+                os.makedirs(params.output, 0o755)
+        if params.use_cosmic:
+            self.cosmic_token = Net.get_cosmic_token(params)
+            
 
     def download_all(self, params: Namespace) -> None:
         """Download all databases."""
@@ -35,16 +38,20 @@ class Download:
         os.chdir(params.output)
 
         # MITELMAN
-        Net.get_mitelman(self, return_err)
+        if params.use_mitelman:
+            Net.get_mitelman(self, return_err)
 
         # FusionGDB
-        Net.get_fusiongdb(self, return_err)
+        if params.use_fusiongdb:
+            Net.get_fusiongdb(self, return_err)
 
         # FusionGDB2
-        Net.get_fusiongdb2(self, return_err)
+        if params.use_fusiongdb2:
+            Net.get_fusiongdb2(self, return_err)
 
         # COSMIC
-        Net.get_cosmic(self.cosmic_token, return_err)
+        if params.use_cosmic:
+            Net.get_cosmic(self.cosmic_token, return_err)
 
         if len(return_err) > 0:
             raise DownloadException(return_err)

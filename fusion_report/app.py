@@ -80,7 +80,7 @@ class App:
     def preprocess(self, params: Namespace) -> None:
         """Parse, enrich and score fusion."""
         self.parse_fusion_outputs(vars(params))
-        self.enrich(params.db_path)
+        self.enrich(params)
         self.score(vars(params))
 
     def generate_report(self, params: Namespace) -> None:
@@ -135,14 +135,20 @@ class App:
                 # value: fusion tool output
                 self.manager.parse(param, value, params['allow_multiple_gene_symbols'])
 
-    def enrich(self, path: str) -> None:
+    def enrich(self, params: Namespace) -> None:
         """Enrich fusion with all relevant information from local databases."""
-        local_fusions: Dict[str, List[str]] = {
-            CosmicDB(path).name: CosmicDB(path).get_all_fusions(),
-            MitelmanDB(path).name: MitelmanDB(path).get_all_fusions(),
-            FusionGDB(path).name: FusionGDB(path).get_all_fusions(),
-            FusionGDB2(path).name: FusionGDB2(path).get_all_fusions()
-        }
+        path: str = params.db_path
+        local_fusions: Dict[str, List[str]] = {}
+        if params.use_cosmic:
+            local_fusions[CosmicDB(path).name] = CosmicDB(path).get_all_fusions()
+        if params.use_mitelman:
+            local_fusions[MitelmanDB(path).name] = MitelmanDB(path).get_all_fusions()
+        if params.use_fusiongdb:
+            local_fusions[FusionGDB(path).name] = FusionGDB(path).get_all_fusions()
+        if params.use_fusiongdb2:
+            local_fusions[FusionGDB2(path).name] = FusionGDB(path).get_all_fusions()
+        
+
         for fusion in self.manager.fusions:
             for db_name, db_list in local_fusions.items():
                 if fusion.name in db_list:
