@@ -8,18 +8,18 @@
 
 This python script generates an interactive summary report from fusion detection tools. Fusion-report is part of a bigger project [nf-core/rnafusion](https://github.com/nf-core/rnafusion) which is designed to detect and report fusion genes from RNA-seq data.
 
-> **TL;DR**: Live demo [here](https://matq007.github.io/fusion-report/example).
+> **TL;DR**: [Live demo](https://matq007.github.io/fusion-report/example); [Documentation](https://matq007.github.io/fusion-report/).
 
 ## Supported tools
 
-* [STAR-Fusion](https://github.com/STAR-Fusion/STAR-Fusion)
-* [EricScript](https://sites.google.com/site/bioericscript/)
-* [Pizzly](https://github.com/pmelsted/pizzly)
-* [Squid](https://github.com/Kingsford-Group/squid)
-* [Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
 * [Arriba](https://github.com/suhrig/arriba)
+* [Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
+* [EricScript](https://sites.google.com/site/bioericscript/)
 * [Illumina Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
 * [Jaffa](https://github.com/Oshlack/JAFFA)
+* [Pizzly](https://github.com/pmelsted/pizzly)
+* [Squid](https://github.com/Kingsford-Group/squid)
+* [STAR-Fusion](https://github.com/STAR-Fusion/STAR-Fusion)
 
 ## Installation
 
