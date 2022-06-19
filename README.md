@@ -1,5 +1,6 @@
 # ![fusion-report](https://raw.githubusercontent.com/matq007/fusion-report/master/fusion_report/templates/assets/img/fusion-report.png)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3a273e521ab44cc49e9352850b5fe3f5)](https://app.codacy.com/gh/matq007/fusion-report?utm_source=github.com&utm_medium=referral&utm_content=matq007/fusion-report&utm_campaign=Badge_Grade_Settings)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/fusion-report/README.html)
 ![build](https://github.com/matq007/fusion-report/workflows/CI%20%5Bmaster%5D/badge.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/932dff8661394cc28448af7b22748bb5)](https://app.codacy.com/app/mproksik/fusion-report?utm_source=github.com&utm_medium=referral&utm_content=matq007/fusion-report&utm_campaign=Badge_Grade_Dashboard)
