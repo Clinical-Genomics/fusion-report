@@ -10,8 +10,14 @@ class Page(BasePage):
     Attributes:
         __page_variables: extra variables to be displayed on the page
     """
-    def __init__(self, title: str, view: str,
-                 filename: str = None, page_variables: Dict[str, Any] = None) -> None:
+
+    def __init__(
+        self,
+        title: str,
+        view: str,
+        filename: str = None,
+        page_variables: Dict[str, Any] = None,
+    ) -> None:
         self.__page_variables = {} if not page_variables else page_variables
         super().__init__(title, view, filename)
 

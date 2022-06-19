@@ -21,7 +21,7 @@ class Db:
     def __init__(self, path: str, name: str, schema: str) -> None:
         self.name: str = name
         self._schema: str = schema
-        self.database: str = f'{name.lower()}.db'
+        self.database: str = f"{name.lower()}.db"
         self.connection = self.connect(path, self.database)
 
     def connect(self, path: str, database: str):
@@ -40,46 +40,49 @@ class Db:
         except sqlite3.DatabaseError as ex:
             raise DbException(ex)
 
-    def setup(self, files: List[str], delimiter: str = '',
-              skip_header=False, encoding='utf-8') -> None:
+    def setup(
+        self, files: List[str], delimiter: str = "", skip_header=False, encoding="utf-8"
+    ) -> None:
         """Sets up database. For most databases there is available schema and text files which
-           contain all the data. This methods builds database using it's schema and imports
-           all provided data files.
+        contain all the data. This methods builds database using it's schema and imports
+        all provided data files.
 
-            Args:
-                files: all necessary files required to be imported
-                delimiter: separator used in data files
-                skip_header: ignore header when importing files, default: False
-                encoding: data file encoding, some files are not using utf-8 as default (Mitelman)
+         Args:
+             files: all necessary files required to be imported
+             delimiter: separator used in data files
+             skip_header: ignore header when importing files, default: False
+             encoding: data file encoding, some files are not using utf-8 as default (Mitelman)
 
-            Raises:
-                DbException
+         Raises:
+             DbException
         """
         try:
             # build database schema
             self.create_database()
             # import all data files except .sql files
-            for file in filter(lambda x: not x.endswith('.sql'), files):
-                with open(file, 'r', encoding=encoding) as resource:
+            for file in filter(lambda x: not x.endswith(".sql"), files):
+                with open(file, "r", encoding=encoding) as resource:
                     if skip_header:
                         next(resource)
                     first_line: List[str] = resource.readline().split(delimiter)
                     rows: List[List[str]] = [first_line]
                     for line in resource:
                         row = line.split(delimiter)
-                        rows.append(row + ['' for _ in range(len(row), len(first_line))])
+                        rows.append(
+                            row + ["" for _ in range(len(row), len(first_line))]
+                        )
                     self.connection.executemany(
-                        f'''INSERT INTO {file.split('/')[-1].split('.')[0].lower()}
-                            VALUES ({','.join(['?' for _ in range(0, len(first_line))])})''',
-                        rows
+                        f"""INSERT INTO {file.split('/')[-1].split('.')[0].lower()}
+                            VALUES ({','.join(['?' for _ in range(0, len(first_line))])})""",
+                        rows,
                     )
                     self.connection.commit()
         except (IOError, sqlite3.Error) as ex:
             raise DbException(ex)
 
     def create_database(self):
-        """ Build database from schema file."""
-        with open(self.schema, 'r', encoding='utf-8') as schema:
+        """Build database from schema file."""
+        with open(self.schema, "r", encoding="utf-8") as schema:
             self.connection.executescript(schema.read().lower())
 
     def select(self, query: str, params: List[str] = None):
@@ -121,7 +124,7 @@ class Db:
     @property
     def schema(self):
         """Returns database schema."""
-        return os.path.join(Settings.ROOT_DIR, f'data/schema/{self._schema}')
+        return os.path.join(Settings.ROOT_DIR, f"data/schema/{self._schema}")
 
     @classmethod
     def __dict_factory(cls, cursor, row):

@@ -15,9 +15,10 @@ class BasePage:
         view: View
         modules: Custom modules
     """
+
     def __init__(self, title: str, view: str, filename: str = None) -> None:
         self.title: str = title.strip()
-        self.view: str = f'views/{view}.html'
+        self.view: str = f"views/{view}.html"
         self.modules: Dict[str, Any] = {}
         self.filename: str = filename if filename else self._set_filename(title)
 
@@ -26,15 +27,11 @@ class BasePage:
         if name not in self.modules:
             self.modules[name] = ModuleLoader(manager, params).exec(name)
         else:
-            Logger(__name__).warning('Module %s already loaded', name)
+            Logger(__name__).warning("Module %s already loaded", name)
 
     def get_content(self) -> Dict[str, Any]:
         """Helper serialization method for templating engine."""
-        return {
-            'title': self.title,
-            'filename': self.filename,
-            'view': self.view
-        }
+        return {"title": self.title, "filename": self.filename, "view": self.view}
 
     @staticmethod
     def _set_filename(fusion: str) -> str:
@@ -46,8 +43,8 @@ class BasePage:
         Returns:
             str: filename of the fusion
         """
-        for char in ['/', '\\', '--']:
+        for char in ["/", "\\", "--"]:
             if char in fusion:
-                fusion = fusion.replace(char, '_')
+                fusion = fusion.replace(char, "_")
 
-        return f'{fusion}.html'
+        return f"{fusion}.html"

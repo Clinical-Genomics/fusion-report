@@ -1,14 +1,18 @@
+# IDEs
+.idea
 .vscode
-db/**/*.db
+
+# fusion-report
+db/
+docs/example
+tests/
+!tests/test_data
+
+# build stuff
 build/
 dist/
 *.egg-info
 *__pycache__*
 .mypy_cache/*
-NOTES.md
-.idea
-tests/
-!tests/test_data
 *.log
-.tox/
 .DS_Store

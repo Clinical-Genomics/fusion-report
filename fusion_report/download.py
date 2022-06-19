@@ -8,6 +8,7 @@ from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.common.net import Net
 
+
 class Download:
     """Class designed for downloading any type of required database.
     Currently the script is able to download: Mitelman, FusionGDB and COSMIC with provided
@@ -49,7 +50,7 @@ class Download:
         if len(return_err) > 0:
             raise DownloadException(return_err)
 
-        Logger(__name__).info('Downloading finished')
+        Logger(__name__).info("Downloading finished")
         Net.clean()
 
         # Create timestamp:

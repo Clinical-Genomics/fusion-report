@@ -7,33 +7,35 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Squid(AbstractFusionTool):
     """Squid tool parser."""
 
-    def set_header(self, header: str, delimiter: Optional[str] = '\t'):
+    def set_header(self, header: str, delimiter: Optional[str] = "\t"):
         self.header: List[str] = header.strip().split(delimiter)
 
     def parse_multiple(self, col: str, delimiter: str) -> List[str]:
-        return [fusion.replace(':', '--') for fusion in col.split(delimiter)]
+        return [fusion.replace(":", "--") for fusion in col.split(delimiter)]
 
-    def parse(self, line: str, delimiter: Optional[str] = '\t') -> List[Tuple[str, Dict[str, Any]]]:
+    def parse(
+        self, line: str, delimiter: Optional[str] = "\t"
+    ) -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = [x.strip() for x in line.split(delimiter)]
-        if col[self.header.index('Type')].strip() == 'non-fusion-gene':
-            return [('', {})]
+        if col[self.header.index("Type")].strip() == "non-fusion-gene":
+            return [("", {})]
 
-        fusions = self.parse_multiple(col[self.header.index('FusedGenes')], ',')
+        fusions = self.parse_multiple(col[self.header.index("FusedGenes")], ",")
         left_breakpoint: str = (
             f"{col[self.header.index('# chrom1')]}:{col[self.header.index('start1')]}"
             "-"
             f"{col[self.header.index('end1')]}:{col[self.header.index('strand1')]}"
-        ).replace('chr', '')
+        ).replace("chr", "")
         right_breakpoint: str = (
             f"{col[self.header.index('chrom2')]}:{col[self.header.index('start2')]}"
             "-"
             f"{col[self.header.index('end2')]}:{col[self.header.index('strand2')]}"
-        ).replace('chr', '')
+        ).replace("chr", "")
         details: Dict[str, Any] = {
-            'position': f"{left_breakpoint}#{right_breakpoint}"
-                        if col[self.header.index('strand1')] == '+'
-                        else f"{right_breakpoint}#{left_breakpoint}",
-            'score': int(col[self.header.index('score')])
+            "position": f"{left_breakpoint}#{right_breakpoint}"
+            if col[self.header.index("strand1")] == "+"
+            else f"{right_breakpoint}#{left_breakpoint}",
+            "score": int(col[self.header.index("score")]),
         }
 
         return [(fusion, details) for fusion in fusions]
