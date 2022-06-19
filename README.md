@@ -23,17 +23,22 @@ This python script generates an interactive summary report from fusion detection
 
 ## Installation
 
+## Using pip
+
+```bash
+pip install fusion-report
+```
+
 ### Using Conda
 
 ```bash
-conda install -c bioconda fusion-report=2.1.4
+conda install -c bioconda fusion-report
 ```
 
 ### From source
 
 ```bash
-sudo apt-get install sqlite3
-python3 setup.py install
+sudo apt-get install sqlite3 && python3 setup.py install
 ```
 
 ## Usage
