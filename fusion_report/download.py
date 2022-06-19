@@ -1,6 +1,5 @@
 """ Download module """
 import os
-import shutil
 
 from argparse import Namespace
 from typing import List
@@ -8,8 +7,6 @@ from typing import List
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.common.net import Net
-from fusion_report.settings import Settings
-
 
 class Download:
     """Class designed for downloading any type of required database.
@@ -37,10 +34,14 @@ class Download:
         return_err: List[str] = []
         os.chdir(params.output)
 
-        # SOURCEFORGE databases
-        url: str = f'{Settings.SOURCEFORGE["HOSTNAME"]}/{Settings.SOURCEFORGE["FILE"]}'
-        Net.get_large_file(url, ignore_ssl=False)
-        shutil.unpack_archive(Settings.SOURCEFORGE['FILE'])
+        # MITELMAN
+        Net.get_mitelman(self, return_err)
+
+        # FusionGDB
+        Net.get_fusiongdb(self, return_err)
+
+        # FusionGDB2
+        Net.get_fusiongdb2(self, return_err)
 
         # COSMIC
         Net.get_cosmic(self.cosmic_token, return_err)
@@ -50,3 +51,6 @@ class Download:
 
         Logger(__name__).info('Downloading finished')
         Net.clean()
+
+        # Create timestamp:
+        Net.timestamp()

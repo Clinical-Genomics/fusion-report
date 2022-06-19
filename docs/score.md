@@ -15,6 +15,7 @@ Currently weights for databases are not adjustable. The weights for databases ar
 * FusionGDB (20)
 * COSMIC (40)
 * MITELMAN (40)
+* FusionGDB2 (0)
 
 > It is strongly suggested to use all supported databases in order to get the best estimated score.
 >

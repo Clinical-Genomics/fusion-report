@@ -7,6 +7,10 @@ import shutil
 import ssl
 import urllib.error
 import urllib.request
+import time
+import pandas as pd
+from zipfile import ZipFile
+
 
 from argparse import Namespace
 from typing import List
@@ -15,7 +19,10 @@ from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.data.cosmic import CosmicDB
 from fusion_report.settings import Settings
-
+from multiprocessing import Pool
+from fusion_report.data.fusiongdb import FusionGDB
+from fusion_report.data.fusiongdb2 import FusionGDB2
+from fusion_report.data.mitelman import MitelmanDB
 
 class Net:
 
@@ -89,7 +96,65 @@ class Net:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
 
     @staticmethod
+    def get_fusiongdb(self, return_err: List[str]) -> None:
+        """Method for download FusionGDB database."""
+
+        pool_params = [
+            (f'{Settings.FUSIONGDB["HOSTNAME"]}/{x}', True) for x in Settings.FUSIONGDB["FILES"]
+        ]
+        pool = Pool(Settings.THREAD_NUM)
+        pool.starmap(Net.get_large_file, pool_params)
+        pool.close()
+        pool.join()
+        db = FusionGDB('.')
+        db.setup(Settings.FUSIONGDB['FILES'], delimiter='\t', skip_header=False)
+
+    @staticmethod
+    def get_fusiongdb2(self, return_err: List[str]) -> None:
+        """Method for download FusionGDB2 database."""
+        try:
+            url: str = f'{Settings.FUSIONGDB2["HOSTNAME"]}/{Settings.FUSIONGDB2["FILE"]}'
+            Net.get_large_file(url)
+            file: str = f'{Settings.FUSIONGDB2["FILE"]}'
+            df = pd.read_excel(file, engine='openpyxl')
+            df["fusion"] = df["5'-gene (text format)"] + "--" + df["3'-gene (text format)"]
+            file_csv = 'fusionGDB2.csv'
+            df['fusion'].to_csv(file_csv, header=False, index=False, sep=',', encoding='utf-8')
+
+            db = FusionGDB2('.')
+            db.setup([file_csv], delimiter=',', skip_header=False)
+
+        except DownloadException as ex:
+            return_err.append(f'FusionGDB2: {ex}')
+
+    @staticmethod
+    def get_mitelman(self, return_err: List[str]) -> None:
+        """Method for download Mitelman database."""
+        try:
+            url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
+            Net.get_large_file(url)
+            with ZipFile(Settings.MITELMAN['FILE'], 'r') as archive:
+                files = [x for x in archive.namelist() if "mitelman_db/MBCA.TXT.DATA" in x]
+                archive.extractall()
+
+            db = MitelmanDB('.')
+            db.setup(files, delimiter='\t', skip_header=False, encoding='ISO-8859-1')
+        except DownloadException as ex:
+            return_err.append(f'Mitelman: {ex}')
+
+    @staticmethod
     def clean():
         """Remove all files except *db."""
-        for temp in glob.glob('*[!db]'):
-            os.remove(temp)
+        for temp in glob.glob('*/'):
+            shutil.rmtree(temp)
+        for temp in glob.glob('*[!.db]'):
+            if not os.path.isdir(temp):
+                os.remove(temp)
+
+    @staticmethod
+    def timestamp():
+        """Create a timestamp file at DB creation"""
+        timestr = time.strftime("%Y-%m-%d/%H:%M")
+        text_file = open("DB-timestamp.txt", "w")
+        text_file.write(timestr)
+        text_file.close()
