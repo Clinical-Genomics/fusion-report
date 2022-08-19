@@ -4,8 +4,8 @@ import os
 from pathlib import Path
 from typing import Any, Dict
 
-from jinja2 import Environment, FileSystemLoader, Markup
-
+from jinja2 import Environment, FileSystemLoader
+from markupsafe import Markup
 from fusion_report.common.page import Page
 from fusion_report.config import Config
 from fusion_report.settings import Settings

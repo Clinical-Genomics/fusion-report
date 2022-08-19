@@ -3,7 +3,7 @@ colorlog
 python-rapidjson
 pyyaml>=4.2b1
 Jinja2>=2.10
-MarkupSafe
+MarkupSafe>=2.1.1
 pandas
 openpyxl
 xlrd >= 1.0.0

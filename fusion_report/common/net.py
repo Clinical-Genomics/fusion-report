@@ -135,7 +135,7 @@ class Net:
             url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
             Net.get_large_file(url)
             with ZipFile(Settings.MITELMAN['FILE'], 'r') as archive:
-                files = [x for x in archive.namelist() if "mitelman_db/MBCA.TXT.DATA" in x]
+                files = [x for x in archive.namelist() if "MBCA.TXT.DATA" in x]
                 archive.extractall()
 
             db = MitelmanDB('.')
