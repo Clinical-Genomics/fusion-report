@@ -10,13 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Build Docker image
-      run: |
-        docker build . --file Dockerfile --tag 2.1.5patched:$(date +%s)
-
-
-
       - name: Login to DockerHub
         id: docker_login
         uses: docker/login-action@v1
