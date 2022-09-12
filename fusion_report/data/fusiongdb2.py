@@ -14,7 +14,7 @@ class FusionGDB2(Db, metaclass=Singleton):
 
     def get_all_fusions(self) -> List[str]:
         """Returns all fusions from database."""
-        query: str = '''SELECT DISTINCT fusionsdgb_id
+        query: str = '''SELECT DISTINCT fusions
                         FROM fusiongdb2'''
         res = self.select(query)
 
