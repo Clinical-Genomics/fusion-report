@@ -9,7 +9,8 @@ import urllib.request
 import time
 import pandas as pd
 from zipfile import ZipFile
-
+import subprocess
+import json
 
 from argparse import Namespace
 from typing import List
@@ -43,6 +44,45 @@ class Net:
             raise DownloadException('COSMIC credentials have not been provided correctly')
 
     @staticmethod
+    def run_qiagen_cmd(cmd, return_output=False, silent=False):
+        if not silent:
+            print(cmd)
+        if return_output:
+            output = subprocess.check_output(cmd, shell=True, executable='/bin/bash').strip()
+            return output
+        else:
+            subprocess.check_call(cmd, shell=True, executable='/bin/bash')
+
+    @staticmethod
+    def get_qiagen_files(self):
+        files_request = 'curl -s -X GET ' \
+                        '-H "Content-Type: application/octet-stream" ' \
+                        '-H "Authorization: Bearer {token}" ' \
+                        '"https://my.qiagendigitalinsights.com/bbp/data/files/cosmic"'
+        cmd = files_request.format(token=self.get_cosmic_qiagen_token())
+        return self.run_qiagen_cmd(cmd, True, True)
+
+    @staticmethod
+    def download_qiagen_file(self, file_id, output_path):
+        file_request = 'curl -X GET ' \
+                    '-H "Content-Type: application/octet-stream" ' \
+                    '-H "Authorization: Bearer {token}" ' \
+                    '"https://my.qiagendigitalinsights.com/bbp/data/download/cosmic-download?name={file_id}" ' \
+                    '-o "{output_path}"'
+        cmd = file_request.format(token=self.get_cosmic_qiagen_token(), file_id=file_id, output_path=output_path)
+        self.run_qiagen_cmd(cmd, True, True)
+
+    @staticmethod
+    def get_cosmic_qiagen_token(self, params: Namespace):
+        token_request = 'curl -s -X POST ' \
+                        '-H "Content-Type: application/x-www-form-urlencoded" ' \
+                        '-d "grant_type=password&client_id=603912630-14192122372034111918-SmRwso&username={uid}&password={pwd}" ' \
+                        '"https://apps.ingenuity.com/qiaoauth/oauth/token"'
+        cmd = token_request.format(uid=params.cosmic_usr, pwd=params.cosmic_passwd)
+        token_response = self.run_qiagen_cmd(cmd, True, True).decode('UTF-8')
+        return json.loads(token_response)['access_token']
+
+    @staticmethod
     def get_large_file(url: str, ignore_ssl: bool = False) -> None:
         """Method for downloading a large file."""
 
@@ -68,8 +108,8 @@ class Net:
             Logger(__name__).error('Downloading resources supports only HTTPS or FTP')
 
     @staticmethod
-    def get_cosmic(token: str, return_err: List[str]) -> None:
-        """Method for download COSMIC database."""
+    def get_cosmic_from_sanger(token: str, return_err: List[str]) -> None:
+        """Method for download COSMIC database from sanger website."""
 
         # get auth url to download file
         files = []
@@ -95,6 +135,29 @@ class Net:
             db.setup(files, delimiter='\t', skip_header=True)
         except urllib.error.HTTPError as ex:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
+
+    @staticmethod
+    def get_cosmic_from_qiagen(token: str, return_err: List[str]) -> None:
+        """Method for download COSMIC database from QIAGEN."""
+        result = self.get_qiagen_files()
+        if len(result) == 0:
+            print('Error: Not authorized or download limit exceeded!')
+        else:
+            self.download_qiagen_file(result)
+        file: str = Settings.COSMIC["FILE"]
+        files = []
+
+        try:
+            files.append('.'.join(file.split('.')[:-1]))
+
+            with gzip.open(file, 'rb') as archive, open(files[0], 'wb') as out_file:
+                shutil.copyfileobj(archive, out_file)
+
+            db = CosmicDB('.')
+            db.setup(files, delimiter='\t', skip_header=True)
+        except urllib.error.HTTPError as ex:
+            return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
+
 
     @staticmethod
     def get_fusiongdb(self, return_err: List[str]) -> None:
