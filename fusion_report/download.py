@@ -44,7 +44,12 @@ class Download:
         Net.get_fusiongdb2(self, return_err)
 
         # COSMIC
-        Net.get_cosmic(self.cosmic_token, return_err)
+        if params.qiagen:
+            Logger(__name__).info('Downloading resources from QIAGEN...')
+            Net.get_cosmic_from_qiagen(self.cosmic_token, return_err)
+        else:
+            Logger(__name__).info('Downloading resources from SANGER...')
+            Net.get_cosmic_from_sanger(self.cosmic_token, return_err)
 
         if len(return_err) > 0:
             raise DownloadException(return_err)

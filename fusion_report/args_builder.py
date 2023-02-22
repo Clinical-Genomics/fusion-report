@@ -74,7 +74,7 @@ class ArgsBuilder:
                         help=optional.get('help'),
                         action=optional.get('action')
                     )
-                else:    
+                else:
                     run_optional.add_argument(
                         optional['key'][0], optional['key'][1],
                         default=optional.get('default'), help=optional.get('help'),
@@ -117,7 +117,10 @@ class ArgsBuilder:
             which will be used to generate base64 token or the token itself.'''
         )
         for cosmic in args['cosmic']:
-            download_cosmic.add_argument(cosmic['key'], help=cosmic['help'], type=str)
+            if not cosmic.get('action'):
+                download_cosmic.add_argument(cosmic['key'], help=cosmic.get('help'), type=str)
+            else:
+                download_cosmic.add_argument(cosmic['key'], help=cosmic.get('help'), action=cosmic.get('action'))
 
     def parse(self) -> Namespace:
         """Parse arguments."""

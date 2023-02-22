@@ -91,6 +91,11 @@
                 {
                     "key": "--cosmic_token",
                     "help": "COSMIC token"
+                },
+                {
+                    "key": "--qiagen",
+                    "help": "Use QIAGEN to download COSMIC db (commercial usage)",
+                    "action": "store_true"
                 }
             ]
         }
