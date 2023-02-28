@@ -73,7 +73,7 @@ class Net:
     @staticmethod
     def fetch_fusion_file_id(output_path: str):
         df = pd.read_csv(output_path+"/qiagen_files.tsv", names=['file_id','file_name','genome_draft'], sep='\t')
-        file_id = df.loc[(df['file_name'] == {Settings.COSMIC["FILE"]}) & (df['genome_draft'] == 'cosmic/GRCh38'), 'file_id'].values[0]
+        file_id = df.loc[(df['file_name'] == Settings.COSMIC["FILE"]) & (df['genome_draft'] == 'cosmic/GRCh38'), 'file_id'].values[0]
         return file_id
 
     @staticmethod
