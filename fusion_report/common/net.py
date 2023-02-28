@@ -65,8 +65,8 @@ class Net:
         file_request = 'curl -X GET ' \
                     '-H "Content-Type: application/octet-stream" ' \
                     '-H "Authorization: Bearer {token}" ' \
-                    '"https://my.qiagendigitalinsights.com/bbp/data/download/cosmic-download?name={file_id}" ' \
-                    '-o "{output_path}"'
+                    '"https://my.qiagendigitalinsights.com/bbp/data/download/cosmic-download?name={file_id}"' \
+                    ' -o {output_path}CosmicFusionExport.tsv.gz'
         cmd = file_request.format(token=token, file_id=file_id, output_path=output_path)
         Net.run_qiagen_cmd(cmd, True, True)
 
