@@ -52,16 +52,16 @@ class Net:
 
     @staticmethod
     def get_qiagen_files(token: str, output_path: str):
-        files_request = 'curl -s -X GET ' \
+        files_request = 'curl --stderr -s -X GET ' \
                         '-H "Content-Type: application/octet-stream" ' \
                         '-H "Authorization: Bearer {token}" ' \
                         '"https://my.qiagendigitalinsights.com/bbp/data/files/cosmic"' \
-                        '-o "{output_path}/qiagen_files.tsv"'
+                        ' -o {output_path}qiagen_files.tsv'
         cmd = files_request.format(token=token, output_path = output_path)
         return Net.run_qiagen_cmd(cmd, True, True)
 
     @staticmethod
-    def download_qiagen_file(token: str, file_id, output_path):
+    def download_qiagen_file(token: str, file_id: str, output_path: str):
         file_request = 'curl -X GET ' \
                     '-H "Content-Type: application/octet-stream" ' \
                     '-H "Authorization: Bearer {token}" ' \
@@ -71,9 +71,9 @@ class Net:
         Net.run_qiagen_cmd(cmd, True, True)
 
     @staticmethod
-    def fetch_fusion_file_id(output_path):
-        df = pd.read_tsv(output_path+"/qiagen_files.tsv", usecols=['file_id','file_name','genome_draft'])
-        file_id = df.loc[df['file_name'] == "CosmicFusionExport.tsv.gz" & df['genome_draft'] == 'cosmic/GRCh38', 'file_id'].values[0]
+    def fetch_fusion_file_id(output_path: str):
+        df = pd.read_csv(output_path+"/qiagen_files.tsv", names=['file_id','file_name','genome_draft'], sep='\t')
+        file_id = df.loc[(df['file_name'] == {Settings.COSMIC["FILE"]}) & (df['genome_draft'] == 'cosmic/GRCh38'), 'file_id'].values[0]
         return file_id
 
     @staticmethod
@@ -143,12 +143,13 @@ class Net:
     @staticmethod
     def get_cosmic_from_qiagen(token: str, return_err: List[str], outputpath: str) -> None:
         """Method for download COSMIC database from QIAGEN."""
-        result = Net.get_qiagen_files(token, outputpath)
-        if len(result) == 0:
-            print('Error: Not authorized or download limit exceeded!')
-        else:
-            file_id = Net.fetch_fusion_file_id(outputpath)
-            Net.download_qiagen_file(token, file_id, outputpath)
+        try:
+            result = Net.get_qiagen_files(token, outputpath)
+        except Exception as ex: 
+            print(ex)
+        #Then continue parsing out the fusion_file_id
+        file_id = Net.fetch_fusion_file_id(outputpath)
+        Net.download_qiagen_file(token, file_id, outputpath)
         file: str = Settings.COSMIC["FILE"]
         files = []
 
