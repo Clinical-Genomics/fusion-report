@@ -137,7 +137,7 @@ class Net:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
 
     @staticmethod
-    def get_cosmic_from_qiagen(token: str, return_err: List[str]) -> None:
+    def get_cosmic_from_qiagen(self, token: str, return_err: List[str]) -> None:
         """Method for download COSMIC database from QIAGEN."""
         result = self.get_qiagen_files()
         if len(result) == 0:
