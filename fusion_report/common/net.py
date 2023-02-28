@@ -62,7 +62,7 @@ class Net:
 
     @staticmethod
     def download_qiagen_file(token: str, file_id: str, output_path: str):
-        file_request = 'curl -X GET ' \
+        file_request = 'curl -s -X GET ' \
                     '-H "Content-Type: application/octet-stream" ' \
                     '-H "Authorization: Bearer {token}" ' \
                     '"https://my.qiagendigitalinsights.com/bbp/data/download/cosmic-download?name={file_id}"' \
