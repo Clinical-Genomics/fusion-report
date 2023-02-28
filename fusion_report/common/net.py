@@ -60,7 +60,7 @@ class Net:
         return Net.run_qiagen_cmd(cmd, True, True)
 
     @staticmethod
-    def download_qiagen_file(token: str, file_id, output_path, ):
+    def download_qiagen_file(token: str, file_id, output_path):
         file_request = 'curl -X GET ' \
                     '-H "Content-Type: application/octet-stream" ' \
                     '-H "Authorization: Bearer {token}" ' \
@@ -134,13 +134,13 @@ class Net:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
 
     @staticmethod
-    def get_cosmic_from_qiagen(token: str, return_err: List[str]) -> None:
+    def get_cosmic_from_qiagen(token: str, return_err: List[str], outputpath: str) -> None:
         """Method for download COSMIC database from QIAGEN."""
         result = Net.get_qiagen_files(token)
         if len(result) == 0:
             print('Error: Not authorized or download limit exceeded!')
         else:
-            Net.download_qiagen_file(token, result)
+            Net.download_qiagen_file(token, result, outputpath)
         file: str = Settings.COSMIC["FILE"]
         files = []
 
