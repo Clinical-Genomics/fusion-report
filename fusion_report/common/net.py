@@ -136,7 +136,7 @@ class Net:
     @staticmethod
     def get_cosmic_from_qiagen(token: str, return_err: List[str]) -> None:
         """Method for download COSMIC database from QIAGEN."""
-        result = Net.get_qiagen_files()
+        result = Net.get_qiagen_files(self, self.params)
         if len(result) == 0:
             print('Error: Not authorized or download limit exceeded!')
         else:
