@@ -22,8 +22,11 @@ class Download:
         self.download_all(params)
 
     def validate(self, params: Namespace) -> None:
-        """Method validating required input. In this case COSMIC credentials."""
-        self.cosmic_token = Net.get_cosmic_token(params)
+        """Method validating required input. In this case COSMIC credentials."""     
+        if(params.qiagen):
+            self.cosmic_token = Net.get_cosmic_qiagen_token(params)
+        else:
+            self.cosmic_token = Net.get_cosmic_token(params)
 
         # making sure output directory exists
         if not os.path.exists(params.output):

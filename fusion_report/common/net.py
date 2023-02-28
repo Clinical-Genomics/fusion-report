@@ -51,22 +51,22 @@ class Net:
             subprocess.check_call(cmd, shell=True, executable='/bin/bash')
 
     @staticmethod
-    def get_qiagen_files(self, params: Namespace):
+    def get_qiagen_files(token: str):
         files_request = 'curl -s -X GET ' \
                         '-H "Content-Type: application/octet-stream" ' \
                         '-H "Authorization: Bearer {token}" ' \
                         '"https://my.qiagendigitalinsights.com/bbp/data/files/cosmic"'
-        cmd = files_request.format(token=Net.get_cosmic_qiagen_token(params))
+        cmd = files_request.format(token=token)
         return Net.run_qiagen_cmd(cmd, True, True)
 
     @staticmethod
-    def download_qiagen_file(file_id, output_path, params: Namespace):
+    def download_qiagen_file(token: str, file_id, output_path, ):
         file_request = 'curl -X GET ' \
                     '-H "Content-Type: application/octet-stream" ' \
                     '-H "Authorization: Bearer {token}" ' \
                     '"https://my.qiagendigitalinsights.com/bbp/data/download/cosmic-download?name={file_id}" ' \
                     '-o "{output_path}"'
-        cmd = file_request.format(token=Net.get_cosmic_qiagen_token(params), file_id=file_id, output_path=output_path)
+        cmd = file_request.format(token=token, file_id=file_id, output_path=output_path)
         Net.run_qiagen_cmd(cmd, True, True)
 
     @staticmethod
@@ -136,11 +136,11 @@ class Net:
     @staticmethod
     def get_cosmic_from_qiagen(token: str, return_err: List[str]) -> None:
         """Method for download COSMIC database from QIAGEN."""
-        result = Net.get_qiagen_files(self, self.params)
+        result = Net.get_qiagen_files(token)
         if len(result) == 0:
             print('Error: Not authorized or download limit exceeded!')
         else:
-            Net.download_qiagen_file(result)
+            Net.download_qiagen_file(token, result)
         file: str = Settings.COSMIC["FILE"]
         files = []
 
