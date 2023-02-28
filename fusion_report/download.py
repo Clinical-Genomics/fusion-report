@@ -49,7 +49,7 @@ class Download:
         # COSMIC
         if params.qiagen:
             Logger(__name__).info('Downloading resources from QIAGEN...')
-            Net.get_cosmic_from_qiagen(self.cosmic_token, return_err, params.qiagen)
+            Net.get_cosmic_from_qiagen(self.cosmic_token, return_err, params.output)
         else:
             Logger(__name__).info('Downloading resources from SANGER...')
             Net.get_cosmic_from_sanger(self.cosmic_token, return_err)
