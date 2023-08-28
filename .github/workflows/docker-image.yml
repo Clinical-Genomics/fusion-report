@@ -1,8 +1,8 @@
-name: Docker Image CI [mittelman_fix]
+name: Docker Image CI [ master ]
 
 on:
   push:
-    branches: [ mittelman_fix ]
+    branches: [ master ]
 
 jobs:
   build:
