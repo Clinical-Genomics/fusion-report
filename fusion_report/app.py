@@ -189,7 +189,7 @@ class App:
     def generate_fusion_list(self, path: str, cutoff: int):
         """
         Helper function that generates file containing list of found fusions and filtered list of
-        fusions. One of these files ise used by FusionInspector to visualize the fusions.
+        fusions. One of these files is used by FusionInspector to visualize the fusions.
         Input for FusionInspector expects list of fusions in format `geneA--geneB\n`.
 
         Returns:

@@ -145,7 +145,7 @@ class Net:
         """Method for download COSMIC database from QIAGEN."""
         try:
             result = Net.get_qiagen_files(token, outputpath)
-        except Exception as ex: 
+        except Exception as ex:
             print(ex)
         #Then continue parsing out the fusion_file_id
         file_id = Net.fetch_fusion_file_id(outputpath)
@@ -204,7 +204,7 @@ class Net:
             url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
             Net.get_large_file(url)
             with ZipFile(Settings.MITELMAN['FILE'], 'r') as archive:
-                files = [x for x in archive.namelist() if "MBCA.TXT.DATA" in x]
+                files = [x for x in archive.namelist() if "MBCA.TXT.DATA" in x and not "MACOSX" in x]
                 archive.extractall()
 
             db = MitelmanDB('.')
