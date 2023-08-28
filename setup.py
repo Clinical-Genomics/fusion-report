@@ -20,7 +20,7 @@ with open('requirements.txt') as f:
 setup(
     name='fusion_report',
     version=Settings.VERSION,
-    python_requires='>=3.6.*',
+    python_requires='>=3.6',
     description='Tool for parsing outputs from fusion detection tools.',
     long_description=README,
     author='Martin Proks',

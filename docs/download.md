@@ -15,6 +15,17 @@ fusion_report download
     /path/to/db
 ```
 
+With a non-academic/research login -> using QIAGEN with a commercial license:
+
+```bash
+fusion_report download
+    --cosmic_usr '<QIAGEN username>'
+    --cosmic_passwd 'QIAGEN <password>'
+    --qiagen
+    /path/to/db
+```
+
+
 ## Manual download
 
 ### FusionGDB

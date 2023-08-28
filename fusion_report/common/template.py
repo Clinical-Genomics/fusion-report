@@ -4,8 +4,8 @@ import os
 from pathlib import Path
 from typing import Any, Dict
 
-from jinja2 import Environment, FileSystemLoader, Markup
-
+from jinja2 import Environment, FileSystemLoader
+from markupsafe import Markup
 from fusion_report.common.page import Page
 from fusion_report.config import Config
 from fusion_report.settings import Settings
@@ -47,7 +47,6 @@ class Template:
         ) as file_out:
             file_out.write(view)
 
-    @staticmethod
     def include_raw(self, filename: str) -> Markup:
         """Helper fusion for including raw content in Jinja2, mostly used to include custom
         or vendor javascript and custom css"""

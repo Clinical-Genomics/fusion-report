@@ -9,7 +9,8 @@ import urllib.request
 import time
 import pandas as pd
 from zipfile import ZipFile
-
+import subprocess
+import json
 
 from argparse import Namespace
 from typing import List
@@ -32,15 +33,58 @@ class Net:
         if params.cosmic_token is not None:
             return params.cosmic_token
 
-        if (
-                params.cosmic_token is None
-                and (params.cosmic_usr is not None or params.cosmic_passwd is not None)
-        ):
+        if params.cosmic_usr is not None and params.cosmic_passwd is not None:
             return base64.b64encode(
                 f'{params.cosmic_usr}:{params.cosmic_passwd}'.encode()
             ).decode('utf-8')
         else:
             raise DownloadException('COSMIC credentials have not been provided correctly')
+
+    @staticmethod
+    def run_qiagen_cmd(cmd, return_output=False, silent=False):
+        if not silent:
+            print(cmd)
+        if return_output:
+            output = subprocess.check_output(cmd, shell=True, executable='/bin/bash').strip()
+            return output
+        else:
+            subprocess.check_call(cmd, shell=True, executable='/bin/bash')
+
+    @staticmethod
+    def get_qiagen_files(token: str, output_path: str):
+        files_request = 'curl --stderr -s -X GET ' \
+                        '-H "Content-Type: application/octet-stream" ' \
+                        '-H "Authorization: Bearer {token}" ' \
+                        '"https://my.qiagendigitalinsights.com/bbp/data/files/cosmic"' \
+                        ' -o {output_path}qiagen_files.tsv'
+        cmd = files_request.format(token=token, output_path = output_path)
+        return Net.run_qiagen_cmd(cmd, True, True)
+
+    @staticmethod
+    def download_qiagen_file(token: str, file_id: str, output_path: str):
+        file_request = 'curl -s -X GET ' \
+                    '-H "Content-Type: application/octet-stream" ' \
+                    '-H "Authorization: Bearer {token}" ' \
+                    '"https://my.qiagendigitalinsights.com/bbp/data/download/cosmic-download?name={file_id}"' \
+                    ' -o {output_path}CosmicFusionExport.tsv.gz'
+        cmd = file_request.format(token=token, file_id=file_id, output_path=output_path)
+        Net.run_qiagen_cmd(cmd, True, True)
+
+    @staticmethod
+    def fetch_fusion_file_id(output_path: str):
+        df = pd.read_csv(output_path+"/qiagen_files.tsv", names=['file_id','file_name','genome_draft'], sep='\t')
+        file_id = df.loc[(df['file_name'] == Settings.COSMIC["FILE"]) & (df['genome_draft'] == 'cosmic/GRCh38'), 'file_id'].values[0]
+        return file_id
+
+    @staticmethod
+    def get_cosmic_qiagen_token(params: Namespace):
+        token_request = 'curl -s -X POST ' \
+                        '-H "Content-Type: application/x-www-form-urlencoded" ' \
+                        '-d "grant_type=password&client_id=603912630-14192122372034111918-SmRwso&username={uid}&password={pwd}" ' \
+                        '"https://apps.ingenuity.com/qiaoauth/oauth/token"'
+        cmd = token_request.format(uid=params.cosmic_usr, pwd=params.cosmic_passwd)
+        token_response = Net.run_qiagen_cmd(cmd, True, True).decode('UTF-8')
+        return json.loads(token_response)['access_token']
 
     @staticmethod
     def get_large_file(url: str, ignore_ssl: bool = False) -> None:
@@ -68,8 +112,8 @@ class Net:
             Logger(__name__).error('Downloading resources supports only HTTPS or FTP')
 
     @staticmethod
-    def get_cosmic(token: str, return_err: List[str]) -> None:
-        """Method for download COSMIC database."""
+    def get_cosmic_from_sanger(token: str, return_err: List[str]) -> None:
+        """Method for download COSMIC database from sanger website."""
 
         # get auth url to download file
         files = []
@@ -95,6 +139,31 @@ class Net:
             db.setup(files, delimiter='\t', skip_header=True)
         except urllib.error.HTTPError as ex:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
+
+    @staticmethod
+    def get_cosmic_from_qiagen(token: str, return_err: List[str], outputpath: str) -> None:
+        """Method for download COSMIC database from QIAGEN."""
+        try:
+            result = Net.get_qiagen_files(token, outputpath)
+        except Exception as ex:
+            print(ex)
+        #Then continue parsing out the fusion_file_id
+        file_id = Net.fetch_fusion_file_id(outputpath)
+        Net.download_qiagen_file(token, file_id, outputpath)
+        file: str = Settings.COSMIC["FILE"]
+        files = []
+
+        try:
+            files.append('.'.join(file.split('.')[:-1]))
+
+            with gzip.open(file, 'rb') as archive, open(files[0], 'wb') as out_file:
+                shutil.copyfileobj(archive, out_file)
+
+            db = CosmicDB('.')
+            db.setup(files, delimiter='\t', skip_header=True)
+        except urllib.error.HTTPError as ex:
+            return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
+
 
     @staticmethod
     def get_fusiongdb(self, return_err: List[str]) -> None:
@@ -135,7 +204,7 @@ class Net:
             url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
             Net.get_large_file(url)
             with ZipFile(Settings.MITELMAN['FILE'], 'r') as archive:
-                files = [x for x in archive.namelist() if "mitelman_db/MBCA.TXT.DATA" in x]
+                files = [x for x in archive.namelist() if "MBCA.TXT.DATA" in x and not "MACOSX" in x]
                 archive.extractall()
 
             db = MitelmanDB('.')
