@@ -98,7 +98,9 @@ class Net:
 
         if url.startswith('https') or url.startswith('ftp'):
             try:
-                with urllib.request.urlopen(url, context=ctx) as response:
+                req = urllib.request.Request(url)
+                req.add_header('User-Agent', 'Mozilla/5.0')
+                with urllib.request.urlopen(req, context=ctx) as response:
                     file = url.split('/')[-1].split('?')[0]
                     Logger(__name__).info('Downloading %s', file)
                     # only download if file size doesn't match
@@ -169,13 +171,13 @@ class Net:
     def get_fusiongdb(self, return_err: List[str]) -> None:
         """Method for download FusionGDB database."""
 
-        pool_params = [
-            (f'{Settings.FUSIONGDB["HOSTNAME"]}/{x}', True) for x in Settings.FUSIONGDB["FILES"]
-        ]
-        pool = Pool(Settings.THREAD_NUM)
-        pool.starmap(Net.get_large_file, pool_params)
-        pool.close()
-        pool.join()
+        for file in Settings.FUSIONGDB["FILES"]:
+            try:
+                url: str = (f'{Settings.FUSIONGDB["HOSTNAME"]}/{file}')
+                Net.get_large_file(url)
+            except DownloadException as ex:
+                return_err.append(f'FusionGDB: {ex}')
+
         db = FusionGDB('.')
         db.setup(Settings.FUSIONGDB['FILES'], delimiter='\t', skip_header=False)
 
