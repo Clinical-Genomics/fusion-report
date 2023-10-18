@@ -18,7 +18,7 @@ class Settings:
 
     COSMIC: Dict[str, str] = {
         "NAME": "COSMIC",
-        "HOSTNAME": "https://cancer.sanger.ac.uk/cosmic/file_download/GRCh38/cosmic/v95",
+        "HOSTNAME": "https://cancer.sanger.ac.uk/cosmic/file_download/GRCh38/cosmic/v98",
         "SCHEMA": "Cosmic.sql",
         "FILE": "CosmicFusionExport.tsv.gz",
     }
