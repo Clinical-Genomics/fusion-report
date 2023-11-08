@@ -82,14 +82,11 @@ class Net:
         return json.loads(token_response)['access_token']
 
     @staticmethod
-    def get_large_file(url: str, ignore_ssl: bool = False) -> None:
+    def get_large_file(url: str) -> None:
         """Method for downloading a large file."""
         try:
             headers = {'User-Agent': 'Mozilla/5.0'}
-            if ignore_ssl:
-                response = requests.get(url, headers=headers, stream=True, verify=False)
-            else:
-                response = requests.get(url, headers=headers, stream=True)
+            response = requests.get(url, headers=headers, stream=True)
 
             file = url.split('/')[-1].split('?')[0]
             Logger(__name__).info('Downloading %s', file)
