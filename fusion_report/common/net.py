@@ -17,7 +17,6 @@ from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.data.cosmic import CosmicDB
 from fusion_report.settings import Settings
-from multiprocessing import Pool
 from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.fusiongdb2 import FusionGDB2
 from fusion_report.data.mitelman import MitelmanDB
