@@ -102,7 +102,7 @@ class Net:
                     for chunk in response.iter_content(chunk_size=8192):
                         if chunk:
                             out_file.write(chunk)
-        except requests.exceptions.HTTPError as ex:
+        except requests.exceptions.RequestException as ex:
             raise DownloadException(ex)
 
     @staticmethod
