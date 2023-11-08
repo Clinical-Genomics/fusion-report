@@ -3,7 +3,6 @@ import glob
 import gzip
 import os
 import shutil
-import urllib.error
 import requests
 import time
 import pandas as pd
@@ -151,7 +150,7 @@ class Net:
 
             db = CosmicDB('.')
             db.setup(files, delimiter='\t', skip_header=True)
-        except urllib.error.HTTPError as ex:
+        except Exception as ex:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
 
 
