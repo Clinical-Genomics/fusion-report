@@ -21,6 +21,8 @@ from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.fusiongdb2 import FusionGDB2
 from fusion_report.data.mitelman import MitelmanDB
 
+LOG = Logger(__name__)
+
 class Net:
 
     @staticmethod
@@ -89,7 +91,7 @@ class Net:
             response = requests.get(url, headers=headers, stream=True)
 
             file = url.split('/')[-1].split('?')[0]
-            Logger(__name__).info('Downloading %s', file)
+            LOG.info(f"Downloading {file}")
 
             if not os.path.exists(file) or \
                     (response.headers.get('Content-Length') or 0) != os.stat(file).st_size:
@@ -97,7 +99,8 @@ class Net:
                     for chunk in response.iter_content(chunk_size=8192):
                         if chunk:
                             out_file.write(chunk)
-        except requests.exceptions.RequestException as ex:
+        except Exception as ex:
+            LOG.error(f'Error downloading {file} from {url}, {ex}')
             raise DownloadException(ex)
 
     @staticmethod
