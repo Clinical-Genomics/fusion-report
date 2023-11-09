@@ -21,6 +21,8 @@ from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.fusiongdb2 import FusionGDB2
 from fusion_report.data.mitelman import MitelmanDB
 
+LOG = Logger(__name__)
+
 class Net:
 
     @staticmethod
@@ -82,17 +84,14 @@ class Net:
         return json.loads(token_response)['access_token']
 
     @staticmethod
-    def get_large_file(url: str, ignore_ssl: bool = False) -> None:
+    def get_large_file(url: str) -> None:
         """Method for downloading a large file."""
+        LOG.info(f"Downloading {url}")
         try:
             headers = {'User-Agent': 'Mozilla/5.0'}
-            if ignore_ssl:
-                response = requests.get(url, headers=headers, stream=True, verify=False)
-            else:
-                response = requests.get(url, headers=headers, stream=True)
+            response = requests.get(url, headers=headers, stream=True)
 
             file = url.split('/')[-1].split('?')[0]
-            Logger(__name__).info('Downloading %s', file)
 
             if not os.path.exists(file) or \
                     (response.headers.get('Content-Length') or 0) != os.stat(file).st_size:
@@ -100,7 +99,8 @@ class Net:
                     for chunk in response.iter_content(chunk_size=8192):
                         if chunk:
                             out_file.write(chunk)
-        except requests.exceptions.RequestException as ex:
+        except Exception as ex:
+            LOG.error(f'Error downloading {url}, {ex}')
             raise DownloadException(ex)
 
     @staticmethod

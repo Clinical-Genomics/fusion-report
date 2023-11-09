@@ -20,4 +20,4 @@ jobs:
         with:
           file: Dockerfile
           push: true
-          tags: clinicalgenomics/fusion-report:2.1.5p7
+          tags: clinicalgenomics/fusion-report:2.1.5p8
