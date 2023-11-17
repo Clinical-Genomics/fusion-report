@@ -15,6 +15,7 @@ class FusionManager:
         running_tools: List of executed fusion detection tools
         supported_tools: List of all supported fusion detection tools
     """
+
     def __init__(self, supported_tools: List[str]) -> None:
         self.fusions: List[Fusion] = []
         self.running_tools: Set[str] = set()
@@ -30,10 +31,10 @@ class FusionManager:
             self.running_tools.add(tool)
             factory_parser = self.__build_factory(tool)
             try:
-                with open(file, 'r', encoding='utf-8') as fusion_output:
-                    factory_parser.set_header(fusion_output.readline().replace('"', ''))
+                with open(file, "r", encoding="utf-8") as fusion_output:
+                    factory_parser.set_header(fusion_output.readline().replace('"', ""))
                     for line in fusion_output:
-                        line = line.replace('"', '').strip()
+                        line = line.replace('"', "").strip()
                         fusion_list: List[Tuple[str, Dict[str, Any]]] = factory_parser.parse(line)
                         if allow_multiple_genes is None and len(fusion_list) > 1:
                             fusion_list = [fusion_list[0]]
@@ -43,7 +44,8 @@ class FusionManager:
                 raise AppException(ex)
         else:
             Logger(__name__).error(
-                'Tool %s is not supported. To integrate the tool please create an issue', tool
+                "Tool %s is not supported. To integrate the tool please create an issue",
+                tool,
             )
 
     def add(self, fusion_name: str, tool: str, details: Dict[str, Any]) -> None:
@@ -76,7 +78,7 @@ class FusionManager:
             AppException
         """
         try:
-            module_name: str = f'fusion_report.parsers.{tool.lower()}'
+            module_name: str = f"fusion_report.parsers.{tool.lower()}"
             module = __import__(module_name, fromlist=[tool.capitalize()])
             klass = getattr(module, tool.capitalize())
             return klass()

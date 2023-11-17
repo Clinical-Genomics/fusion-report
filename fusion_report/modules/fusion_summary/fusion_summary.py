@@ -9,7 +9,4 @@ class CustomModule(BaseModule):
 
     def load(self) -> Dict[str, Any]:
         """Return module variables."""
-        return {
-            'fusion': self.params['fusion'],
-            'menu': ['Summary']
-        }
+        return {"fusion": self.params["fusion"], "menu": ["Summary"]}

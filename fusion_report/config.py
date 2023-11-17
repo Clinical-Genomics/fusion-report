@@ -23,14 +23,20 @@ class Config:
     """
 
     def __init__(self) -> None:
-        self._report_title = 'nfcore/rnafusion summary report'
+        self._report_title = "nfcore/rnafusion summary report"
         self.logos: Dict[str, str] = {
-            'main': base64.b64encode(open(
-                os.path.join(Settings.ROOT_DIR, 'templates/assets/img/fusion-report.png'), 'rb'
-            ).read()).decode('utf-8'),
-            'rnafusion': base64.b64encode(open(
-                os.path.join(Settings.ROOT_DIR, 'templates/assets/img/rnafusion_logo.png'), 'rb'
-            ).read()).decode('utf-8')
+            "main": base64.b64encode(
+                open(
+                    os.path.join(Settings.ROOT_DIR, "templates/assets/img/fusion-report.png"),
+                    "rb",
+                ).read()
+            ).decode("utf-8"),
+            "rnafusion": base64.b64encode(
+                open(
+                    os.path.join(Settings.ROOT_DIR, "templates/assets/img/rnafusion_logo.png"),
+                    "rb",
+                ).read()
+            ).decode("utf-8"),
         }
         self._institution: Dict[str, Any] = {}
         self._date: str = datetime.now().strftime(Settings.DATE_FORMAT)
@@ -53,17 +59,15 @@ class Config:
 
     @institution.setter
     def institution(self, institution: Dict[str, str]) -> None:
-        if 'name' in institution.keys():
-            self._institution['name'] = institution['name']
+        if "name" in institution.keys():
+            self._institution["name"] = institution["name"]
 
-        if 'img' in institution.keys() and os.path.exists(institution['img']):
-            image = os.path.join(Settings.ROOT_DIR, institution['img'])
-            self._institution['img'] = base64.b64encode(
-                open(image, 'rb').read()
-            ).decode('utf-8')
+        if "img" in institution.keys() and os.path.exists(institution["img"]):
+            image = os.path.join(Settings.ROOT_DIR, institution["img"])
+            self._institution["img"] = base64.b64encode(open(image, "rb").read()).decode("utf-8")
 
-        if 'url' in institution.keys():
-            self._institution['url'] = institution['url']
+        if "url" in institution.keys():
+            self._institution["url"] = institution["url"]
 
     @property
     def date(self) -> str:
@@ -83,10 +87,10 @@ class Config:
     @assets.setter
     def assets(self, assets) -> None:
         for key, value in assets.items():
-            if key in ('css', 'js') and value is not None:
+            if key in ("css", "js") and value is not None:
                 self.assets[key] = [x for x in value if os.path.exists(x)]
 
-    def parse(self, path) -> 'Config':
+    def parse(self, path) -> "Config":
         """
         Method for parsing the configuration file.
 
@@ -95,13 +99,13 @@ class Config:
         """
         if path:
             try:
-                with open(path, 'r', encoding='utf-8') as in_file:
+                with open(path, "r", encoding="utf-8") as in_file:
                     try:
                         data = safe_load(in_file)
-                        self.report_title = data['report_title']
-                        self.institution = data['institution']
-                        self.date = data['date_format']
-                        self.assets = data['assets']
+                        self.report_title = data["report_title"]
+                        self.institution = data["institution"]
+                        self.date = data["date_format"]
+                        self.assets = data["assets"]
                         return self
                     except YAMLError as ex:
                         raise ConfigException(ex)
@@ -113,9 +117,9 @@ class Config:
     def json_serialize(self) -> Dict[str, Any]:
         """Helper serialization method for templating engine."""
         return {
-            'report_title': self.report_title,
-            'logos': self.logos,
-            'institution': self.institution,
-            'date': self.date,
-            'assets': self.assets
+            "report_title": self.report_title,
+            "logos": self.logos,
+            "institution": self.institution,
+            "date": self.date,
+            "assets": self.assets,
         }

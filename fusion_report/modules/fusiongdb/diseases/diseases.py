@@ -10,18 +10,15 @@ class CustomModule(BaseModule):
 
     def get_data(self) -> Dict[str, Any]:
         """Gathers necessary data."""
-        return FusionGDB(self.params['db_path']).select(
-            '''
+        return FusionGDB(self.params["db_path"]).select(
+            """
             SELECT * FROM fgene_disease_associations
             WHERE (gene = ? OR gene = ?)
             AND disease_prob > 0.2001 ORDER BY disease_prob DESC
-            ''',
-            self.params['fusion'].split('--')
+            """,
+            self.params["fusion"].split("--"),
         )
 
     def load(self) -> Dict[str, Any]:
         """Return module variables."""
-        return {
-            'data': self.get_data(),
-            'menu': ['Related diseases']
-        }
+        return {"data": self.get_data(), "menu": ["Related diseases"]}

@@ -8,6 +8,7 @@ from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.common.net import Net
 
+
 class Download:
     """Class designed for downloading any type of required database.
     Currently the script is able to download: Mitelman, FusionGDB and COSMIC with provided
@@ -22,8 +23,8 @@ class Download:
         self.download_all(params)
 
     def validate(self, params: Namespace) -> None:
-        """Method validating required input. In this case COSMIC credentials."""     
-        if(params.qiagen):
+        """Method validating required input. In this case COSMIC credentials."""
+        if params.qiagen:
             self.cosmic_token = Net.get_cosmic_qiagen_token(params)
         else:
             self.cosmic_token = Net.get_cosmic_token(params)
@@ -48,16 +49,16 @@ class Download:
 
         # COSMIC
         if params.qiagen:
-            Logger(__name__).info('Downloading resources from QIAGEN...')
+            Logger(__name__).info("Downloading resources from QIAGEN...")
             Net.get_cosmic_from_qiagen(self.cosmic_token, return_err, params.output)
         else:
-            Logger(__name__).info('Downloading resources from SANGER...')
+            Logger(__name__).info("Downloading resources from SANGER...")
             Net.get_cosmic_from_sanger(self.cosmic_token, return_err)
 
         if len(return_err) > 0:
             raise DownloadException(return_err)
 
-        Logger(__name__).info('Downloading finished')
+        Logger(__name__).info("Downloading finished")
         Net.clean()
 
         # Create timestamp:
