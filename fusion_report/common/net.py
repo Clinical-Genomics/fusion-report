@@ -133,6 +133,7 @@ class Net:
         }
         try:
             res = requests.get(url, headers=headers)
+            print(res)
             auth_url: str = res.json()["url"]
             LOG.info(f"auth_url: {auth_url}")
             Net.get_large_file(auth_url)

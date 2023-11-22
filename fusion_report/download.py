@@ -42,7 +42,7 @@ class Download:
         Net.get_mitelman(self, return_err)
 
         # FusionGDB
-        Net.get_fusiongdb(self, return_err)
+        # Net.get_fusiongdb(self, return_err)
 
         # FusionGDB2
         Net.get_fusiongdb2(self, return_err)
