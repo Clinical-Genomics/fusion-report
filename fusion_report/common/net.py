@@ -17,7 +17,6 @@ from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.data.cosmic import CosmicDB
 from fusion_report.settings import Settings
-from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.fusiongdb2 import FusionGDB2
 from fusion_report.data.mitelman import MitelmanDB
 
@@ -133,7 +132,6 @@ class Net:
         }
         try:
             res = requests.get(url, headers=headers)
-            print(res)
             auth_url: str = res.json()["url"]
             LOG.info(f"auth_url: {auth_url}")
             Net.get_large_file(auth_url)
@@ -170,20 +168,6 @@ class Net:
             db.setup(files, delimiter="\t", skip_header=True)
         except Exception as ex:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
-
-    @staticmethod
-    def get_fusiongdb(self, return_err: List[str]) -> None:
-        """Method for download FusionGDB database."""
-
-        for file in Settings.FUSIONGDB["FILES"]:
-            try:
-                url: str = f'{Settings.FUSIONGDB["HOSTNAME"]}/{file}'
-                Net.get_large_file(url)
-            except DownloadException as ex:
-                return_err.append(f"FusionGDB: {ex}")
-
-        db = FusionGDB(".")
-        db.setup(Settings.FUSIONGDB["FILES"], delimiter="\t", skip_header=False)
 
     @staticmethod
     def get_fusiongdb2(self, return_err: List[str]) -> None:

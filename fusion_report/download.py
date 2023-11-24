@@ -11,7 +11,7 @@ from fusion_report.common.net import Net
 
 class Download:
     """Class designed for downloading any type of required database.
-    Currently the script is able to download: Mitelman, FusionGDB and COSMIC with provided
+    Currently the script is able to download: Mitelman, FusionGDB2 and COSMIC with provided
     credentials.
 
     Attributes:
@@ -40,9 +40,6 @@ class Download:
 
         # MITELMAN
         Net.get_mitelman(self, return_err)
-
-        # FusionGDB
-        # Net.get_fusiongdb(self, return_err)
 
         # FusionGDB2
         Net.get_fusiongdb2(self, return_err)

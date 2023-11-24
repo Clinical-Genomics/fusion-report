@@ -26,11 +26,6 @@ class Sync:
 
         processes = [
             Process(
-                name=Settings.FUSIONGDB["NAME"],
-                target=Net.get_fusiongdb,
-                args=(return_err,),
-            ),
-            Process(
                 name=Settings.MITELMAN["NAME"],
                 target=Net.get_mitelman,
                 args=(return_err,),

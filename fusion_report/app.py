@@ -21,7 +21,6 @@ from fusion_report.common.logger import Logger
 from fusion_report.common.models.fusion import Fusion
 from fusion_report.common.report import Report
 from fusion_report.data.cosmic import CosmicDB
-from fusion_report.data.fusiongdb import FusionGDB
 from fusion_report.data.fusiongdb2 import FusionGDB2
 from fusion_report.data.mitelman import MitelmanDB
 from fusion_report.download import Download
@@ -100,36 +99,16 @@ class App:
         )
         report.render(index_page)
 
-        # with tqdm(total=len(fusions)) as pbar:
-        #     for fusion in fusions:
-        #         fusion_page = report.create_page(
-        #             fusion.name, page_variables={"sample": params.sample}
-        #         )
-        #         fusion_page.add_module("fusion_summary", params={"fusion": fusion})
-        #         fusion_page.add_module(
-        #             "fusiongdb.variations",
-        #             params={"fusion": fusion.name, "db_path": params.db_path},
-        #         )
-        #         fusion_page.add_module(
-        #             "fusiongdb.transcripts",
-        #             params={"fusion": fusion.name, "db_path": params.db_path},
-        #         )
-        #         fusion_page.add_module(
-        #             "fusiongdb.ppi",
-        #             params={"fusion": fusion.name, "db_path": params.db_path},
-        #         )
-        #         fusion_page.add_module(
-        #             "fusiongdb.drugs",
-        #             params={"fusion": fusion.name, "db_path": params.db_path},
-        #         )
-        #         fusion_page.add_module(
-        #             "fusiongdb.diseases",
-        #             params={"fusion": fusion.name, "db_path": params.db_path},
-        #         )
-        #         report.render(fusion_page)
-        #         pbar.set_description(f"Processing {fusion.name}")
-        #         time.sleep(0.1)
-        #         pbar.update(1)
+        with tqdm(total=len(fusions)) as pbar:
+            for fusion in fusions:
+                fusion_page = report.create_page(
+                    fusion.name, page_variables={"sample": params.sample}
+                )
+                fusion_page.add_module("fusion_summary", params={"fusion": fusion})
+                report.render(fusion_page)
+                pbar.set_description(f"Processing {fusion.name}")
+                time.sleep(0.1)
+                pbar.update(1)
 
     def parse_fusion_outputs(self, params: Dict[str, Any]) -> None:
         """Executes parsing for each provided fusion detection tool."""
@@ -144,7 +123,6 @@ class App:
         local_fusions: Dict[str, List[str]] = {
             CosmicDB(path).name: CosmicDB(path).get_all_fusions(),
             MitelmanDB(path).name: MitelmanDB(path).get_all_fusions(),
-            # FusionGDB(path).name: FusionGDB(path).get_all_fusions(),
             FusionGDB2(path).name: FusionGDB2(path).get_all_fusions(),
         }
         for fusion in self.manager.fusions:
