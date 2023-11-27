@@ -17,12 +17,13 @@ class Logger(metaclass=Singleton):
         logger: Logger instance
         filename: Logger file name
     """
+
     logger: Any = {}
 
     def __init__(self, name: str) -> None:
         if not self.logger:
             self.logger = logging.getLogger(name)
-            self.filename = 'fusion_report.log'
+            self.filename = "fusion_report.log"
             self.logger.setLevel(logging.INFO)
             self.logger.addHandler(self.get_critical_handler(self.filename))
             self.logger.addHandler(self.get_info_handler())
@@ -58,9 +59,9 @@ class Logger(metaclass=Singleton):
     @staticmethod
     def get_critical_handler(filename: str) -> TimedRotatingFileHandler:
         """Logging handler for levels: CRITICAL, ERROR and WARNING."""
-        file_handler = TimedRotatingFileHandler(filename, when='midnight')
-        file_handler.setFormatter(logging.Formatter(
-            '%(asctime)s - %(levelname)s - %(name)s - %(message)s')
+        file_handler = TimedRotatingFileHandler(filename, when="midnight")
+        file_handler.setFormatter(
+            logging.Formatter("%(asctime)s - %(levelname)s - %(name)s - %(message)s")
         )
         file_handler.setLevel(logging.WARNING)
 
@@ -70,7 +71,7 @@ class Logger(metaclass=Singleton):
     def get_info_handler() -> logging.StreamHandler:
         """Logging handler for level INFO."""
         info_handler = logging.StreamHandler(sys.stdout)
-        info_handler.setFormatter(ColoredFormatter('%(log_color)s%(message)s%(reset)s'))
+        info_handler.setFormatter(ColoredFormatter("%(log_color)s%(message)s%(reset)s"))
         info_handler.setLevel(logging.INFO)
 
         return info_handler

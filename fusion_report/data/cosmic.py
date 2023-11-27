@@ -12,7 +12,7 @@ class CosmicDB(Db, metaclass=Singleton):
     """Implementation of Cosmic Database. All core functionality is handled by parent class."""
 
     def __init__(self, path: str) -> None:
-        super().__init__(path, Settings.COSMIC['NAME'], Settings.COSMIC['SCHEMA'])
+        super().__init__(path, Settings.COSMIC["NAME"], Settings.COSMIC["SCHEMA"])
 
     def get_all_fusions(self) -> List[str]:
         """Returns all fusions from database."""
@@ -21,5 +21,9 @@ class CosmicDB(Db, metaclass=Singleton):
                         WHERE translocation_name != ""'''
         res = self.select(query)
 
-        return ['--'.join(re.findall(r'\(.*?\)', x['translocation_name']))
-                .replace('(', '').replace(')', '') for x in res]
+        return [
+            "--".join(re.findall(r"\(.*?\)", x["translocation_name"]))
+            .replace("(", "")
+            .replace(")", "")
+            for x in res
+        ]

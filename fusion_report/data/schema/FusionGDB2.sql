@@ -1,3 +1,3 @@
-CREATE TABLE "fusionGDB2" (
-	"Fusions" varchar(50) NOT NULL DEFAULT ''
+CREATE TABLE "fusiongdb2" (
+	"fusions" varchar(50) NOT NULL DEFAULT ''
 );

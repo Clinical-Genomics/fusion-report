@@ -40,7 +40,7 @@ python3 setup.py install
 
 ```bash
 # Download required databases
-# Currently supported databases: FusionGDB, Mitelman and COSMIC
+# Currently supported databases: FusionGDB2, Mitelman and COSMIC
 # COSMIC requires login credentials to download Fusion gene Database
 fusion_report download --cosmic_usr '<username>' --cosmic_passwd '<password>' /path/to/db/
 
