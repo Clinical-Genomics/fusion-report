@@ -24,23 +24,23 @@ class Config:
 
     def __init__(self) -> None:
         self._report_title = "nfcore/rnafusion summary report"
-        self.logos: Dict[str, str] = {
-            "main": base64.b64encode(
-                open(
-                    os.path.join(Settings.ROOT_DIR, "templates/assets/img/fusion-report.png"),
-                    "rb",
-                ).read()
-            ).decode("utf-8"),
-            "rnafusion": base64.b64encode(
-                open(
-                    os.path.join(Settings.ROOT_DIR, "templates/assets/img/rnafusion_logo.png"),
-                    "rb",
-                ).read()
-            ).decode("utf-8"),
-        }
+        self.logos = self._load_logos()
         self._institution: Dict[str, Any] = {}
         self._date: str = datetime.now().strftime(Settings.DATE_FORMAT)
         self._assets: Dict[str, List[str]] = {}
+
+    @staticmethod
+    def _load_logos() -> Dict[str, str]:
+        logos = {}
+        paths = {
+            "main": "templates/assets/img/fusion-report.png",
+            "rnafusion": "templates/assets/img/rnafusion_logo.png",
+        }
+        for key, path in paths.items():
+            full_path = os.path.join(Settings.ROOT_DIR, path)
+            with open(full_path, "rb") as image_file:
+                logos[key] = base64.b64encode(image_file.read()).decode("utf-8")
+        return logos
 
     @property
     def report_title(self) -> str:
