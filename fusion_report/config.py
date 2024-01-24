@@ -12,7 +12,15 @@ from fusion_report.settings import Settings
 
 
 class Config:
-    """Class for adjusting report defined in configuration file."""
+    """Class for adjusting report defined in configuration file.
+
+    Attributes:
+        report_title: Title of the report
+        logos: Dictionary of logos: fusion-report and nf-core/rnafusion
+        institution: Institution name
+        date: Date in format '%d/%m/%Y'
+        assets: Additional CSS and JS files
+    """
 
     def __init__(self) -> None:
         self._report_title = "nfcore/rnafusion summary report"
