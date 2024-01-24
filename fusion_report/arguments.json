@@ -44,6 +44,10 @@
                     "key": "--arriba",
                     "help": "Arriba output file"
                 },
+		{
+		    "key": "--starseqr",
+		    "help": "STARSeqR output file"
+		},
                 {
                     "key": "--jaffa",
                     "help": "Jaffa output file"
