@@ -20,7 +20,8 @@ class ArgsBuilder:
 
     def __init__(self):
         configuration = os.path.join(Settings.ROOT_DIR, "arguments.json")
-        self.arguments: Dict[str, Any] = rapidjson.loads(open(configuration, "r").read())
+        with open(configuration, "r") as config_file:
+            self.arguments: Dict[str, Any] = rapidjson.loads(config_file.read())
         self.arguments["weight"] = float(100 / len(self.supported_tools))
         self.parser = ArgumentParser(
             description="""Tool for generating friendly UI custom report."""
