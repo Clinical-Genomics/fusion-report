@@ -206,12 +206,11 @@ class Net:
 
     @staticmethod
     def clean():
-        """Remove all files except *db."""
-        for temp in glob.glob("*/"):
-            shutil.rmtree(temp)
-        for temp in glob.glob("*[!.db]"):
-            if not os.path.isdir(temp):
-                os.remove(temp)
+        """Remove all files except *db and move to output dir."""
+        for temp in glob.glob("*.db"):
+            shutil.copy(temp, "../")
+        os.chdir("../")
+        shutil.rmtree("tmp_dir")
 
     @staticmethod
     def timestamp():
