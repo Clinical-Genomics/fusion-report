@@ -25,10 +25,8 @@ class CustomModule(BaseModule):
         counts["together"] = 0
         running_tools_count: int = len(running_tools)
         for fusion in self.manager.fusions:
-            print(fusion.name)
             fusion_tools = fusion.tools.keys()
             for tool in fusion_tools:
-                print(tool)
                 counts[tool] += 1
             # intersection
             if len(fusion_tools) == running_tools_count:
