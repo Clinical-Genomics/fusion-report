@@ -36,7 +36,10 @@ class Download:
     def download_all(self, params: Namespace) -> None:
         """Download all databases."""
         return_err: List[str] = []
-        os.chdir(params.output)
+        tmp_dir = os.path.join(params.output, "tmp_dir")
+        if not os.path.exists(tmp_dir):
+            os.mkdir(tmp_dir)
+        os.chdir(tmp_dir)
 
         # MITELMAN
         Net.get_mitelman(self, return_err)
