@@ -1,2 +1,2 @@
 __title__ = "fusion_report"
-__version__ = "2.1.9"
+__version__ = "2.1.10"
