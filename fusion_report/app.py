@@ -145,14 +145,13 @@ class App:
                     output, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
                 )
                 # header
-                header = ["Fusion", "Databases", "Tools", "Score", "Explained score"]
+                header = ["Fusion", "Databases", "Score", "Explained score"]
                 header.extend([x for x in sorted(self.manager.running_tools)])
                 csv_writer.writerow(header)
                 for fusion in self.manager.fusions:
                     row: List[Any] = [
                         fusion.name,
                         [",".join(fusion.dbs)],
-                        fusion.tools,
                         fusion.score,
                         fusion.score_explained,
                     ]
