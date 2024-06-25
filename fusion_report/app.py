@@ -151,7 +151,7 @@ class App:
                 for fusion in self.manager.fusions:
                     row: List[Any] = [
                         fusion.name,
-                        [",".join(fusion.dbs)],
+                        ",".join(fusion.dbs),
                         fusion.score,
                         fusion.score_explained,
                     ]
