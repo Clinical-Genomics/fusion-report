@@ -107,7 +107,19 @@ class ArgsBuilder:
         )
         for mandatory in args["mandatory"]:
             download_parser.add_argument(mandatory["key"], help=mandatory["help"], type=str)
-
+        
+        # optionals
+        run_optional = download_parser.add_argument_group(
+            "Optionals", "List of optional configuration parameters."
+        )
+        for optional in args["optionals"]:
+                run_optional.add_argument(
+                    optional["key"][0],
+                    default=optional.get("default"),
+                    help=optional.get("help"),
+                    type=type(optional.get("default"))
+                )
+        
         self._cosmic(args, download_parser)
 
     def sync_args(self, args: Dict[str, Any]) -> None:

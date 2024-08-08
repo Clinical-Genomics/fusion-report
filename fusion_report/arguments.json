@@ -79,6 +79,13 @@
                     "help": "Output directory"
                 }
             ],
+            "optionals": [
+                    {
+                        "key": ["-no_ssl"],
+                        "help": "Turn off verification of SSL certificates when downloading data.",
+                        "default": "False"
+                    }
+            ],
             "cosmic": [
                 {
                     "key": "--cosmic_usr",
