@@ -13,6 +13,8 @@ class Settings:
         "mitelman": 0.50,
         "fusiongdb2": 0.0,
     }
+    
+    SSL : True
 
     COSMIC: Dict[str, str] = {
         "NAME": "COSMIC",

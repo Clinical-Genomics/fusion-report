@@ -101,7 +101,7 @@ class Net:
         LOG.info(f"Downloading {url}")
         try:
             headers = {"User-Agent": "Mozilla/5.0"}
-            response = requests.get(url, headers=headers, stream=True)
+            response = requests.get(url, headers=headers, stream=True, verify = Settings.SSL)
 
             file = url.split("/")[-1].split("?")[0]
 
@@ -131,7 +131,7 @@ class Net:
             ),
         }
         try:
-            res = requests.get(url, headers=headers)
+            res = requests.get(url, headers=headers, verify = Settings.SSL)
             auth_url: str = res.json()["url"]
             LOG.info(f"auth_url: {auth_url}")
             Net.get_large_file(auth_url)
