@@ -26,7 +26,6 @@ LOG = Logger(__name__)
 class Net:
     @staticmethod
     def get_cosmic_token(params: Namespace):
-        print(params.no_cosmic)
         if params.cosmic_token is not None:
             return params.cosmic_token
 
