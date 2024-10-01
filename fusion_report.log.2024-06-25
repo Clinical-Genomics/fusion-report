@@ -1,0 +1,64 @@
+2024-06-25 09:55:25,106 - CRITICAL - fusion_report.common.net - table "mbca" already exists
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 61, in setup
+    self.create_database()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 84, in create_database
+    self.connection.executescript(schema.read().lower())
+sqlite3.OperationalError: table "mbca" already exists
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 23, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 42, in download_all
+    Net.get_mitelman(self, return_err)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 203, in get_mitelman
+    db.setup(files, delimiter="\t", skip_header=False, encoding="ISO-8859-1")
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 79, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: table "mbca" already exists
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/EGG-INFO/scripts/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: table "mbca" already exists
+2024-06-25 09:56:32,905 - CRITICAL - fusion_report.common.net - unable to open database file
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 37, in connect
+    connection = sqlite3.connect(os.path.join(path, database))
+sqlite3.OperationalError: unable to open database file
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 60, in run
+    self.preprocess(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 84, in preprocess
+    self.enrich(params.db_path)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 124, in enrich
+    CosmicDB(path).name: CosmicDB(path).get_all_fusions(),
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/singleton.py", line 12, in __call__
+    cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/data/cosmic.py", line 15, in __init__
+    super().__init__(path, Settings.COSMIC["NAME"], Settings.COSMIC["SCHEMA"])
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 25, in __init__
+    self.connection = self.connect(path, self.database)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 41, in connect
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: unable to open database file
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/EGG-INFO/scripts/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: unable to open database file

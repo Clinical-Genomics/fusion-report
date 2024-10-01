@@ -79,6 +79,23 @@
                     "help": "Output directory"
                 }
             ],
+            "optionals": [
+                {
+                    "key": "--no-cosmic",
+                    "help": "Do not download cosmic fusion database",
+                    "action": "store_true"
+                },
+                {
+                    "key": "--no-fusiongdb2",
+                    "help": "Do not download fusiongdb2 fusion database",
+                    "action": "store_true"
+                },
+                {
+                    "key": "--no-mitelman",
+                    "help": "Do not download mitelman fusion database",
+                    "action": "store_true"
+                }
+            ],
             "cosmic": [
                 {
                     "key": "--cosmic_usr",
