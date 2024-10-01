@@ -13,7 +13,9 @@ class Squid(AbstractFusionTool):
     def parse_multiple(self, col: str, delimiter: str) -> List[str]:
         return [fusion.replace(":", "--") for fusion in col.split(delimiter)]
 
-    def parse(self, line: str, delimiter: Optional[str] = "\t") -> List[Tuple[str, Dict[str, Any]]]:
+    def parse(
+        self, line: str, delimiter: Optional[str] = "\t"
+    ) -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = [x.strip() for x in line.split(delimiter)]
         if col[self.header.index("Type")].strip() == "non-fusion-gene":
             return [("", {})]

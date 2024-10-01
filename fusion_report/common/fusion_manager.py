@@ -35,7 +35,9 @@ class FusionManager:
                     factory_parser.set_header(fusion_output.readline().replace('"', ""))
                     for line in fusion_output:
                         line = line.replace('"', "").strip()
-                        fusion_list: List[Tuple[str, Dict[str, Any]]] = factory_parser.parse(line)
+                        fusion_list: List[
+                            Tuple[str, Dict[str, Any]]
+                        ] = factory_parser.parse(line)
                         if allow_multiple_genes is None and len(fusion_list) > 1:
                             fusion_list = [fusion_list[0]]
                         for fusion_name, details in fusion_list:

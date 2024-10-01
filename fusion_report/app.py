@@ -89,7 +89,9 @@ class App:
         """Generate fusion report with all pages."""
         report = Report(params.config, params.output)
         fusions = [
-            fusion for fusion in self.manager.fusions if len(fusion.tools) >= params.tool_cutoff
+            fusion
+            for fusion in self.manager.fusions
+            if len(fusion.tools) >= params.tool_cutoff
         ]
 
         index_page = report.create_page(
@@ -124,15 +126,31 @@ class App:
         local_fusions: Dict[str, List[str]] = {}
 
         if not params.no_cosmic:
-            local_fusions.update({CosmicDB(params.db_path).name: CosmicDB(params.db_path).get_all_fusions()})
+            local_fusions.update(
+                {
+                    CosmicDB(params.db_path)
+                    .name: CosmicDB(params.db_path)
+                    .get_all_fusions()
+                }
+            )
 
         if not params.no_fusiongdb2:
-            local_fusions.update({MitelmanDB(params.db_path).name: MitelmanDB(params.db_path).get_all_fusions()})
+            local_fusions.update(
+                {
+                    MitelmanDB(params.db_path)
+                    .name: MitelmanDB(params.db_path)
+                    .get_all_fusions()
+                }
+            )
 
         if not params.no_mitelman:
-            local_fusions.update({FusionGDB2(params.db_path).name: FusionGDB2(params.db_path).get_all_fusions()})
-
-
+            local_fusions.update(
+                {
+                    FusionGDB2(params.db_path)
+                    .name: FusionGDB2(params.db_path)
+                    .get_all_fusions()
+                }
+            )
 
         for fusion in self.manager.fusions:
             for db_name, db_list in local_fusions.items():
@@ -168,7 +186,10 @@ class App:
                         if tool in fusion.tools.keys():
                             row.append(
                                 ",".join(
-                                    [f"{key}: {value}" for key, value in fusion.tools[tool].items()]
+                                    [
+                                        f"{key}: {value}"
+                                        for key, value in fusion.tools[tool].items()
+                                    ]
                                 )
                             )
                         else:
@@ -188,12 +209,16 @@ class App:
             - fusions_list_filtered.tsv
         """
         # unfiltered list
-        with open(os.path.join(path, "fusion_list.tsv"), "w", encoding="utf-8") as output:
+        with open(
+            os.path.join(path, "fusion_list.tsv"), "w", encoding="utf-8"
+        ) as output:
             for fusion in self.manager.fusions:
                 output.write(f"{fusion.name}\n")
 
         # filtered list
-        with open(os.path.join(path, "fusion_list_filtered.tsv"), "w", encoding="utf-8") as output:
+        with open(
+            os.path.join(path, "fusion_list_filtered.tsv"), "w", encoding="utf-8"
+        ) as output:
             for fusion in self.manager.fusions:
                 if len(fusion.tools) >= cutoff:
                     output.write(f"{fusion.name}\n")
@@ -207,7 +232,10 @@ class App:
         for fusion in self.manager.fusions:
             # tool estimation
             tool_score: float = sum(
-                [params[f"{tool.lower()}_weight"] / 100.0 for tool, _ in fusion.tools.items()]
+                [
+                    params[f"{tool.lower()}_weight"] / 100.0
+                    for tool, _ in fusion.tools.items()
+                ]
             )
             tool_score_expl: List[str] = [
                 format((params[f"{tool}_weight"] / 100.0), ".3f")
@@ -216,16 +244,16 @@ class App:
 
             # database estimation
             db_score: float = sum(
-                float(Settings.FUSION_WEIGHTS[db_name.lower()]) for db_name in fusion.dbs
+                float(Settings.FUSION_WEIGHTS[db_name.lower()])
+                for db_name in fusion.dbs
             )
             db_score_expl: List[str] = [
-                format(Settings.FUSION_WEIGHTS[db_name.lower()], ".3f") for db_name in fusion.dbs
+                format(Settings.FUSION_WEIGHTS[db_name.lower()], ".3f")
+                for db_name in fusion.dbs
             ]
 
             score: float = float("%0.3f" % (0.5 * tool_score + 0.5 * db_score))
-            score_explained = (
-                f'0.5 * ({" + ".join(tool_score_expl)}) + 0.5 * ({" + ".join(db_score_expl)})'
-            )
+            score_explained = f'0.5 * ({" + ".join(tool_score_expl)}) + 0.5 * ({" + ".join(db_score_expl)})'
             fusion.score, fusion.score_explained = score, score_explained
 
     @staticmethod

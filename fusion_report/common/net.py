@@ -30,18 +30,22 @@ class Net:
             return params.cosmic_token
 
         if params.cosmic_usr is not None and params.cosmic_passwd is not None:
-            return base64.b64encode(f"{params.cosmic_usr}:{params.cosmic_passwd}".encode()).decode(
-                "utf-8"
-            )
+            return base64.b64encode(
+                f"{params.cosmic_usr}:{params.cosmic_passwd}".encode()
+            ).decode("utf-8")
         else:
-            raise DownloadException("COSMIC credentials have not been provided correctly")
+            raise DownloadException(
+                "COSMIC credentials have not been provided correctly"
+            )
 
     @staticmethod
     def run_qiagen_cmd(cmd, return_output=False, silent=False):
         if not silent:
             print(cmd)
         if return_output:
-            output = subprocess.check_output(cmd, shell=True, executable="/bin/bash").strip()
+            output = subprocess.check_output(
+                cmd, shell=True, executable="/bin/bash"
+            ).strip()
             return output
         else:
             subprocess.check_call(cmd, shell=True, executable="/bin/bash")
@@ -78,7 +82,8 @@ class Net:
             sep="\t",
         )
         file_id = df.loc[
-            (df["file_name"] == Settings.COSMIC["FILE"]) & (df["genome_draft"] == "cosmic/GRCh38"),
+            (df["file_name"] == Settings.COSMIC["FILE"])
+            & (df["genome_draft"] == "cosmic/GRCh38"),
             "file_id",
         ].values[0]
         return file_id
@@ -107,7 +112,8 @@ class Net:
 
             if (
                 not os.path.exists(file)
-                or (response.headers.get("Content-Length") or 0) != os.stat(file).st_size
+                or (response.headers.get("Content-Length") or 0)
+                != os.stat(file).st_size
             ):
                 with open(file, "wb") as out_file:
                     for chunk in response.iter_content(chunk_size=8192):
@@ -146,7 +152,9 @@ class Net:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
 
     @staticmethod
-    def get_cosmic_from_qiagen(token: str, return_err: List[str], outputpath: str) -> None:
+    def get_cosmic_from_qiagen(
+        token: str, return_err: List[str], outputpath: str
+    ) -> None:
         """Method for download COSMIC database from QIAGEN."""
         try:
             Net.get_qiagen_files(token, outputpath)
@@ -173,13 +181,19 @@ class Net:
     def get_fusiongdb2(self, return_err: List[str]) -> None:
         """Method for download FusionGDB2 database."""
         try:
-            url: str = f'{Settings.FUSIONGDB2["HOSTNAME"]}/{Settings.FUSIONGDB2["FILE"]}'
+            url: str = (
+                f'{Settings.FUSIONGDB2["HOSTNAME"]}/{Settings.FUSIONGDB2["FILE"]}'
+            )
             Net.get_large_file(url)
             file: str = f'{Settings.FUSIONGDB2["FILE"]}'
             df = pd.read_excel(file, engine="openpyxl")
-            df["fusion"] = df["5'-gene (text format)"] + "--" + df["3'-gene (text format)"]
+            df["fusion"] = (
+                df["5'-gene (text format)"] + "--" + df["3'-gene (text format)"]
+            )
             file_csv = "fusionGDB2.csv"
-            df["fusion"].to_csv(file_csv, header=False, index=False, sep=",", encoding="utf-8")
+            df["fusion"].to_csv(
+                file_csv, header=False, index=False, sep=",", encoding="utf-8"
+            )
 
             db = FusionGDB2(".")
             db.setup([file_csv], delimiter=",", skip_header=False)
@@ -195,7 +209,9 @@ class Net:
             Net.get_large_file(url)
             with ZipFile(Settings.MITELMAN["FILE"], "r") as archive:
                 files = [
-                    x for x in archive.namelist() if "MBCA.TXT.DATA" in x and not "MACOSX" in x
+                    x
+                    for x in archive.namelist()
+                    if "MBCA.TXT.DATA" in x and not "MACOSX" in x
                 ]
                 archive.extractall()
 

@@ -28,9 +28,7 @@ class Download:
         else:
             self.cosmic_token = Net.get_cosmic_token(params)
 
-
     def download_all(self, params: Namespace) -> None:
-
         # making sure output directory exists
         if not os.path.exists(params.output):
             os.makedirs(params.output, 0o755)

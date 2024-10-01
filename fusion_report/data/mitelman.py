@@ -14,7 +14,9 @@ class MitelmanDB(Db, metaclass=Singleton):
 
     def get_all_fusions(self) -> List[str]:
         """Returns all fusions from database."""
-        query: str = '''SELECT DISTINCT geneshort FROM mbca WHERE geneshort LIKE "%::%"'''
+        query: str = (
+            '''SELECT DISTINCT geneshort FROM mbca WHERE geneshort LIKE "%::%"'''
+        )
         res = self.select(query)
 
         return [fusion["geneshort"].strip().replace("::", "--") for fusion in res]

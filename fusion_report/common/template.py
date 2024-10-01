@@ -46,7 +46,9 @@ class Template:
         """Renders page"""
         merged_variables = {**self.j2_variables.json_serialize(), **extra_variables}
         view = self.j2_env.get_template(page.view).render(merged_variables)
-        with open(os.path.join(self.output_dir, page.filename), "w", encoding="utf-8") as file_out:
+        with open(
+            os.path.join(self.output_dir, page.filename), "w", encoding="utf-8"
+        ) as file_out:
             file_out.write(view)
 
     def include_raw(self, filename: str) -> Markup:
