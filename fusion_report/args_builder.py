@@ -100,6 +100,13 @@ class ArgsBuilder:
                         type=type(optional.get("default")),
                     )
 
+        for database in args["databases"]:
+            run_parser.add_argument(
+                database["key"],
+                help=database["help"],
+                action=database.get("action", "store"),
+            )
+
     def download_args(self, args: Dict[str, Any]) -> None:
         """Build download command-line arguments."""
         download_parser = self.command_parser.add_parser(
