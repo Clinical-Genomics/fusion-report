@@ -10,9 +10,7 @@ class Arriba(AbstractFusionTool):
     def set_header(self, header: str, delimiter: Optional[str] = "\t"):
         self.header: List[str] = header.strip().split(delimiter)
 
-    def parse_multiple(
-        self, left_fusion: str, right_fusion: str, delimiter: str
-    ) -> List[str]:
+    def parse_multiple(self, left_fusion: str, right_fusion: str, delimiter: str) -> List[str]:
         if delimiter not in left_fusion and delimiter not in right_fusion:
             return [f"{left_fusion}--{right_fusion}"]
 
@@ -22,9 +20,7 @@ class Arriba(AbstractFusionTool):
 
         return fusions
 
-    def parse(
-        self, line: str, delimiter: Optional[str] = "\t"
-    ) -> List[Tuple[str, Dict[str, Any]]]:
+    def parse(self, line: str, delimiter: Optional[str] = "\t") -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = [x.strip() for x in line.split(delimiter)]
         fusions = self.parse_multiple(
             col[self.header.index("#gene1")], col[self.header.index("gene2")], ","

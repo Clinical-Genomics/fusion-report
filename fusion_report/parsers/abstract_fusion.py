@@ -12,7 +12,5 @@ class AbstractFusionTool(metaclass=abc.ABCMeta):
         """Set header."""
 
     @abc.abstractmethod
-    def parse(
-        self, line: str, delimiter: Optional[str] = None
-    ) -> List[Tuple[str, Dict[str, Any]]]:
+    def parse(self, line: str, delimiter: Optional[str] = None) -> List[Tuple[str, Dict[str, Any]]]:
         """Parsing method required to be implemented per fusion tool."""

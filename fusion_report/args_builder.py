@@ -32,17 +32,12 @@ class ArgsBuilder:
             action="version",
             version=f"fusion-report {Settings.VERSION}",
         )
-        self.command_parser: _SubParsersAction = self.parser.add_subparsers(
-            dest="command"
-        )
+        self.command_parser: _SubParsersAction = self.parser.add_subparsers(dest="command")
 
     @property
     def supported_tools(self):
         """Return all supported fusion detection tools."""
-        return [
-            tool["key"].replace("--", "")
-            for tool in self.arguments["args"]["run"]["tools"]
-        ]
+        return [tool["key"].replace("--", "") for tool in self.arguments["args"]["run"]["tools"]]
 
     def build(self) -> None:
         """Build command-line arguments."""
@@ -58,9 +53,7 @@ class ArgsBuilder:
             "Mandatory arguments", "Required arguments to run app."
         )
         for mandatory in args["mandatory"]:
-            run_mandatory.add_argument(
-                mandatory["key"], help=mandatory["help"], type=str
-            )
+            run_mandatory.add_argument(mandatory["key"], help=mandatory["help"], type=str)
         # fusion tools
         run_tools = run_parser.add_argument_group(
             "Tools", "List of all supported tools with their weights."
@@ -120,9 +113,7 @@ class ArgsBuilder:
             "download", help="Download required databases"
         )
         for mandatory in args["mandatory"]:
-            download_parser.add_argument(
-                mandatory["key"], help=mandatory["help"], type=str
-            )
+            download_parser.add_argument(mandatory["key"], help=mandatory["help"], type=str)
 
         for optional in args["optionals"]:
             download_parser.add_argument(
@@ -135,13 +126,9 @@ class ArgsBuilder:
 
     def sync_args(self, args: Dict[str, Any]) -> None:
         """Build sync command-line arguments."""
-        download_parser = self.command_parser.add_parser(
-            "sync", help="Synchronize databases"
-        )
+        download_parser = self.command_parser.add_parser("sync", help="Synchronize databases")
         for mandatory in args["mandatory"]:
-            download_parser.add_argument(
-                mandatory["key"], help=mandatory["help"], type=str
-            )
+            download_parser.add_argument(mandatory["key"], help=mandatory["help"], type=str)
 
         self._cosmic(args, download_parser)
 
@@ -154,9 +141,7 @@ class ArgsBuilder:
         )
         for cosmic in args["cosmic"]:
             if not cosmic.get("action"):
-                download_cosmic.add_argument(
-                    cosmic["key"], help=cosmic.get("help"), type=str
-                )
+                download_cosmic.add_argument(cosmic["key"], help=cosmic.get("help"), type=str)
             else:
                 download_cosmic.add_argument(
                     cosmic["key"], help=cosmic.get("help"), action=cosmic.get("action")

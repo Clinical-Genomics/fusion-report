@@ -64,9 +64,7 @@ class Config:
 
         if "img" in institution.keys() and os.path.exists(institution["img"]):
             image = os.path.join(Settings.ROOT_DIR, institution["img"])
-            self._institution["img"] = base64.b64encode(
-                open(image, "rb").read()
-            ).decode("utf-8")
+            self._institution["img"] = base64.b64encode(open(image, "rb").read()).decode("utf-8")
 
         if "url" in institution.keys():
             self._institution["url"] = institution["url"]

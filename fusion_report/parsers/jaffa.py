@@ -9,9 +9,7 @@ class Jaffa(AbstractFusionTool):
     def set_header(self, header: str, delimiter: Optional[str] = ","):
         self.header: List[str] = header.strip().split(delimiter)
 
-    def parse(
-        self, line: str, delimiter: Optional[str] = ","
-    ) -> List[Tuple[str, Dict[str, Any]]]:
+    def parse(self, line: str, delimiter: Optional[str] = ",") -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = [x.strip() for x in line.split(delimiter)]
 
         fusions = col[self.header.index("fusion genes")].split(":")

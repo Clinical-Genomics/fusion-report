@@ -68,9 +68,7 @@ class Db:
                     rows: List[List[str]] = [first_line]
                     for line in resource:
                         row = line.split(delimiter)
-                        rows.append(
-                            row + ["" for _ in range(len(row), len(first_line))]
-                        )
+                        rows.append(row + ["" for _ in range(len(row), len(first_line))])
                     self.connection.executemany(
                         f"""INSERT INTO {file.split('/')[-1].split('.')[0].lower()}
                             VALUES ({','.join(['?' for _ in range(0, len(first_line))])})""",
