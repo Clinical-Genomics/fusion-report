@@ -8,7 +8,7 @@ from argparse import Namespace
 from collections import defaultdict
 from typing import Any, Dict, List
 
-import rapidjson
+import json
 
 from tqdm import tqdm
 
@@ -138,7 +138,7 @@ class App:
         if extension == "json":
             with open(dest, "w", encoding="utf-8") as output:
                 results = [fusion.json_serialize() for fusion in self.manager.fusions]
-                output.write(rapidjson.dumps(results))
+                output.write(json.dumps(results))
         elif extension == "csv":
             with open(dest, "w", encoding="utf-8") as output:
                 csv_writer = csv.writer(
@@ -194,21 +194,28 @@ class App:
         More information about the scoring function can be found in the documentation
         at https://github.com/matq007/fusion-report/docs/scoring-fusion
         """
+        tools_provided = 0
+        for tool in ['ericscript', 'fusioncatcher', 'starfusion', 'arriba', 'pizzly', "squid", "dragen", 'jaffa']:
+            if params[tool] is not None:
+                tools_provided += 1
 
         for fusion in self.manager.fusions:
             # tool estimation
-            tool_score: float = sum(
-                [params[f"{tool.lower()}_weight"] / 100.0 for tool, _ in fusion.tools.items()]
-            )
+            tool_score: float = len(fusion.tools) / tools_provided * 100.0
+
             tool_score_expl: List[str] = [
                 format((params[f"{tool}_weight"] / 100.0), ".3f")
                 for tool, _ in fusion.tools.items()
             ]
+            print(fusion.dbs)
 
+            for db_name in fusion.dbs:
+                print(float(Settings.FUSION_WEIGHTS[db_name.lower()]))
             # database estimation
             db_score: float = sum(
                 float(Settings.FUSION_WEIGHTS[db_name.lower()]) for db_name in fusion.dbs
             )
+            print(db_score)
             db_score_expl: List[str] = [
                 format(Settings.FUSION_WEIGHTS[db_name.lower()], ".3f") for db_name in fusion.dbs
             ]
@@ -248,4 +255,4 @@ class App:
 
         dest = f"{os.path.join(path, 'fusion_genes_mqc.json')}"
         with open(dest, "w", encoding="utf-8") as output:
-            output.write(rapidjson.dumps(configuration))
+            output.write(json.dumps(configuration))
