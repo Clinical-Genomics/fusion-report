@@ -56,7 +56,6 @@ class App:
         params = self.args.parse()
         try:
             if params.command == "run":
-                print(params.no_cosmic)
                 Logger(__name__).info("Running application...")
                 self.preprocess(params)
                 self.generate_report(params)
