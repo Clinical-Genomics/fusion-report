@@ -25,6 +25,14 @@ fusion_report download
     /path/to/db
 ```
 
+You can exclude a specific database with --no-cosmic/--no-mitelman/--no-fusiongdb2. Exemple for no cosmic:
+
+```bash
+fusion_report download
+    --no-cosmic
+    /path/to/db
+```
+
 
 ## Manual download
 
