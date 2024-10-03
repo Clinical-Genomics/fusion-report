@@ -82,7 +82,7 @@ class App:
         """Parse, enrich and score fusion."""
         self.parse_fusion_outputs(vars(params))
         self.enrich(params)
-        self.score(vars(params))
+        self.score(params)
 
     def generate_report(self, params: Namespace) -> None:
         """Generate fusion report with all pages."""
@@ -118,7 +118,7 @@ class App:
                 # value: fusion tool output
                 self.manager.parse(param, value, params["allow_multiple_gene_symbols"])
 
-    def enrich(self, params) -> None:
+    def enrich(self, params: Namespace) -> None:
         """Enrich fusion with all relevant information from local databases."""
         local_fusions: Dict[str, List[str]] = {}
 
@@ -201,40 +201,36 @@ class App:
                 if len(fusion.tools) >= cutoff:
                     output.write(f"{fusion.name}\n")
 
-    def score(self, params: Dict[str, Any]) -> None:
+    def score(self, params: Namespace) -> None:
         """Custom scoring function for individual fusion.
         More information about the scoring function can be found in the documentation
         at https://github.com/matq007/fusion-report/docs/scoring-fusion
         """
         tools_provided = 0
         for tool in ['ericscript', 'fusioncatcher', 'starfusion', 'arriba', 'pizzly', "squid", "dragen", 'jaffa']:
-            if params[tool] is not None:
+            if getattr(params, tool) is not None:
                 tools_provided += 1
 
+        db_provided = 1
+        if params.no_cosmic:
+            db_provided -= Settings.FUSION_WEIGHTS["cosmic"]
+        if params.no_fusiongdb2:
+            db_provided -= Settings.FUSION_WEIGHTS["fusiongdb2"]
+        if params.no_mitelman:
+            db_provided -= Settings.FUSION_WEIGHTS["mitelman"]
         for fusion in self.manager.fusions:
             # tool estimation
-            tool_score: float = len(fusion.tools) / tools_provided * 100.0
+            tool_score: float = len(fusion.tools) / tools_provided
 
-            tool_score_expl: List[str] = [
-                format((params[f"{tool}_weight"] / 100.0), ".3f")
-                for tool, _ in fusion.tools.items()
-            ]
-            print(fusion.dbs)
-
-            for db_name in fusion.dbs:
-                print(float(Settings.FUSION_WEIGHTS[db_name.lower()]))
             # database estimation
-            db_score: float = sum(
-                float(Settings.FUSION_WEIGHTS[db_name.lower()]) for db_name in fusion.dbs
-            )
-            print(db_score)
-            db_score_expl: List[str] = [
-                format(Settings.FUSION_WEIGHTS[db_name.lower()], ".3f") for db_name in fusion.dbs
-            ]
+            db_hits: float = sum(
+                float(Settings.FUSION_WEIGHTS[db_name.lower()]) for db_name in fusion.dbs)
 
-            score: float = float("%0.3f" % (0.5 * tool_score + 0.5 * db_score))
+            db_score: float = db_hits/db_provided
+
+            score: float = float("%0.3f" % (0.8 * tool_score + 0.2 * db_score))
             score_explained = (
-                f'0.5 * ({" + ".join(tool_score_expl)}) + 0.5 * ({" + ".join(db_score_expl)})'
+                f'0.8 * ({len(fusion.tools)} / {tools_provided}) + 0.2 * ({(db_hits)} / {db_provided})'
             )
             fusion.score, fusion.score_explained = score, score_explained
 
