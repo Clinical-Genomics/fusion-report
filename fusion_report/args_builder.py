@@ -120,7 +120,7 @@ class ArgsBuilder:
         run_optional = download_parser.add_argument_group(
             "Optionals", "List of optional configuration parameters."
         )
-        for ssl in args["optional_ssl"]:
+        for ssl in args["optionals_ssl"]:
                 run_optional.add_argument(
                     optional["key"][0],
                     default=optional.get("default"),
