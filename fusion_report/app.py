@@ -207,7 +207,16 @@ class App:
         at https://github.com/matq007/fusion-report/docs/scoring-fusion
         """
         tools_provided = 0
-        for tool in ['ericscript', 'fusioncatcher', 'starfusion', 'arriba', 'pizzly', "squid", "dragen", 'jaffa']:
+        for tool in [
+            "ericscript",
+            "fusioncatcher",
+            "starfusion",
+            "arriba",
+            "pizzly",
+            "squid",
+            "dragen",
+            "jaffa",
+        ]:
             if getattr(params, tool) is not None:
                 tools_provided += 1
 
@@ -224,14 +233,13 @@ class App:
 
             # database estimation
             db_hits: float = sum(
-                float(Settings.FUSION_WEIGHTS[db_name.lower()]) for db_name in fusion.dbs)
+                float(Settings.FUSION_WEIGHTS[db_name.lower()]) for db_name in fusion.dbs
+            )
 
-            db_score: float = db_hits/db_provided
+            db_score: float = db_hits / db_provided
 
             score: float = float("%0.3f" % (0.8 * tool_score + 0.2 * db_score))
-            score_explained = (
-                f'0.8 * ({len(fusion.tools)} / {tools_provided}) + 0.2 * ({(db_hits)} / {db_provided})'
-            )
+            score_explained = f"0.8 * ({len(fusion.tools)} / {tools_provided}) + 0.2 * ({(db_hits)} / {db_provided})"
             fusion.score, fusion.score_explained = score, score_explained
 
     @staticmethod
