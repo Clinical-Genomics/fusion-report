@@ -101,7 +101,7 @@ class Net:
         LOG.info(f"Downloading {url}")
         try:
             headers = {"User-Agent": "Mozilla/5.0"}
-            response = requests.get(url, headers=headers, stream=True, verify = no_ssl)
+            response = requests.get(url, headers=headers, stream=True, verify=no_ssl)
             file = url.split("/")[-1].split("?")[0]
 
             if (
@@ -130,7 +130,7 @@ class Net:
             ),
         }
         try:
-            res = requests.get(url, headers=headers, verify = no_ssl)
+            res = requests.get(url, headers=headers, verify=no_ssl)
             auth_url: str = res.json()["url"]
             LOG.info(f"auth_url: {auth_url}")
             Net.get_large_file(auth_url, no_ssl)
