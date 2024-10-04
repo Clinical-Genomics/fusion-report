@@ -122,10 +122,10 @@ class ArgsBuilder:
         )
         for ssl in args["optionals_ssl"]:
                 run_optional.add_argument(
-                    optional["key"][0],
-                    default=optional.get("default"),
-                    help=optional.get("help"),
-                    type=type(optional.get("default"))
+                    ssl["key"][0],
+                    default=ssl.get("default"),
+                    help=ssl.get("help"),
+                    type=type(ssl.get("default"))
                 )
         
         for optional in args["optionals"]:
