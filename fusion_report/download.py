@@ -35,7 +35,10 @@ class Download:
 
         """Download all databases."""
         return_err: List[str] = []
-        os.chdir(params.output)
+        tmp_dir = os.path.join(params.output, "tmp_dir")
+        if not os.path.exists(tmp_dir):
+            os.mkdir(tmp_dir)
+        os.chdir(tmp_dir)
 
         if not params.no_mitelman:
             # MITELMAN
