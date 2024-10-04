@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support to run the tool without SSL chain verification for users behind proxy servers who act as MITM
 
+## [3.1.0]
+
+### Changed
+
+- Scoring formula changed to:
+    $$
+    score = 0.8 * \sum_{tool}^{tools provided} f(fusion, tool) + 0.2 * \sum_{db}^{dbs provided} g(fusion, db)*w(db)
+    $$
+
+    Weights for databases are as follows:
+
+    * COSMIC (50)
+    * MITELMAN (50)
+    * FusionGDB2 (0)
+
+## [3.0.0]
+
+### Added
+
+- Options --no-cosmic/--no-fusiongdb2/--no-mitelman to download and run without those specified databases
+
 ## [2.1.8]
 
 ### Removed

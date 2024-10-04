@@ -4,7 +4,7 @@ import os
 from argparse import ArgumentParser, Namespace, _SubParsersAction
 from typing import Any, Dict
 
-import rapidjson
+import json
 
 from fusion_report.settings import Settings
 
@@ -21,7 +21,8 @@ class ArgsBuilder:
     def __init__(self):
         configuration = os.path.join(Settings.ROOT_DIR, "arguments.json")
         with open(configuration, "r") as config_file:
-            self.arguments: Dict[str, Any] = rapidjson.loads(config_file.read())
+            self.arguments: Dict[str, Any] = json.load(config_file)
+
         self.arguments["weight"] = float(100 / len(self.supported_tools))
         self.parser = ArgumentParser(
             description="""Tool for generating friendly UI custom report."""
@@ -100,6 +101,13 @@ class ArgsBuilder:
                         type=type(optional.get("default")),
                     )
 
+        for database in args["databases"]:
+            run_parser.add_argument(
+                database["key"],
+                help=database["help"],
+                action=database.get("action", "store"),
+            )
+
     def download_args(self, args: Dict[str, Any]) -> None:
         """Build download command-line arguments."""
         download_parser = self.command_parser.add_parser(
@@ -108,11 +116,11 @@ class ArgsBuilder:
         for mandatory in args["mandatory"]:
             download_parser.add_argument(mandatory["key"], help=mandatory["help"], type=str)
         
-        # optionals
+        # ssl
         run_optional = download_parser.add_argument_group(
             "Optionals", "List of optional configuration parameters."
         )
-        for optional in args["optionals"]:
+        for ssl in args["optional_ssl"]:
                 run_optional.add_argument(
                     optional["key"][0],
                     default=optional.get("default"),
@@ -120,6 +128,13 @@ class ArgsBuilder:
                     type=type(optional.get("default"))
                 )
         
+        for optional in args["optionals"]:
+            download_parser.add_argument(
+                optional["key"],
+                help=optional["help"],
+                action=optional.get("action", "store"),
+            )
+
         self._cosmic(args, download_parser)
 
     def sync_args(self, args: Dict[str, Any]) -> None:

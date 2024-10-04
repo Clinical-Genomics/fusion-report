@@ -10,7 +10,7 @@ report different results, for example FusionCatcher will work best on somatic sa
 You can customize weight of individual tool by specific parameter `<tool-name>_weight 30`.
 The sum of the weights has to be 100!
 
-Currently weights for databases are not adjustable. The weights for databases are as follows:
+Weights for databases are as follows:
 
 * COSMIC (50)
 * MITELMAN (50)
@@ -24,5 +24,11 @@ Currently weights for databases are not adjustable. The weights for databases ar
 The final formula for calculating score is:
 
 $$
-score = 0.5 * \sum_{tool}^{tools} f(fusion, tool)*w(tool) + 0.5 * \sum_{db}^{dbs} g(fusion, db)*w(db)
+score = 0.8 * \sum_{tool}^{tools provided} f(fusion, tool) + 0.2 * \sum_{db}^{dbs provided} g(fusion, db)*w(db)
 $$
+
+Weights for databases are as follows:
+
+* COSMIC (50)
+* MITELMAN (50)
+* FusionGDB2 (0)

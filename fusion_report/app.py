@@ -8,7 +8,7 @@ from argparse import Namespace
 from collections import defaultdict
 from typing import Any, Dict, List
 
-import rapidjson
+import json
 
 from tqdm import tqdm
 
@@ -81,8 +81,8 @@ class App:
     def preprocess(self, params: Namespace) -> None:
         """Parse, enrich and score fusion."""
         self.parse_fusion_outputs(vars(params))
-        self.enrich(params.db_path)
-        self.score(vars(params))
+        self.enrich(params)
+        self.score(params)
 
     def generate_report(self, params: Namespace) -> None:
         """Generate fusion report with all pages."""
@@ -118,13 +118,25 @@ class App:
                 # value: fusion tool output
                 self.manager.parse(param, value, params["allow_multiple_gene_symbols"])
 
-    def enrich(self, path: str) -> None:
+    def enrich(self, params: Namespace) -> None:
         """Enrich fusion with all relevant information from local databases."""
-        local_fusions: Dict[str, List[str]] = {
-            CosmicDB(path).name: CosmicDB(path).get_all_fusions(),
-            MitelmanDB(path).name: MitelmanDB(path).get_all_fusions(),
-            FusionGDB2(path).name: FusionGDB2(path).get_all_fusions(),
-        }
+        local_fusions: Dict[str, List[str]] = {}
+
+        if not params.no_cosmic:
+            local_fusions.update(
+                {CosmicDB(params.db_path).name: CosmicDB(params.db_path).get_all_fusions()}
+            )
+
+        if not params.no_fusiongdb2:
+            local_fusions.update(
+                {MitelmanDB(params.db_path).name: MitelmanDB(params.db_path).get_all_fusions()}
+            )
+
+        if not params.no_mitelman:
+            local_fusions.update(
+                {FusionGDB2(params.db_path).name: FusionGDB2(params.db_path).get_all_fusions()}
+            )
+
         for fusion in self.manager.fusions:
             for db_name, db_list in local_fusions.items():
                 if fusion.name in db_list:
@@ -138,7 +150,7 @@ class App:
         if extension == "json":
             with open(dest, "w", encoding="utf-8") as output:
                 results = [fusion.json_serialize() for fusion in self.manager.fusions]
-                output.write(rapidjson.dumps(results))
+                output.write(json.dumps(results))
         elif extension == "csv":
             with open(dest, "w", encoding="utf-8") as output:
                 csv_writer = csv.writer(
@@ -189,34 +201,45 @@ class App:
                 if len(fusion.tools) >= cutoff:
                     output.write(f"{fusion.name}\n")
 
-    def score(self, params: Dict[str, Any]) -> None:
+    def score(self, params: Namespace) -> None:
         """Custom scoring function for individual fusion.
         More information about the scoring function can be found in the documentation
         at https://github.com/matq007/fusion-report/docs/scoring-fusion
         """
+        tools_provided = 0
+        for tool in [
+            "ericscript",
+            "fusioncatcher",
+            "starfusion",
+            "arriba",
+            "pizzly",
+            "squid",
+            "dragen",
+            "jaffa",
+        ]:
+            if getattr(params, tool) is not None:
+                tools_provided += 1
 
+        db_provided = 1
+        if params.no_cosmic:
+            db_provided -= Settings.FUSION_WEIGHTS["cosmic"]
+        if params.no_fusiongdb2:
+            db_provided -= Settings.FUSION_WEIGHTS["fusiongdb2"]
+        if params.no_mitelman:
+            db_provided -= Settings.FUSION_WEIGHTS["mitelman"]
         for fusion in self.manager.fusions:
             # tool estimation
-            tool_score: float = sum(
-                [params[f"{tool.lower()}_weight"] / 100.0 for tool, _ in fusion.tools.items()]
-            )
-            tool_score_expl: List[str] = [
-                format((params[f"{tool}_weight"] / 100.0), ".3f")
-                for tool, _ in fusion.tools.items()
-            ]
+            tool_score: float = len(fusion.tools) / tools_provided
 
             # database estimation
-            db_score: float = sum(
+            db_hits: float = sum(
                 float(Settings.FUSION_WEIGHTS[db_name.lower()]) for db_name in fusion.dbs
             )
-            db_score_expl: List[str] = [
-                format(Settings.FUSION_WEIGHTS[db_name.lower()], ".3f") for db_name in fusion.dbs
-            ]
 
-            score: float = float("%0.3f" % (0.5 * tool_score + 0.5 * db_score))
-            score_explained = (
-                f'0.5 * ({" + ".join(tool_score_expl)}) + 0.5 * ({" + ".join(db_score_expl)})'
-            )
+            db_score: float = db_hits / db_provided
+
+            score: float = float("%0.3f" % (0.8 * tool_score + 0.2 * db_score))
+            score_explained = f"0.8 * ({len(fusion.tools)} / {tools_provided}) + 0.2 * ({(db_hits)} / {db_provided})"
             fusion.score, fusion.score_explained = score, score_explained
 
     @staticmethod
@@ -248,4 +271,4 @@ class App:
 
         dest = f"{os.path.join(path, 'fusion_genes_mqc.json')}"
         with open(dest, "w", encoding="utf-8") as output:
-            output.write(rapidjson.dumps(configuration))
+            output.write(json.dumps(configuration))
