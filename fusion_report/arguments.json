@@ -111,6 +111,11 @@
                     "key": "--no-mitelman",
                     "help": "Do not download mitelman fusion database",
                     "action": "store_true"
+                },
+                {
+                    "key": ["-no_ssl"],
+                    "help": "Turn off verification of SSL certificates when downloading data.",
+                    "action": "store_true"
                 }
             ],
             "cosmic": [
