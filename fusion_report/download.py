@@ -42,21 +42,23 @@ class Download:
 
         if not params.no_mitelman:
             # MITELMAN
-            Net.get_mitelman(self, return_err)
+            Net.get_mitelman(self, return_err, params.no_ssl)
 
         if not params.no_fusiongdb2:
             # FusionGDB2
-            Net.get_fusiongdb2(self, return_err)
+            Net.get_fusiongdb2(self, return_err, params.no_ssl)
 
         if not params.no_cosmic:
             # COSMIC
             self.validate(params)
             if params.qiagen:
                 Logger(__name__).info("Downloading resources from QIAGEN...")
-                Net.get_cosmic_from_qiagen(self.cosmic_token, return_err, params.output)
+                Net.get_cosmic_from_qiagen(
+                    self.cosmic_token, return_err, params.output, params.no_ssl
+                )
             else:
                 Logger(__name__).info("Downloading resources from SANGER...")
-                Net.get_cosmic_from_sanger(self.cosmic_token, return_err)
+                Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl)
 
         if len(return_err) > 0:
             raise DownloadException(return_err)

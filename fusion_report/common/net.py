@@ -96,13 +96,12 @@ class Net:
         return json.loads(token_response)["access_token"]
 
     @staticmethod
-    def get_large_file(url: str) -> None:
+    def get_large_file(url: str, no_ssl) -> None:
         """Method for downloading a large file."""
         LOG.info(f"Downloading {url}")
         try:
             headers = {"User-Agent": "Mozilla/5.0"}
-            response = requests.get(url, headers=headers, stream=True)
-
+            response = requests.get(url, headers=headers, stream=True, verify=no_ssl)
             file = url.split("/")[-1].split("?")[0]
 
             if (
@@ -118,7 +117,7 @@ class Net:
             raise DownloadException(ex)
 
     @staticmethod
-    def get_cosmic_from_sanger(token: str, return_err: List[str]) -> None:
+    def get_cosmic_from_sanger(token: str, return_err: List[str], no_ssl) -> None:
         """Method for download COSMIC database from sanger website."""
         files = []
         file: str = Settings.COSMIC["FILE"]
@@ -131,10 +130,10 @@ class Net:
             ),
         }
         try:
-            res = requests.get(url, headers=headers)
+            res = requests.get(url, headers=headers, verify=no_ssl)
             auth_url: str = res.json()["url"]
             LOG.info(f"auth_url: {auth_url}")
-            Net.get_large_file(auth_url)
+            Net.get_large_file(auth_url, no_ssl)
 
             files.append(".".join(file.split(".")[:-1]))
             with gzip.open(file, "rb") as archive, open(files[0], "wb") as out_file:
@@ -170,11 +169,11 @@ class Net:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
 
     @staticmethod
-    def get_fusiongdb2(self, return_err: List[str]) -> None:
+    def get_fusiongdb2(self, return_err: List[str], no_ssl) -> None:
         """Method for download FusionGDB2 database."""
         try:
             url: str = f'{Settings.FUSIONGDB2["HOSTNAME"]}/{Settings.FUSIONGDB2["FILE"]}'
-            Net.get_large_file(url)
+            Net.get_large_file(url, no_ssl)
             file: str = f'{Settings.FUSIONGDB2["FILE"]}'
             df = pd.read_excel(file, engine="openpyxl")
             df["fusion"] = df["5'-gene (text format)"] + "--" + df["3'-gene (text format)"]
@@ -188,11 +187,11 @@ class Net:
             return_err.append(f"FusionGDB2: {ex}")
 
     @staticmethod
-    def get_mitelman(self, return_err: List[str]) -> None:
+    def get_mitelman(self, return_err: List[str], no_ssl) -> None:
         """Method for download Mitelman database."""
         try:
             url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
-            Net.get_large_file(url)
+            Net.get_large_file(url, no_ssl)
             with ZipFile(Settings.MITELMAN["FILE"], "r") as archive:
                 files = [
                     x for x in archive.namelist() if "MBCA.TXT.DATA" in x and not "MACOSX" in x
