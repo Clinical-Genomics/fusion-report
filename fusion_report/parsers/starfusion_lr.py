@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
-class Starfusion_LR(AbstractFusionTool):
+class Starfusion_lr(AbstractFusionTool):
     """Star-Fusion Long Reads (Nanopore or PacBio) tool parser."""
 
     def set_header(self, header: str, delimiter: Optional[str] = "\t"):
