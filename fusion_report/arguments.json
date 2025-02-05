@@ -47,6 +47,10 @@
                 {
                     "key": "--jaffa",
                     "help": "Jaffa output file"
+                },
+                {
+                    "key": "--starfusion_lr",
+                    "help": "CTAT-LR-Fusion output file"
                 }
             ],
             "databases": [
