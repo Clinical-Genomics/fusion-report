@@ -20,6 +20,7 @@ This python script generates an interactive summary report from fusion detection
 * [Arriba](https://github.com/suhrig/arriba)
 * [Illumina Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
 * [Jaffa](https://github.com/Oshlack/JAFFA)
+* [CTAT-LR-Fusion](https://github.com/TrinityCTAT/CTAT-LR-fusion)
 
 ## Installation
 
@@ -32,8 +33,9 @@ conda install -c bioconda fusion-report=2.1.4
 ### From source
 
 ```bash
+# sqlite3 can be installed via conda/mamba as well
 sudo apt-get install sqlite3
-python3 setup.py install
+pip3 install -r requirements.txt && python3 setup.py install
 ```
 
 ## Usage
