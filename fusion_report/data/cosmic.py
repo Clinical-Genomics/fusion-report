@@ -1,4 +1,5 @@
 """Cosmic Database"""
+
 import re
 
 from typing import List
@@ -23,8 +24,6 @@ class CosmicDB(Db, metaclass=Singleton):
         res = self.select(query)
 
         return [
-            "--".join(re.findall(r"\(.*?\)", x["fusion_pair"]))
-            .replace("(", "")
-            .replace(")", "")
+            "--".join(re.findall(r"\(.*?\)", x["fusion_pair"])).replace("(", "").replace(")", "")
             for x in res
         ]

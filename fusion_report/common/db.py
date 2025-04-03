@@ -1,4 +1,5 @@
 """Database wrapper"""
+
 import os
 import sqlite3
 

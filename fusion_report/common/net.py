@@ -121,9 +121,7 @@ class Net:
         """Method for download COSMIC database from sanger website."""
         params = {"path": file_path, "bucket": "downloads"}
         url = Settings.COSMIC["HOSTNAME"]
-        headers = {
-            "Authorization": f"Basic {token}"
-        }
+        headers = {"Authorization": f"Basic {token}"}
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         return response.json().get("url")
@@ -174,15 +172,14 @@ class Net:
             LOG.info(f"Download URL: {download_url}")
             Net.get_large_file(download_url, no_ssl)
             Net.extract_tar(Settings.COSMIC["TARFILE"], ".")
-            extracted_file = Net.extract_gz("." +  "/" + Settings.COSMIC["FILE"])
+            extracted_file = Net.extract_gz("." + "/" + Settings.COSMIC["FILE"])
             db = CosmicDB(".")
             db.setup([extracted_file.split("/")[-1]], delimiter="\t", skip_header=False)
 
         except requests.exceptions.RequestException as req_err:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {req_err}')
         except (ValueError, KeyError) as json_err:
-            return_err.append(f'Error processing request: {json_err}')
-
+            return_err.append(f"Error processing request: {json_err}")
 
     @staticmethod
     def get_cosmic_from_qiagen(token: str, return_err: List[str], outputpath: str) -> None:

@@ -1,4 +1,5 @@
 """Jaffa module"""
+
 from typing import Any, Dict, List, Optional, Tuple
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 

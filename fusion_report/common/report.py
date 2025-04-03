@@ -1,4 +1,5 @@
 """Report class"""
+
 from typing import Any, Dict, List
 
 from fusion_report.common.exceptions.report import ReportException

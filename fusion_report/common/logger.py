@@ -1,4 +1,5 @@
-""" Application logger """
+"""Application logger"""
+
 import logging
 import sys
 

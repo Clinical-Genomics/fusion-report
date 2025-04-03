@@ -1,4 +1,4 @@
-""" Report Exception """
+"""Report Exception"""
 
 
 class ReportException(Exception):

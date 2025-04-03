@@ -1,4 +1,4 @@
-""" Download Exception """
+"""Download Exception"""
 
 
 class DownloadException(Exception):

@@ -1,4 +1,5 @@
 """Configuration module"""
+
 import base64
 import os
 

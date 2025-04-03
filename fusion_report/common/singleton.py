@@ -1,4 +1,5 @@
 """Singleton"""
+
 from typing import Any
 
 

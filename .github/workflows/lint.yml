@@ -9,13 +9,13 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@v3
 
-      - name: Setup Python 3.8
+      - name: Setup Python 3.12
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.12
 
       - name: Set up Black
         uses: psf/black@stable
         with:
           options: ". --check --line-length 100"
-          version: "~=23.3.0"
+          version: "~=25.1.0"

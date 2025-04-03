@@ -1,4 +1,5 @@
 """Squid module"""
+
 from typing import Any, Dict, List, Optional, Tuple
 
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
@@ -30,9 +31,11 @@ class Squid(AbstractFusionTool):
             f"{col[self.header.index('end2')]}:{col[self.header.index('strand2')]}"
         ).replace("chr", "")
         details: Dict[str, Any] = {
-            "position": f"{left_breakpoint}#{right_breakpoint}"
-            if col[self.header.index("strand1")] == "+"
-            else f"{right_breakpoint}#{left_breakpoint}",
+            "position": (
+                f"{left_breakpoint}#{right_breakpoint}"
+                if col[self.header.index("strand1")] == "+"
+                else f"{right_breakpoint}#{left_breakpoint}"
+            ),
             "score": int(col[self.header.index("score")]),
         }
 

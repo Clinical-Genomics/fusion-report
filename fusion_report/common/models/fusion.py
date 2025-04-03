@@ -1,4 +1,5 @@
-""" Fusion Model """
+"""Fusion Model"""
+
 from typing import Any, Dict, List
 
 from fusion_report.common.logger import Logger

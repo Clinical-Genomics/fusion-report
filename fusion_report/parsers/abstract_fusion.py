@@ -1,4 +1,5 @@
 """Abstract Fusion module"""
+
 import abc
 
 from typing import Any, Dict, List, Tuple
