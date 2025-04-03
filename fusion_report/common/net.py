@@ -12,7 +12,6 @@ import subprocess
 import json
 from argparse import Namespace
 from typing import List
-from typing import Optional
 
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
@@ -130,7 +129,7 @@ class Net:
         return response.json().get("url")
 
     @staticmethod
-    def extract_gz(file_path: str) -> Optional[str]:
+    def extract_gz(file_path: str) -> str | None:
         """Decompresses a .gz file."""
         try:
             output_file = file_path.rsplit(".", 1)[0]  # Remove .gz extension
@@ -143,7 +142,7 @@ class Net:
             return None
 
     @staticmethod
-    def extract_tar(file_path: str, extract_to: str) -> Optional[str]:
+    def extract_tar(file_path: str, extract_to: str) -> str | None:
         """Extracts a specific file from a tar archive."""
         try:
             with tarfile.open(file_path, "r:") as tar:

@@ -16,15 +16,14 @@ class CosmicDB(Db, metaclass=Singleton):
 
     def get_all_fusions(self) -> List[str]:
         """Returns all fusions from database."""
-        query: str = '''SELECT FIVE_PRIME_GENE_SYMBOL || '--' || THREE_PRIME_GENE_SYMBOL AS fusion_pair
-                            FROM cosmic_fusion_v101_grch38
-                        SELECT DISTINCT fusion_pair
+        query: str = '''SELECT DISTINCT
+                            FIVE_PRIME_GENE_SYMBOL || '--' || THREE_PRIME_GENE_SYMBOL AS fusion_pair
                         FROM cosmic_fusion_v101_grch38
-                        WHERE translocation_name != ""'''
+                        WHERE fusion_pair != ""'''
         res = self.select(query)
 
         return [
-            "--".join(re.findall(r"\(.*?\)", x["translocation_name"]))
+            "--".join(re.findall(r"\(.*?\)", x["fusion_pair"]))
             .replace("(", "")
             .replace(")", "")
             for x in res

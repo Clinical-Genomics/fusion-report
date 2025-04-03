@@ -12,9 +12,8 @@ with open("requirements.txt") as f:
     INSTALL_REQUIREMENTS = f.read().splitlines()
 
 setup(
-    name="fusion_report",
-    version=Settings.VERSION,
-    python_requires=">=3.6",
+    name="fusion-report",
+    python_requires=">=3.12",
     description="Tool for parsing outputs from fusion detection tools.",
     long_description=README,
     author="Martin Proks",
@@ -30,7 +29,7 @@ setup(
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.12",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX",
         "Operating System :: Unix",

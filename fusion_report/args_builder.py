@@ -27,12 +27,6 @@ class ArgsBuilder:
         self.parser = ArgumentParser(
             description="""Tool for generating friendly UI custom report."""
         )
-        self.parser.add_argument(
-            "--version",
-            "-v",
-            action="version",
-            version=f"fusion-report {Settings.VERSION}",
-        )
         self.command_parser: _SubParsersAction = self.parser.add_subparsers(dest="command")
 
     @property

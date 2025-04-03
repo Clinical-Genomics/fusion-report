@@ -5,7 +5,6 @@ from typing import Any, Dict
 
 class Settings:
     ROOT_DIR: str = os.path.dirname(os.path.abspath(__file__))
-    VERSION: str = "2.1.5"
     DATE_FORMAT: str = "%d/%m/%Y"
     THREAD_NUM: int = 2
     FUSION_WEIGHTS: Dict[str, float] = {

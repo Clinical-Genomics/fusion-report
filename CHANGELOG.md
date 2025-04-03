@@ -5,11 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
-
-
 ## [4.0.0]
-
 
 ### Added
 
@@ -19,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated COSMIC database to be compatible with the new SANGER website.
+- Updated project to be compatible with Python 3.12
+- Updated GitHub Actions workflow to use latest actions versions
 - The score is now called Fusion Indication Index (FII)
 - FII formula changed to:
     $$
