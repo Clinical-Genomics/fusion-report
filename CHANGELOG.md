@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## dev
 
 
-## [3.1.0]
+## [4.0.0]
 
 
 ### Added
@@ -18,9 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Scoring formula changed to:
+- Updated COSMIC database to be compatible with the new SANGER website.
+- The score is now called Fusion Indication Index (FII)
+- FII formula changed to:
     $$
-    score = 0.8 * \sum_{tool}^{tools provided} f(fusion, tool) + 0.2 * \sum_{db}^{dbs provided} g(fusion, db)*w(db)
+    FII = 0.5 * \sum_{tool}^{tools provided} f(fusion, tool) + 0.5 * \sum_{db}^{dbs provided} g(fusion, db)*w(db)
     $$
 
     Weights for databases are as follows:

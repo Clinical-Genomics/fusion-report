@@ -3,15 +3,16 @@ import glob
 import gzip
 import os
 import shutil
+import tarfile
 import requests
 import time
 import pandas as pd
 from zipfile import ZipFile
 import subprocess
 import json
-
 from argparse import Namespace
 from typing import List
+from typing import Optional
 
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
@@ -65,7 +66,7 @@ class Net:
             '-H "Content-Type: application/octet-stream" '
             '-H "Authorization: Bearer {token}" '
             '"https://my.qiagendigitalinsights.com/bbp/data/download/cosmic-download?name={file_id}"'
-            " -o {output_path}CosmicFusionExport.tsv.gz"
+            " -o {output_path}Cosmic_Fusion_v101_GRCh38.tsv.gz"
         )
         cmd = file_request.format(token=token, file_id=file_id, output_path=output_path)
         Net.run_qiagen_cmd(cmd, True, True)
@@ -117,32 +118,72 @@ class Net:
             raise DownloadException(ex)
 
     @staticmethod
-    def get_cosmic_from_sanger(token: str, return_err: List[str], no_ssl) -> None:
+    def get_cosmic_from_sanger_url(token: str, file_path: str) -> str:
         """Method for download COSMIC database from sanger website."""
-        files = []
-        file: str = Settings.COSMIC["FILE"]
-        url: str = f'{Settings.COSMIC["HOSTNAME"]}/{Settings.COSMIC["FILE"]}'
+        params = {"path": file_path, "bucket": "downloads"}
+        url = Settings.COSMIC["HOSTNAME"]
         headers = {
-            "Authorization": f"Basic {token}",
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/41.0.2228.0 Safari/537.3"
-            ),
+            "Authorization": f"Basic {token}"
         }
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        return response.json().get("url")
+
+    @staticmethod
+    def extract_gz(file_path: str) -> Optional[str]:
+        """Decompresses a .gz file."""
         try:
-            res = requests.get(url, headers=headers, verify=no_ssl)
-            auth_url: str = res.json()["url"]
-            LOG.info(f"auth_url: {auth_url}")
-            Net.get_large_file(auth_url, no_ssl)
+            output_file = file_path.rsplit(".", 1)[0]  # Remove .gz extension
+            with gzip.open(file_path, "rb") as f_in, open(output_file, "wb") as f_out:
+                shutil.copyfileobj(f_in, f_out)
+            LOG.info(f"Decompressed {file_path} to {output_file}")
+            return output_file
+        except Exception as e:
+            LOG.error(f"Error extracting gzip file: {e}")
+            return None
 
-            files.append(".".join(file.split(".")[:-1]))
-            with gzip.open(file, "rb") as archive, open(files[0], "wb") as out_file:
-                shutil.copyfileobj(archive, out_file)
+    @staticmethod
+    def extract_tar(file_path: str, extract_to: str) -> Optional[str]:
+        """Extracts a specific file from a tar archive."""
+        try:
+            with tarfile.open(file_path, "r:") as tar:
+                # Find the specific file
+                target_file = "Cosmic_Fusion_v101_GRCh38.tsv.gz"
+                if target_file in tar.getnames():
+                    tar.extract(target_file, path=extract_to)
+                    extracted_path = os.path.join(extract_to, target_file)
+                    LOG.info(f"Extracted {target_file} to {extracted_path}")
+                    return extracted_path
+                else:
+                    LOG.error(f"{target_file} not found in the tar archive.")
+                    return None
+        except Exception as e:
+            LOG.error(f"Error extracting tar file: {e}")
+            return None
 
+    @staticmethod
+    def get_cosmic_from_sanger(token: str, return_err: List[str], no_ssl, outputpath) -> None:
+        """Downloads the COSMIC database from the Sanger website."""
+        file_name = "grch38/cosmic/v101/" + Settings.COSMIC["TARFILE"]
+        file_path = f"{file_name}"
+        try:
+            download_url = Net.get_cosmic_from_sanger_url(token, file_path=file_path)
+
+            if not download_url:
+                raise ValueError("Failed to retrieve the download URL.")
+
+            LOG.info(f"Download URL: {download_url}")
+            Net.get_large_file(download_url, no_ssl)
+            Net.extract_tar(Settings.COSMIC["TARFILE"], ".")
+            extracted_file = Net.extract_gz("." +  "/" + Settings.COSMIC["FILE"])
             db = CosmicDB(".")
-            db.setup(files, delimiter="\t", skip_header=True)
-        except requests.exceptions.HTTPError as ex:
-            return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
+            db.setup([extracted_file.split("/")[-1]], delimiter="\t", skip_header=False)
+
+        except requests.exceptions.RequestException as req_err:
+            return_err.append(f'{Settings.COSMIC["NAME"]}: {req_err}')
+        except (ValueError, KeyError) as json_err:
+            return_err.append(f'Error processing request: {json_err}')
+
 
     @staticmethod
     def get_cosmic_from_qiagen(token: str, return_err: List[str], outputpath: str) -> None:
@@ -150,8 +191,8 @@ class Net:
         try:
             Net.get_qiagen_files(token, outputpath)
         except Exception as ex:
-            print(ex)
-        # Then continue parsing out the fusion_file_id
+            LOG.info(ex)
+
         file_id = Net.fetch_fusion_file_id(outputpath)
         Net.download_qiagen_file(token, file_id, outputpath)
         file: str = Settings.COSMIC["FILE"]

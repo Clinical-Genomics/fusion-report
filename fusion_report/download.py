@@ -58,7 +58,7 @@ class Download:
                 )
             else:
                 Logger(__name__).info("Downloading resources from SANGER...")
-                Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl)
+                Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
 
         if len(return_err) > 0:
             raise DownloadException(return_err)

@@ -16,9 +16,10 @@ class Settings:
 
     COSMIC: Dict[str, str] = {
         "NAME": "COSMIC",
-        "HOSTNAME": "https://cancer.sanger.ac.uk/cosmic/file_download/GRCh38/cosmic/v98",
+        "HOSTNAME": "https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?",
         "SCHEMA": "Cosmic.sql",
-        "FILE": "CosmicFusionExport.tsv.gz",
+        "TARFILE": "Cosmic_Fusion_Tsv_v101_GRCh38.tar",
+        "FILE": "Cosmic_Fusion_v101_GRCh38.tsv.gz"
     }
 
     FUSIONGDB2: Dict[str, str] = {

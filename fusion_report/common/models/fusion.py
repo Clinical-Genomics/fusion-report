@@ -9,7 +9,7 @@ class Fusion:
 
     Attributes:
         name: Fusion name
-        score: Fusion score, attributes: `score` and `explained`
+        score: Fusion Indication Index, attributes: `score` and `explained`
         dbs: List of databases where fusion was found
         tools: List of tools which detected fusion
     """
@@ -30,7 +30,7 @@ class Fusion:
 
     @property
     def score_explained(self) -> str:
-        """Returns explanation of how the score was calculated."""
+        """Returns explanation of how the FII was calculated."""
         return self._score["explained"]
 
     @score_explained.setter
@@ -56,8 +56,8 @@ class Fusion:
         json: Dict[str, Any] = {
             "Fusion": self.name,
             "Databases": self.dbs,
-            "Score": self.score,
-            "Explained score": self.score_explained,
+            "Fusion Indication Index (FII)": self.score,
+            "Explained FII": self.score_explained,
         }
 
         return {**json, **self.tools}

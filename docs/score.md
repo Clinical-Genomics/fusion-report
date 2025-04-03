@@ -1,11 +1,11 @@
-# Scoring fusion
+# Scoring fusion with the fusion indication index
 
 One disadvantage of the tools is that they tend to report false positive results. Not all fusion tools provide
 estimated score for a fusion. The only way how to correctly verify a fusion is biologically (RT-qPCR …).
 
-**fusion-report** uses weighted approach of assigning weights to tools and databases. By default, each tool
+**fusion-report** uses a weighted approach of assigning weights to tools and databases. By default, each tool
 is assigned the same weight. This is because each tool uses different approach of discovering fusions and
-report different results, for example FusionCatcher will work best on somatic samples.
+report different results.
 
 You can customize weight of individual tool by specific parameter `<tool-name>_weight 30`.
 The sum of the weights has to be 100!
@@ -16,15 +16,15 @@ Weights for databases are as follows:
 * MITELMAN (50)
 * FusionGDB2 (0)
 
-> It is strongly suggested to use all supported databases in order to get the best estimated score.
+> It is strongly suggested to use all supported databases in order to get the best estimated Fusion Indication Index.
 >
 
 ## Formula
 
-The final formula for calculating score is:
+The final formula for calculating the Fusion Indication Index is:
 
 $$
-score = 0.8 * \sum_{tool}^{tools provided} f(fusion, tool) + 0.2 * \sum_{db}^{dbs provided} g(fusion, db)*w(db)
+Fusion Indication Index = 0.5 * \sum_{tool}^{tools provided} f(fusion, tool) + 0.5 * \sum_{db}^{dbs provided} g(fusion, db)*w(db)
 $$
 
 Weights for databases are as follows:

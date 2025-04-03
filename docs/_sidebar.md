@@ -3,7 +3,7 @@
 * [Quick start](README.md)
 * [Download resources](download.md)
 * [Running the tool](usage.md)
-* [Scoring fusion](score.md)
+* [Fusion Indication Index](score.md)
 
 * Customizations
 
