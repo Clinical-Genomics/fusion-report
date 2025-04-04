@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.0.0]
 
+PR: [#83](https://github.com/Clinical-Genomics/fusion-report/pull/83)
+
 ### Added
 
 - Added support to run the tool without SSL chain verification for users behind proxy servers who act as MITM
