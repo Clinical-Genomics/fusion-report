@@ -7,7 +7,7 @@ class Settings:
     ROOT_DIR: str = os.path.dirname(os.path.abspath(__file__))
     DATE_FORMAT: str = "%d/%m/%Y"
     THREAD_NUM: int = 2
-    VERSION: str = "3.1.2"
+    VERSION: str = "3.1.3"
     FUSION_WEIGHTS: Dict[str, float] = {
         "cosmic": 0.50,
         "mitelman": 0.50,
