@@ -14,7 +14,6 @@ with open("requirements.txt") as f:
 setup(
     name="fusion-report",
     python_requires=">=3.12",
-    version=Settings.VERSION,
     description="Tool for parsing outputs from fusion detection tools.",
     long_description=README,
     author="Martin Proks, Annick Renevey",
