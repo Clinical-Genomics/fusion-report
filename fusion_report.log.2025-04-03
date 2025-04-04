@@ -1,0 +1,878 @@
+2025-04-03 10:45:40,108 - CRITICAL - fusion_report.common.net - Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/requests/models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 134, in get_cosmic_from_sanger
+    auth_url: str = res.json()["url"]
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/requests/models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: Expecting value: line 1 column 1 (char 0)
+2025-04-03 10:48:19,021 - CRITICAL - fusion_report.common.net - table "mbca" already exists
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 61, in setup
+    self.create_database()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 84, in create_database
+    self.connection.executescript(schema.read().lower())
+sqlite3.OperationalError: table "mbca" already exists
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 45, in download_all
+    Net.get_mitelman(self, return_err, params.no_ssl)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 202, in get_mitelman
+    db.setup(files, delimiter="\t", skip_header=False, encoding="ISO-8859-1")
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 79, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: table "mbca" already exists
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: table "mbca" already exists
+2025-04-03 10:48:46,341 - CRITICAL - fusion_report.common.net - Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/requests/models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 134, in get_cosmic_from_sanger
+    auth_url: str = res.json()["url"]
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/requests/models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: Expecting value: line 1 column 1 (char 0)
+2025-04-03 10:52:55,819 - CRITICAL - fusion_report.common.net - Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/requests/models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 134, in get_cosmic_from_sanger
+    auth_url: str = res.json()["url"]
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/requests/models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: Expecting value: line 1 column 1 (char 0)
+2025-04-03 10:59:22,410 - CRITICAL - fusion_report.common.net - table "mbca" already exists
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 61, in setup
+    self.create_database()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 84, in create_database
+    self.connection.executescript(schema.read().lower())
+sqlite3.OperationalError: table "mbca" already exists
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 45, in download_all
+    Net.get_mitelman(self, return_err, params.no_ssl)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 202, in get_mitelman
+    db.setup(files, delimiter="\t", skip_header=False, encoding="ISO-8859-1")
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 79, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: table "mbca" already exists
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: table "mbca" already exists
+2025-04-03 11:02:09,555 - CRITICAL - fusion_report.common.net - [Errno 2] No such file or directory: 'Cosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads'
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 139, in get_cosmic_from_sanger
+    with gzip.open(file, "rb") as archive, open(files[0], "wb") as out_file:
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/gzip.py", line 58, in open
+    binary_file = GzipFile(filename, gz_mode, compresslevel)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/gzip.py", line 173, in __init__
+    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')
+FileNotFoundError: [Errno 2] No such file or directory: 'Cosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: [Errno 2] No such file or directory: 'Cosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads'
+2025-04-03 11:14:52,558 - CRITICAL - fusion_report.common.net - Not a gzipped file (b'<?')
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 150, in get_cosmic_from_sanger
+    shutil.copyfileobj(archive, out_file)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/shutil.py", line 205, in copyfileobj
+    buf = fsrc_read(length)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/gzip.py", line 300, in read
+    return self._buffer.read(size)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/_compression.py", line 68, in readinto
+    data = self.read(len(byte_view))
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/gzip.py", line 487, in read
+    if not self._read_gzip_header():
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/gzip.py", line 435, in _read_gzip_header
+    raise BadGzipFile('Not a gzipped file (%r)' % magic)
+gzip.BadGzipFile: Not a gzipped file (b'<?')
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: Not a gzipped file (b'<?')
+2025-04-03 11:19:30,311 - ERROR - fusion_report.common.net - Error extracting tar file: truncated header
+2025-04-03 11:21:36,104 - ERROR - fusion_report.common.net - Error extracting tar file: truncated header
+2025-04-03 11:26:20,710 - CRITICAL - fusion_report.common.net - ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=Cosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 64, in download_all
+    raise DownloadException(return_err)
+fusion_report.common.exceptions.download.DownloadException: ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=Cosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=Cosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+2025-04-03 11:29:53,597 - CRITICAL - fusion_report.common.net - ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=grch38%2Fcosmic%2Fv101%2FCosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 64, in download_all
+    raise DownloadException(return_err)
+fusion_report.common.exceptions.download.DownloadException: ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=grch38%2Fcosmic%2Fv101%2FCosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=grch38%2Fcosmic%2Fv101%2FCosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+2025-04-03 11:44:50,664 - CRITICAL - fusion_report.common.net - ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=grch38%2Fcosmic%2Fv101%2FCosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 64, in download_all
+    raise DownloadException(return_err)
+fusion_report.common.exceptions.download.DownloadException: ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=grch38%2Fcosmic%2Fv101%2FCosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=grch38%2Fcosmic%2Fv101%2FCosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+2025-04-03 11:51:13,948 - CRITICAL - fusion_report.common.net - ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&bucket=downloads']
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 64, in download_all
+    raise DownloadException(return_err)
+fusion_report.common.exceptions.download.DownloadException: ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&bucket=downloads']
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&bucket=downloads']
+2025-04-03 11:53:44,579 - CRITICAL - fusion_report.common.net - ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=grch38%2Fcosmic%2Fv101%2FCosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 64, in download_all
+    raise DownloadException(return_err)
+fusion_report.common.exceptions.download.DownloadException: ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=grch38%2Fcosmic%2Fv101%2FCosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: ['COSMIC: 500 Server Error: Internal Server Error for url: https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v101/&path=grch38%2Fcosmic%2Fv101%2FCosmic_Fusion_Tsv_v101_GRCh38.tar&bucket=downloads']
+2025-04-03 11:56:25,423 - ERROR - fusion_report.common.net - Error extracting tar file: [Errno 2] No such file or directory: 'grch38/cosmic/v101/Cosmic_Fusion_Tsv_v101_GRCh38.tar'
+2025-04-03 11:58:43,484 - ERROR - fusion_report.common.net - Error extracting tar file: [Errno 2] No such file or directory: 'grch38/cosmic/v101/Cosmic_Fusion_Tsv_v101_GRCh38.tar'
+2025-04-03 13:25:44,415 - CRITICAL - fusion_report.common.net - table "mbca" already exists
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 61, in setup
+    self.create_database()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 84, in create_database
+    self.connection.executescript(schema.read().lower())
+sqlite3.OperationalError: table "mbca" already exists
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 45, in download_all
+    Net.get_mitelman(self, return_err, params.no_ssl)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 240, in get_mitelman
+    db.setup(files, delimiter="\t", skip_header=False, encoding="ISO-8859-1")
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 79, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: table "mbca" already exists
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: table "mbca" already exists
+2025-04-03 13:26:05,782 - ERROR - fusion_report.common.net - Error extracting gzip file: [Errno 2] No such file or directory: '/Users/annick.renevey/Projects/test-fusion-reportCosmic_Fusion_Tsv_v101_GRCh38Cosmic_Fusion_v101_GRCh38.tsv.gz'
+2025-04-03 13:29:47,420 - ERROR - fusion_report.common.net - Error extracting gzip file: [Errno 2] No such file or directory: '/Users/annick.renevey/Projects/test-fusion-reportCosmic_Fusion_v101_GRCh38.tsv.gz'
+2025-04-03 13:31:39,884 - CRITICAL - fusion_report.common.net - [Errno 2] No such file or directory: 'C'
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 64, in setup
+    with open(file, "r", encoding=encoding) as resource:
+FileNotFoundError: [Errno 2] No such file or directory: 'C'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 177, in get_cosmic_from_sanger
+    db.setup(Settings.COSMIC["FILE"].split(".")[0], delimiter="\t", skip_header=True)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 79, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: [Errno 2] No such file or directory: 'C'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: [Errno 2] No such file or directory: 'C'
+2025-04-03 13:33:15,776 - CRITICAL - fusion_report.common.net - [Errno 21] Is a directory: '/'
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 64, in setup
+    with open(file, "r", encoding=encoding) as resource:
+IsADirectoryError: [Errno 21] Is a directory: '/'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 177, in get_cosmic_from_sanger
+    db.setup(extracted_file, delimiter="\t", skip_header=True)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 79, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: [Errno 21] Is a directory: '/'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: [Errno 21] Is a directory: '/'
+2025-04-03 13:38:27,307 - CRITICAL - fusion_report.common.net - [Errno 21] Is a directory: '/'
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 64, in setup
+    with open(file, "r", encoding=encoding) as resource:
+IsADirectoryError: [Errno 21] Is a directory: '/'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 181, in get_cosmic_from_sanger
+    db.setup(extracted_file, delimiter="\t", skip_header=True)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 79, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: [Errno 21] Is a directory: '/'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: [Errno 21] Is a directory: '/'
+2025-04-03 13:40:28,784 - CRITICAL - fusion_report.common.net - [Errno 2] No such file or directory: 'C'
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 64, in setup
+    with open(file, "r", encoding=encoding) as resource:
+FileNotFoundError: [Errno 2] No such file or directory: 'C'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 181, in get_cosmic_from_sanger
+    db.setup(extracted_file, delimiter="\t", skip_header=True)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 79, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: [Errno 2] No such file or directory: 'C'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: [Errno 2] No such file or directory: 'C'
+2025-04-03 13:42:05,031 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 72, in setup
+    self.connection.executemany(
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 181, in get_cosmic_from_sanger
+    db.setup([extracted_file], delimiter="\t", skip_header=True)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 79, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38
+2025-04-03 13:53:12,869 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 72, in setup
+    self.connection.executemany(
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 181, in get_cosmic_from_sanger
+    db.setup([extracted_file], delimiter="\t", skip_header=True)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 79, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38
+2025-04-03 13:58:24,395 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 73, in setup
+    self.connection.executemany(
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 181, in get_cosmic_from_sanger
+    db.setup([extracted_file], delimiter="\t", skip_header=True)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 80, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38
+2025-04-03 13:59:21,029 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 74, in setup
+    self.connection.executemany(
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 181, in get_cosmic_from_sanger
+    db.setup([extracted_file], delimiter="\t", skip_header=True)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 81, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38
+2025-04-03 14:00:28,649 - CRITICAL - fusion_report.common.net - [Errno 2] No such file or directory: 'Cosmic_Fusion_v101_GRCh38.tsv'
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 65, in setup
+    with open(file, "r", encoding=encoding) as resource:
+FileNotFoundError: [Errno 2] No such file or directory: 'Cosmic_Fusion_v101_GRCh38.tsv'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 181, in get_cosmic_from_sanger
+    db.setup([extracted_file.split("/")[-1]], delimiter="\t", skip_header=True)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 81, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: [Errno 2] No such file or directory: 'Cosmic_Fusion_v101_GRCh38.tsv'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: [Errno 2] No such file or directory: 'Cosmic_Fusion_v101_GRCh38.tsv'
+2025-04-03 14:02:30,993 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 74, in setup
+    self.connection.executemany(
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 181, in get_cosmic_from_sanger
+    db.setup([extracted_file.split("/")[-1]], delimiter="\t", skip_header=True)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 81, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38
+2025-04-03 14:03:45,339 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 74, in setup
+    self.connection.executemany(
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 181, in get_cosmic_from_sanger
+    db.setup([extracted_file.split("/")[-1]], delimiter="\t", skip_header=False)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 81, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38
+2025-04-03 14:04:41,105 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 74, in setup
+    self.connection.executemany(
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 180, in get_cosmic_from_sanger
+    db.setup([extracted_file.split("/")[-1]], delimiter="\t", skip_header=False)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 81, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38
+2025-04-03 14:06:28,833 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 76, in setup
+    self.connection.executemany(
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 180, in get_cosmic_from_sanger
+    db.setup([extracted_file.split("/")[-1]], delimiter="\t", skip_header=False)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 83, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38
+2025-04-03 14:12:48,140 - CRITICAL - fusion_report.common.net - near ")": syntax error
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 61, in setup
+    self.create_database()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 88, in create_database
+    self.connection.executescript(schema.read().lower())
+sqlite3.OperationalError: near ")": syntax error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 180, in get_cosmic_from_sanger
+    db.setup([extracted_file.split("/")[-1]], delimiter="\t", skip_header=False)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 83, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: near ")": syntax error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: near ")": syntax error
+2025-04-03 14:13:55,337 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 76, in setup
+    self.connection.executemany(
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 72, in run
+    Download(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 22, in __init__
+    self.download_all(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/download.py", line 61, in download_all
+    Net.get_cosmic_from_sanger(self.cosmic_token, return_err, params.no_ssl, params.output)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/net.py", line 180, in get_cosmic_from_sanger
+    db.setup([extracted_file.split("/")[-1]], delimiter="\t", skip_header=False)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/common/db.py", line 83, in setup
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report/lib/python3.9/site-packages/fusion_report-2.1.5-py3.9.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38
+2025-04-03 15:32:54,888 - CRITICAL - fusion_report.common.net - near "SELECT": syntax error
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/common/db.py", line 96, in select
+    cur.execute(query)
+sqlite3.OperationalError: near "SELECT": syntax error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 60, in run
+    self.preprocess(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 84, in preprocess
+    self.enrich(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 127, in enrich
+    {CosmicDB(params.db_path).name: CosmicDB(params.db_path).get_all_fusions()}
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/data/cosmic.py", line 24, in get_all_fusions
+    res = self.select(query)
+          ^^^^^^^^^^^^^^^^^^
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/common/db.py", line 103, in select
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: near "SELECT": syntax error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: near "SELECT": syntax error
+2025-04-03 15:42:39,365 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/common/db.py", line 96, in select
+    cur.execute(query)
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 60, in run
+    self.preprocess(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 84, in preprocess
+    self.enrich(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 127, in enrich
+    {CosmicDB(params.db_path).name: CosmicDB(params.db_path).get_all_fusions()}
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/data/cosmic.py", line 23, in get_all_fusions
+    res = self.select(query)
+          ^^^^^^^^^^^^^^^^^^
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/common/db.py", line 103, in select
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38
+2025-04-03 15:43:45,384 - CRITICAL - fusion_report.common.net - no such table: cosmic_fusion_v101_grch38
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/common/db.py", line 96, in select
+    cur.execute(query)
+sqlite3.OperationalError: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 60, in run
+    self.preprocess(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 84, in preprocess
+    self.enrich(params)
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 127, in enrich
+    {CosmicDB(params.db_path).name: CosmicDB(params.db_path).get_all_fusions()}
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/data/cosmic.py", line 23, in get_all_fusions
+    res = self.select(query)
+          ^^^^^^^^^^^^^^^^^^
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/common/db.py", line 103, in select
+    raise DbException(ex)
+fusion_report.common.exceptions.db.DbException: no such table: cosmic_fusion_v101_grch38
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/annick.renevey/Projects/fusion-report/./bin/fusion_report", line 13, in <module>
+    app.run()
+  File "/Users/annick.renevey/anaconda3/envs/fusion-report_3.12/lib/python3.12/site-packages/fusion_report-0.0.0-py3.12.egg/fusion_report/app.py", line 79, in run
+    raise AppException(ex)
+fusion_report.common.exceptions.app.AppException: no such table: cosmic_fusion_v101_grch38

@@ -10,12 +10,6 @@ report different results.
 You can customize weight of individual tool by specific parameter `<tool-name>_weight 30`.
 The sum of the weights has to be 100!
 
-Weights for databases are as follows:
-
-* COSMIC (50)
-* MITELMAN (50)
-* FusionGDB2 (0)
-
 > It is strongly suggested to use all supported databases in order to get the best estimated Fusion Indication Index.
 >
 
@@ -26,6 +20,8 @@ The final formula for calculating the Fusion Indication Index is:
 $$
 Fusion Indication Index = 0.5 * \sum_{tool}^{tools provided} f(fusion, tool) + 0.5 * \sum_{db}^{dbs provided} g(fusion, db)*w(db)
 $$
+
+`Tools provided` is the sum of the tools that are passed as CLI arguments. `DBs provided` are the sum of the DBs that are considered.
 
 Weights for databases are as follows:
 
