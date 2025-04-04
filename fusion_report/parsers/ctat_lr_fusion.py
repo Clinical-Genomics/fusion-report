@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Tuple
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
 
-class Starfusion_lr(AbstractFusionTool):
+class Ctat_lr_fusion(AbstractFusionTool):
     """Star-Fusion Long Reads (Nanopore or PacBio) tool parser."""
 
     def set_header(self, header: str, delimiter: str | None = "\t"):

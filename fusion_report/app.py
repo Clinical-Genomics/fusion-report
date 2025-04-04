@@ -212,15 +212,13 @@ class App:
             "ericscript",
             "fusioncatcher",
             "starfusion",
-            "starfusion_lr",
+            "ctat_lr_fusion",
             "arriba",
             "pizzly",
             "squid",
             "dragen",
             "jaffa",
         ]:
-            value = getattr(params, tool, None)
-            print(f"Tool: {tool}, Value: {value}, Param name: {tool.replace('_', '-')}")
             if getattr(params, tool) is not None:
                 tools_provided += 1
 
