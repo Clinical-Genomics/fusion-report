@@ -1,5 +1,6 @@
 """Arriba module"""
-from typing import Any, Dict, List, Optional, Tuple
+
+from typing import Any, Dict, List, Tuple
 
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
@@ -7,7 +8,7 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Arriba(AbstractFusionTool):
     """Arriba tool parser."""
 
-    def set_header(self, header: str, delimiter: Optional[str] = "\t"):
+    def set_header(self, header: str, delimiter: str | None = "\t"):
         self.header: List[str] = header.strip().split(delimiter)
 
     def parse_multiple(self, left_fusion: str, right_fusion: str, delimiter: str) -> List[str]:
@@ -20,7 +21,7 @@ class Arriba(AbstractFusionTool):
 
         return fusions
 
-    def parse(self, line: str, delimiter: Optional[str] = "\t") -> List[Tuple[str, Dict[str, Any]]]:
+    def parse(self, line: str, delimiter: str | None = "\t") -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = [x.strip() for x in line.split(delimiter)]
         fusions = self.parse_multiple(
             col[self.header.index("#gene1")], col[self.header.index("gene2")], ","

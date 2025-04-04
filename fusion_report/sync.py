@@ -1,4 +1,5 @@
-""" Sync module """
+"""Sync module"""
+
 import os
 import time
 

@@ -1219,7 +1219,7 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
     <h1 class="h2">NPM1--ALK</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group mr-2">
-            <p class="mb-0">Generated 25/06/2024<br><strong>example-sample</strong></p>
+            <p class="mb-0">Generated 04/04/2025<br><strong>example-sample</strong></p>
         </div>
     </div>
 </div>
@@ -1230,6 +1230,9 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
                     <a class="nav-link active" onclick="toggleCard(this, 'card-summary')">Summary</a>
+                </li>
+                                <li class="nav-item">
+                    <a class="nav-link" onclick="toggleCard(this, 'card-ctat_lr_fusion')">ctat_lr_fusion</a>
                 </li>
                                 <li class="nav-item">
                     <a class="nav-link" onclick="toggleCard(this, 'card-fusioncatcher')">fusioncatcher</a>
@@ -1256,7 +1259,6 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
                         d="M256 416c-141.385 0-256-35.817-256-80v96c0 44.183 114.615 80 256 80s256-35.817 256-80v-96c0 44.183-114.615 80-256 80z">
                     </path>
                 </svg> Databases:
-                                <span class="badge badge-light">COSMIC</span>
                                 <span class="badge badge-light">Mitelman</span>
                                 <span class="badge badge-light">FusionGDB2</span>
                             </p>
@@ -1266,11 +1268,11 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
                     <path
                         d="M470.803 367.354l22.197-47.354h19l-32 192h-480v-37.121l165.773-195.606-165.773-165.773v-113.5h490l22 128h-17.188l-9.36-19.44c-17.659-36.682-30.952-44.56-69.452-44.56h-331l176.528 176.528-148.71 175.472h271.182c58.004 0 73.324-20.789 86.803-48.646z">
                     </path>
-                </svg> Score: <strong>0.625</strong> (<abbr title="attribute"
+                </svg> Fusion Indication Index (FII): <strong>0.625</strong> (<abbr title="attribute"
                     onclick="toggleView('score-explained')" style="font-style: italic">explain</abbr>) <br>
             </p>
             <p class="card-text" id="score-explained" style="display: none;">
-                <code>Explained score: 0.5 * (0.125 + 0.125) + 0.5 * (0.500 + 0.500 + 0.000)</code>
+                <code>Explained FII: 0.5 * (3 / 4) + 0.5 * (0.5 / 1)</code>
             </p>
         </div>
                 <div class="card-body" id="card-fusioncatcher" style="display: none">
@@ -1305,8 +1307,20 @@ e.mapbubble&&(e.mapbubble.prototype.exportKey="name");e.treemap&&(e.treemap.prot
                                     </dl>
             </p>
         </div>
+                <div class="card-body" id="card-ctat_lr_fusion" style="display: none">
+            <p class="card-text">
+                <dl class="row">
+                                        <dt class="col-sm-2">position</dt>
+                    <dd class="col-sm-10">5:171391799:+#2:29223528:-</dd>
+                                        <dt class="col-sm-2">num_LR</dt>
+                    <dd class="col-sm-10">1</dd>
+                                        <dt class="col-sm-2">ffmp</dt>
+                    <dd class="col-sm-10">239.1201</dd>
+                                    </dl>
+            </p>
+        </div>
                 <div class="card-body" id="card-raw" style="display: none">
-            <code>{'fusioncatcher': {'position': '5:171391799:+#2:29223528:-', 'common_mapping_reads': 0, 'spanning_pairs': 3, 'spanning_unique_reads': 3, 'longest_anchor': 30, 'fusion_type': 'in-frame'}, 'starfusion': {'position': '5:171391799:+#2:29223528:-', 'junction_reads': 1, 'spanning_reads': 2, 'ffmp': 239.1201}}</code>
+            <code>{'fusioncatcher': {'position': '5:171391799:+#2:29223528:-', 'common_mapping_reads': 0, 'spanning_pairs': 3, 'spanning_unique_reads': 3, 'longest_anchor': 30, 'fusion_type': 'in-frame'}, 'starfusion': {'position': '5:171391799:+#2:29223528:-', 'junction_reads': 1, 'spanning_reads': 2, 'ffmp': 239.1201}, 'ctat_lr_fusion': {'position': '5:171391799:+#2:29223528:-', 'num_LR': 1, 'ffmp': 239.1201}}</code>
         </div>
     </div>
 </section>                    </main>

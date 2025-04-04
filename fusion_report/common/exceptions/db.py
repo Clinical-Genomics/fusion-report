@@ -1,4 +1,4 @@
-""" Database Exception """
+"""Database Exception"""
 
 
 class DbException(Exception):

@@ -1,4 +1,4 @@
-""" Configuration Exception """
+"""Configuration Exception"""
 
 
 class ConfigException(Exception):

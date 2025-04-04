@@ -1,4 +1,4 @@
-""" Custom Module Exception """
+"""Custom Module Exception"""
 
 
 class ModuleException(Exception):

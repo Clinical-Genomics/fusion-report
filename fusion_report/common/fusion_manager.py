@@ -1,4 +1,5 @@
-""" Fusion Manager """
+"""Fusion Manager"""
+
 from typing import Any, Dict, List, Set, Tuple
 
 from fusion_report.common.exceptions.app import AppException

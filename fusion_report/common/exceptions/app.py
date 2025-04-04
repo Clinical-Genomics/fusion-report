@@ -1,4 +1,4 @@
-""" Application Exception """
+"""Application Exception"""
 
 
 class AppException(Exception):

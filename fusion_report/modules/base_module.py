@@ -1,4 +1,5 @@
 """Base module for CustomModules"""
+
 from typing import Any, Dict
 
 from fusion_report.common.fusion_manager import FusionManager

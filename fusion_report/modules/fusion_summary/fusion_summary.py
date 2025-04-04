@@ -1,4 +1,5 @@
 """Fusion summary module"""
+
 from typing import Any, Dict
 
 from fusion_report.modules.base_module import BaseModule

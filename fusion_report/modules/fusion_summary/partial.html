@@ -49,11 +49,11 @@
                     <path
                         d="M470.803 367.354l22.197-47.354h19l-32 192h-480v-37.121l165.773-195.606-165.773-165.773v-113.5h490l22 128h-17.188l-9.36-19.44c-17.659-36.682-30.952-44.56-69.452-44.56h-331l176.528 176.528-148.71 175.472h271.182c58.004 0 73.324-20.789 86.803-48.646z">
                     </path>
-                </svg> Score: <strong>{{ modules.fusion_summary.fusion.score }}</strong> (<abbr title="attribute"
+                </svg> Fusion Indication Index (FII): <strong>{{ modules.fusion_summary.fusion.score }}</strong> (<abbr title="attribute"
                     onclick="toggleView('score-explained')" style="font-style: italic">explain</abbr>) <br>
             </p>
             <p class="card-text" id="score-explained" style="display: none;">
-                <code>Explained score: {{ modules.fusion_summary.fusion.score_explained }}</code>
+                <code>Explained FII: {{ modules.fusion_summary.fusion.score_explained }}</code>
             </p>
         </div>
         {% for tool, findings in modules.fusion_summary.fusion.tools.items() %}

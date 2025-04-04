@@ -1,4 +1,5 @@
-""" Template wrapper """
+"""Template wrapper"""
+
 import os
 
 from pathlib import Path

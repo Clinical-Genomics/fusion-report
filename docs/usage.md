@@ -31,7 +31,7 @@ Dummy fusion detected by Squid: `15	34347968	34348134	19	15254151	15254264	.	9	-
 
 ## Set a custom weight for tool
 
-Each tool has a predefined weight when estimating score of a fusion. On default all tools have an equal weight
+Each tool has a predefined weight when estimating the Fusion Indication Index of a fusion. On default all tools have an equal weight
 `(100 / NUMBER_OF_RUNNING_TOOLS)`. To change the weights follow the steps below:
 
 ```bash

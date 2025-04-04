@@ -1,4 +1,5 @@
 """Mitelman Database"""
+
 from typing import List
 
 from fusion_report.common.db import Db

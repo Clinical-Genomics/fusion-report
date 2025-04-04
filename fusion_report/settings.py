@@ -5,9 +5,9 @@ from typing import Any, Dict
 
 class Settings:
     ROOT_DIR: str = os.path.dirname(os.path.abspath(__file__))
-    VERSION: str = "2.1.5"
     DATE_FORMAT: str = "%d/%m/%Y"
     THREAD_NUM: int = 2
+    VERSION: str = "3.1.2"
     FUSION_WEIGHTS: Dict[str, float] = {
         "cosmic": 0.50,
         "mitelman": 0.50,
@@ -16,9 +16,10 @@ class Settings:
 
     COSMIC: Dict[str, str] = {
         "NAME": "COSMIC",
-        "HOSTNAME": "https://cancer.sanger.ac.uk/cosmic/file_download/GRCh38/cosmic/v98",
+        "HOSTNAME": "https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?",
         "SCHEMA": "Cosmic.sql",
-        "FILE": "CosmicFusionExport.tsv.gz",
+        "TARFILE": "Cosmic_Fusion_Tsv_v101_GRCh38.tar",
+        "FILE": "Cosmic_Fusion_v101_GRCh38.tsv.gz",
     }
 
     FUSIONGDB2: Dict[str, str] = {

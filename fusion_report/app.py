@@ -1,4 +1,5 @@
 """Main app module"""
+
 import csv
 import os
 import sys
@@ -79,7 +80,7 @@ class App:
             raise AppException(ex)
 
     def preprocess(self, params: Namespace) -> None:
-        """Parse, enrich and score fusion."""
+        """Parse, enrich and calculate Fusion Indication Index of the fusion."""
         self.parse_fusion_outputs(vars(params))
         self.enrich(params)
         self.score(params)
@@ -157,7 +158,7 @@ class App:
                     output, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
                 )
                 # header
-                header = ["Fusion", "Databases", "Score", "Explained score"]
+                header = ["Fusion", "Databases", "Fusion Indication Index (FII)", "Explained FII"]
                 header.extend([x for x in sorted(self.manager.running_tools)])
                 csv_writer.writerow(header)
                 for fusion in self.manager.fusions:
@@ -202,15 +203,16 @@ class App:
                     output.write(f"{fusion.name}\n")
 
     def score(self, params: Namespace) -> None:
-        """Custom scoring function for individual fusion.
-        More information about the scoring function can be found in the documentation
-        at https://github.com/matq007/fusion-report/docs/scoring-fusion
+        """Custom Fusion Indication Index calculation for individual fusion.
+        More information about the Fusion Indication Index function can be found in the documentation
+        at https://github.com/Clinical-Genomics/fusion-report/blob/master/docs/score.md
         """
         tools_provided = 0
         for tool in [
             "ericscript",
             "fusioncatcher",
             "starfusion",
+            "ctat_lr_fusion",
             "arriba",
             "pizzly",
             "squid",
@@ -238,8 +240,8 @@ class App:
 
             db_score: float = db_hits / db_provided
 
-            score: float = float("%0.3f" % (0.8 * tool_score + 0.2 * db_score))
-            score_explained = f"0.8 * ({len(fusion.tools)} / {tools_provided}) + 0.2 * ({(db_hits)} / {db_provided})"
+            score: float = float("%0.3f" % (0.5 * tool_score + 0.5 * db_score))
+            score_explained = f"0.5 * ({len(fusion.tools)} / {tools_provided}) + 0.5 * ({(db_hits)} / {db_provided})"
             fusion.score, fusion.score_explained = score, score_explained
 
     @staticmethod
