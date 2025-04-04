@@ -20,7 +20,7 @@ setup(
     author="Martin Proks, Annick Renevey",
     url="https://github.com/Clinical-Genomics/fusion-report",
     license="GPL_v3",
-    packages=find_packages(include=['fusion_report', 'fusion_report.*']),
+    packages=find_packages(include=["fusion_report", "fusion_report.*"]),
     install_requires=INSTALL_REQUIREMENTS,
     zip_safe=False,
     scripts=["bin/fusion_report"],
