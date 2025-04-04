@@ -212,6 +212,7 @@ class App:
             "ericscript",
             "fusioncatcher",
             "starfusion",
+            "starfusion_lr",
             "arriba",
             "pizzly",
             "squid",
