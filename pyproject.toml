@@ -14,11 +14,7 @@ multi_line_output = 3
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+
+[tool.ruff.lint]
 select = ["E", "F", "B", "I"]
 ignore = []
-
-[tool.mypy]
-python_version = "3.12"
-strict = true
-warn_return_any = true
-warn_unused_configs = true

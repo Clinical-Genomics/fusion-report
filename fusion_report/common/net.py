@@ -89,7 +89,7 @@ class Net:
         token_request = (
             "curl -s -X POST "
             '-H "Content-Type: application/x-www-form-urlencoded" '
-            '-d "grant_type=password&client_id=603912630-14192122372034111918-SmRwso&username={uid}&password={pwd}" '
+            '-d "grant_type=password&client_id=603912630-14192122372034111918-SmRwso&username={uid}&password={pwd}" '  # noqa: E501
             '"https://apps.ingenuity.com/qiaoauth/oauth/token"'
         )
         cmd = token_request.format(uid=params.cosmic_usr, pwd=params.cosmic_passwd)
@@ -115,7 +115,7 @@ class Net:
                             out_file.write(chunk)
         except Exception as ex:
             LOG.error(f"Error downloading {url}, {ex}")
-            raise DownloadException(ex)
+            raise DownloadException(ex) from ex
 
     @staticmethod
     def get_cosmic_from_sanger_url(token: str, file_path: str) -> str:

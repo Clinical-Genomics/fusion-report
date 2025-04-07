@@ -108,9 +108,9 @@ class Config:
                         self.assets = data["assets"]
                         return self
                     except YAMLError as ex:
-                        raise ConfigException(ex)
+                        raise ConfigException(ex) from ex
             except IOError as ex:
-                raise ConfigException(ex)
+                raise ConfigException(ex) from ex
 
         return self
 

@@ -27,7 +27,7 @@ class ModuleLoader:
             variables["partial"] = os.path.join(f'{name.replace(".", "/")}', "partial.html")
             return variables
         except AttributeError as ex:
-            raise ModuleException(ex)
+            raise ModuleException(ex) from ex
 
     @staticmethod
     def __build_factory(name: str, manager: FusionManager, params=None):
