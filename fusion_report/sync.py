@@ -2,7 +2,6 @@
 
 import os
 import time
-
 from argparse import Namespace
 from multiprocessing import Manager, Process
 from typing import List
@@ -10,7 +9,6 @@ from typing import List
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.common.net import Net
-
 from fusion_report.settings import Settings
 
 

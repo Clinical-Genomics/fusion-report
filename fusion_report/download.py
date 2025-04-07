@@ -1,7 +1,6 @@
 """Download module"""
 
 import os
-
 from argparse import Namespace
 from typing import List
 

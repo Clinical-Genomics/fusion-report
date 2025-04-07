@@ -1,7 +1,6 @@
 """Module loader"""
 
 import os
-
 from typing import Any, Dict
 
 from fusion_report.common.exceptions.module import ModuleException
@@ -39,5 +38,5 @@ class ModuleLoader:
         """
         module_name: str = f'fusion_report.modules.{name}.{name.split(".")[-1]}'
         module = __import__(module_name, fromlist=["CustomModule"])
-        klass = getattr(module, "CustomModule")
+        klass = module.CustomModule
         return klass(manager, params)

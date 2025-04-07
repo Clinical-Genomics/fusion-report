@@ -5,7 +5,6 @@ from fusion_report.app import App
 from fusion_report.common.exceptions.app import AppException
 from fusion_report.common.logger import Logger
 
-
 if __name__ == "__main__":
     try:
         app = App()

@@ -2,7 +2,6 @@
 
 import os
 import sqlite3
-
 from typing import List
 
 from fusion_report.common.exceptions.db import DbException

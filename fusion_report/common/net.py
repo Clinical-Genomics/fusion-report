@@ -1,24 +1,25 @@
 import base64
 import glob
 import gzip
+import json
 import os
 import shutil
-import tarfile
-import requests
-import time
-import pandas as pd
-from zipfile import ZipFile
 import subprocess
-import json
+import tarfile
+import time
 from argparse import Namespace
 from typing import List
+from zipfile import ZipFile
+
+import pandas as pd
+import requests
 
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.data.cosmic import CosmicDB
-from fusion_report.settings import Settings
 from fusion_report.data.fusiongdb2 import FusionGDB2
 from fusion_report.data.mitelman import MitelmanDB
+from fusion_report.settings import Settings
 
 LOG = Logger(__name__)
 
@@ -231,7 +232,7 @@ class Net:
             Net.get_large_file(url, no_ssl)
             with ZipFile(Settings.MITELMAN["FILE"], "r") as archive:
                 files = [
-                    x for x in archive.namelist() if "MBCA.TXT.DATA" in x and not "MACOSX" in x
+                    x for x in archive.namelist() if "MBCA.TXT.DATA" in x and "MACOSX" not in x
                 ]
                 archive.extractall()
 

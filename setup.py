@@ -1,8 +1,5 @@
 from setuptools import find_packages, setup
 
-from fusion_report.settings import Settings
-
-
 PACKAGE_DATA = {"fusion_report": ["data/schema/*.sql" "arguments.json", "templates/*/*"]}
 
 with open("README.md") as f:

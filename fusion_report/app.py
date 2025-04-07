@@ -1,15 +1,13 @@
 """Main app module"""
 
 import csv
+import json
 import os
 import sys
 import time
-
 from argparse import Namespace
 from collections import defaultdict
 from typing import Any, Dict, List
-
-import json
 
 from tqdm import tqdm
 
