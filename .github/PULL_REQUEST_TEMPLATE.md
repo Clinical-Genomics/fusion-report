@@ -12,6 +12,8 @@ Thank you for contribution to `fusion-report` project.
 
 ### This [version](https://semver.org/) is a
 
+Add LEVEL in parenthesis to the commit message
+
 - [ ] **MAJOR** - when you make incompatible API changes
 - [ ] **MINOR** - when you add functionality in a backwards compatible manner
 - [ ] **PATCH** - when you make backwards compatible bug fixes or documentation/instructions
