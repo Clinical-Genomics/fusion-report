@@ -1,15 +1,13 @@
 """Main app module"""
 
 import csv
+import json
 import os
 import sys
 import time
-
 from argparse import Namespace
 from collections import defaultdict
 from typing import Any, Dict, List
-
-import json
 
 from tqdm import tqdm
 
@@ -42,7 +40,7 @@ class App:
             self.args = ArgsBuilder()
             self.manager = FusionManager(self.args.supported_tools)
         except IOError as ex:
-            raise AppException(ex)
+            raise AppException(ex) from ex
 
     def build_args(self):
         """Builds command-line arguments."""
@@ -77,7 +75,7 @@ class App:
             else:
                 sys.exit(f"Command {params.command} not recognized!")
         except (AppException, DbException, DownloadException, IOError) as ex:
-            raise AppException(ex)
+            raise AppException(ex) from ex
 
     def preprocess(self, params: Namespace) -> None:
         """Parse, enrich and calculate Fusion Indication Index of the fusion."""
@@ -204,8 +202,9 @@ class App:
 
     def score(self, params: Namespace) -> None:
         """Custom Fusion Indication Index calculation for individual fusion.
-        More information about the Fusion Indication Index function can be found in the documentation
-        at https://github.com/Clinical-Genomics/fusion-report/blob/master/docs/score.md
+        More information about the Fusion Indication Index function can be found
+        in the documentation at
+        https://github.com/Clinical-Genomics/fusion-report/blob/master/docs/score.md
         """
         tools_provided = 0
         for tool in [
@@ -241,7 +240,10 @@ class App:
             db_score: float = db_hits / db_provided
 
             score: float = float("%0.3f" % (0.5 * tool_score + 0.5 * db_score))
-            score_explained = f"0.5 * ({len(fusion.tools)} / {tools_provided}) + 0.5 * ({(db_hits)} / {db_provided})"
+            score_explained = (
+                f"0.5 * ({len(fusion.tools)} / {tools_provided}) + "
+                f"0.5 * ({db_hits} / {db_provided})"
+            )
             fusion.score, fusion.score_explained = score, score_explained
 
     @staticmethod

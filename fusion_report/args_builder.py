@@ -1,11 +1,9 @@
 """Command-line argument wrapper"""
 
+import json
 import os
-
 from argparse import ArgumentParser, Namespace, _SubParsersAction
 from typing import Any, Dict
-
-import json
 
 from fusion_report.settings import Settings
 

@@ -1,24 +1,25 @@
 import base64
 import glob
 import gzip
+import json
 import os
 import shutil
-import tarfile
-import requests
-import time
-import pandas as pd
-from zipfile import ZipFile
 import subprocess
-import json
+import tarfile
+import time
 from argparse import Namespace
 from typing import List
+from zipfile import ZipFile
+
+import pandas as pd
+import requests
 
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
 from fusion_report.data.cosmic import CosmicDB
-from fusion_report.settings import Settings
 from fusion_report.data.fusiongdb2 import FusionGDB2
 from fusion_report.data.mitelman import MitelmanDB
+from fusion_report.settings import Settings
 
 LOG = Logger(__name__)
 
@@ -88,7 +89,7 @@ class Net:
         token_request = (
             "curl -s -X POST "
             '-H "Content-Type: application/x-www-form-urlencoded" '
-            '-d "grant_type=password&client_id=603912630-14192122372034111918-SmRwso&username={uid}&password={pwd}" '
+            '-d "grant_type=password&client_id=603912630-14192122372034111918-SmRwso&username={uid}&password={pwd}" '  # noqa: E501
             '"https://apps.ingenuity.com/qiaoauth/oauth/token"'
         )
         cmd = token_request.format(uid=params.cosmic_usr, pwd=params.cosmic_passwd)
@@ -114,7 +115,7 @@ class Net:
                             out_file.write(chunk)
         except Exception as ex:
             LOG.error(f"Error downloading {url}, {ex}")
-            raise DownloadException(ex)
+            raise DownloadException(ex) from ex
 
     @staticmethod
     def get_cosmic_from_sanger_url(token: str, file_path: str) -> str:
@@ -231,7 +232,7 @@ class Net:
             Net.get_large_file(url, no_ssl)
             with ZipFile(Settings.MITELMAN["FILE"], "r") as archive:
                 files = [
-                    x for x in archive.namelist() if "MBCA.TXT.DATA" in x and not "MACOSX" in x
+                    x for x in archive.namelist() if "MBCA.TXT.DATA" in x and "MACOSX" not in x
                 ]
                 archive.extractall()
 

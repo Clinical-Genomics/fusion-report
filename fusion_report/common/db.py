@@ -2,7 +2,6 @@
 
 import os
 import sqlite3
-
 from typing import List
 
 from fusion_report.common.exceptions.db import DbException
@@ -39,7 +38,7 @@ class Db:
             connection.row_factory = self.__dict_factory
             return connection
         except sqlite3.DatabaseError as ex:
-            raise DbException(ex)
+            raise DbException(ex) from ex
 
     def setup(
         self, files: List[str], delimiter: str = "", skip_header=False, encoding="utf-8"
@@ -77,7 +76,7 @@ class Db:
                     )
                     self.connection.commit()
         except (IOError, sqlite3.Error) as ex:
-            raise DbException(ex)
+            raise DbException(ex) from ex
 
     def create_database(self):
         """Build database from schema file."""
@@ -101,7 +100,7 @@ class Db:
                 cur.close()
                 return res
         except sqlite3.OperationalError as ex:
-            raise DbException(ex)
+            raise DbException(ex) from ex
 
     def execute(self, query: str, params: List[str] = None):
         """Execute SQL statement. Can be anything like INSERT/UPDATE/DELETE ...
@@ -118,7 +117,7 @@ class Db:
                     cur.execute(query, params)
                 self.connection.commit()
         except sqlite3.Error as ex:
-            raise DbException(ex)
+            raise DbException(ex) from ex
 
     @property
     def schema(self):

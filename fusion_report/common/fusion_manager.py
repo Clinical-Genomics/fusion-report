@@ -42,7 +42,7 @@ class FusionManager:
                         for fusion_name, details in fusion_list:
                             self.add(fusion_name, tool, details)
             except IOError as ex:
-                raise AppException(ex)
+                raise AppException(ex) from ex
         else:
             Logger(__name__).error(
                 "Tool %s is not supported. To integrate the tool please create an issue",
@@ -84,7 +84,7 @@ class FusionManager:
             klass = getattr(module, tool.capitalize())
             return klass()
         except AttributeError as ex:
-            raise AppException(ex)
+            raise AppException(ex) from ex
 
     def index_by(self, value: str) -> int:
         """Helper for finding fusion based on its name.

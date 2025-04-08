@@ -1,13 +1,14 @@
 """Star-Fusion Long Reads module."""
 
 from typing import Any, Dict, List, Tuple
+
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
 
 class Ctat_lr_fusion(AbstractFusionTool):
     """Star-Fusion Long Reads (Nanopore or PacBio) tool parser."""
 
-    def set_header(self, header: str, delimiter: str | None = "\t"):
+    def set_header(self, header: str, delimiter: str | None = "\t") -> None:
         self.header: List[str] = header.strip().split(delimiter)
 
     def parse(self, line: str, delimiter: str | None = "\t") -> List[Tuple[str, Dict[str, Any]]]:
