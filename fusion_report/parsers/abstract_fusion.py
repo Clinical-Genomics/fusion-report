@@ -8,7 +8,7 @@ class AbstractFusionTool(metaclass=abc.ABCMeta):
     """Abstract class requiring to implement parse method for every fusion detection tool parser."""
 
     @abc.abstractmethod
-    def set_header(self, header: str, delimiter: str | None = None):
+    def set_header(self, header: str, delimiter: str | None = None) -> None:
         """Set header."""
 
     @abc.abstractmethod

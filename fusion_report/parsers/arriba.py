@@ -8,7 +8,7 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Arriba(AbstractFusionTool):
     """Arriba tool parser."""
 
-    def set_header(self, header: str, delimiter: str | None = "\t"):
+    def set_header(self, header: str, delimiter: str | None = "\t") -> None:
         self.header: List[str] = header.strip().split(delimiter)
 
     def parse_multiple(self, left_fusion: str, right_fusion: str, delimiter: str) -> List[str]:

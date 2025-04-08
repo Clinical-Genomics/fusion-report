@@ -8,7 +8,7 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Jaffa(AbstractFusionTool):
     """Jaffa tool parser."""
 
-    def set_header(self, header: str, delimiter: str | None = ","):
+    def set_header(self, header: str, delimiter: str | None = ",") -> None:
         self.header: List[str] = header.strip().split(delimiter)
 
     def parse(self, line: str, delimiter: str | None = ",") -> List[Tuple[str, Dict[str, Any]]]:

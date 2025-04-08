@@ -8,7 +8,7 @@ from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 class Squid(AbstractFusionTool):
     """Squid tool parser."""
 
-    def set_header(self, header: str, delimiter: str | None = "\t"):
+    def set_header(self, header: str, delimiter: str | None = "\t") -> None:
         self.header: List[str] = header.strip().split(delimiter)
 
     def parse_multiple(self, col: str, delimiter: str) -> List[str]:

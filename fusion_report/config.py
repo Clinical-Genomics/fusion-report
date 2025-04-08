@@ -23,8 +23,8 @@ class Config:
     """
 
     def __init__(self) -> None:
-        self._report_title = "nfcore/rnafusion summary report"
-        self.logos = self._load_logos()
+        self._report_title: str = "nfcore/rnafusion summary report"
+        self.logos: Dict[str, str] = self._load_logos()
         self._institution: Dict[str, Any] = {}
         self._date: str = datetime.now().strftime(Settings.DATE_FORMAT)
         self._assets: Dict[str, List[str]] = {}
@@ -101,16 +101,16 @@ class Config:
             try:
                 with open(path, "r", encoding="utf-8") as in_file:
                     try:
-                        data = safe_load(in_file)
+                        data: Dict[str, Any] = safe_load(in_file)
                         self.report_title = data["report_title"]
                         self.institution = data["institution"]
                         self.date = data["date_format"]
                         self.assets = data["assets"]
                         return self
                     except YAMLError as ex:
-                        raise ConfigException(ex) from ex
+                        raise ConfigException(f"YAML parsing error: {ex}") from ex
             except IOError as ex:
-                raise ConfigException(ex) from ex
+                raise ConfigException(f"Failed to read config file: {ex}") from ex
 
         return self
 
