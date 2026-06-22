@@ -1,6 +1,5 @@
 """Cosmic Database"""
 
-import re
 from typing import List
 
 from fusion_report.common.db import Db
@@ -19,10 +18,7 @@ class CosmicDB(Db, metaclass=Singleton):
         query: str = '''SELECT DISTINCT
                             FIVE_PRIME_GENE_SYMBOL || '--' || THREE_PRIME_GENE_SYMBOL AS fusion_pair
                         FROM cosmic_fusion_v101_grch38
-                        WHERE fusion_pair != ""'''
+                        WHERE FIVE_PRIME_GENE_SYMBOL != "" AND THREE_PRIME_GENE_SYMBOL != ""'''
         res = self.select(query)
 
-        return [
-            "--".join(re.findall(r"\(.*?\)", x["fusion_pair"])).replace("(", "").replace(")", "")
-            for x in res
-        ]
+        return [x["fusion_pair"] for x in res if x["fusion_pair"]]

@@ -2,6 +2,7 @@
 
 * [Quick start](README.md)
 * [Download resources](download.md)
+* [Create databases from local files](createdb.md)
 * [Running the tool](usage.md)
 * [Fusion Indication Index](score.md)
 

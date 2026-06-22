@@ -1,6 +1,7 @@
 # Running the tool
 
 > Before running the tool make sure you have downloaded all the necessary resources!
+> You can either use [`fusion_report download`](download.md) or [`fusion_report createdb`](createdb.md) to set up the databases.
 
 ## Run all fusion detection tools
 
@@ -48,5 +49,4 @@ fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ \
 fusion_report --help
 fusion_report run --help
 fusion_report download --help
-fusion_report sync --help
 ```

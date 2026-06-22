@@ -1,7 +1,9 @@
 default_language_version:
     python: python3.12
 default_stages: [commit, push]
-minimum_pre_commit_version: "3.6.0"
+
+# Generated example reports are checked in verbatim; don't lint their formatting.
+exclude: '^docs/example/'
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks

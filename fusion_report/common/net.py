@@ -66,9 +66,14 @@ class Net:
             '-H "Content-Type: application/octet-stream" '
             '-H "Authorization: Bearer {token}" '
             '"https://my.qiagendigitalinsights.com/bbp/data/download/cosmic-download?name={file_id}"'
-            " -o {output_path}Cosmic_Fusion_v101_GRCh38.tsv.gz"
+            " -o {output_path}{cosmic_file}"
         )
-        cmd = file_request.format(token=token, file_id=file_id, output_path=output_path)
+        cmd = file_request.format(
+            token=token,
+            file_id=file_id,
+            output_path=output_path,
+            cosmic_file=Settings.COSMIC["FILE"],
+        )
         Net.run_qiagen_cmd(cmd, True, True)
 
     @staticmethod
@@ -145,8 +150,7 @@ class Net:
         """Extracts a specific file from a tar archive."""
         try:
             with tarfile.open(file_path, "r:") as tar:
-                # Find the specific file
-                target_file = "Cosmic_Fusion_v101_GRCh38.tsv.gz"
+                target_file = Settings.COSMIC["FILE"]
                 if target_file in tar.getnames():
                     tar.extract(target_file, path=extract_to)
                     extracted_path = os.path.join(extract_to, target_file)
@@ -162,8 +166,7 @@ class Net:
     @staticmethod
     def get_cosmic_from_sanger(token: str, return_err: List[str], no_ssl, outputpath) -> None:
         """Downloads the COSMIC database from the Sanger website."""
-        file_name = "grch38/cosmic/v101/" + Settings.COSMIC["TARFILE"]
-        file_path = f"{file_name}"
+        file_path = f"grch38/cosmic/{Settings.COSMIC['VERSION']}/{Settings.COSMIC['TARFILE']}"
         try:
             download_url = Net.get_cosmic_from_sanger_url(token, file_path=file_path)
 
@@ -174,8 +177,12 @@ class Net:
             Net.get_large_file(download_url, no_ssl)
             Net.extract_tar(Settings.COSMIC["TARFILE"], ".")
             extracted_file = Net.extract_gz("." + "/" + Settings.COSMIC["FILE"])
+            renamed_file = os.path.join(
+                os.path.dirname(extracted_file), "cosmic_fusion_v101_grch38.tsv"
+            )
+            os.rename(extracted_file, renamed_file)
             db = CosmicDB(".")
-            db.setup([extracted_file.split("/")[-1]], delimiter="\t", skip_header=False)
+            db.setup([os.path.basename(renamed_file)], delimiter="\t", skip_header=True)
 
         except requests.exceptions.RequestException as req_err:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {req_err}')
@@ -201,8 +208,10 @@ class Net:
             with gzip.open(file, "rb") as archive, open(files[0], "wb") as out_file:
                 shutil.copyfileobj(archive, out_file)
 
+            renamed_file = "cosmic_fusion_v101_grch38.tsv"
+            os.rename(files[0], renamed_file)
             db = CosmicDB(".")
-            db.setup(files, delimiter="\t", skip_header=True)
+            db.setup([renamed_file], delimiter="\t", skip_header=True)
         except Exception as ex:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
 
@@ -213,8 +222,9 @@ class Net:
             url: str = f'{Settings.FUSIONGDB2["HOSTNAME"]}/{Settings.FUSIONGDB2["FILE"]}'
             Net.get_large_file(url, no_ssl)
             file: str = f'{Settings.FUSIONGDB2["FILE"]}'
-            df = pd.read_excel(file, engine="openpyxl")
-            df["fusion"] = df["5'-gene (text format)"] + "--" + df["3'-gene (text format)"]
+            # Headerless 6-column TSV: col2 = 5'-gene, col4 = 3'-gene (0-indexed)
+            df = pd.read_csv(file, sep="\t", header=None)
+            df["fusion"] = df[2] + "--" + df[4]
             file_csv = "fusionGDB2.csv"
             df["fusion"].to_csv(file_csv, header=False, index=False, sep=",", encoding="utf-8")
 

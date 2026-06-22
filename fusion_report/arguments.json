@@ -141,6 +141,28 @@
                     "action": "store_true"
                 }
             ]
+        },
+        "createdb": {
+            "mandatory": [
+                {
+                    "key": "output",
+                    "help": "Output directory for generated database files"
+                }
+            ],
+            "optionals": [
+                {
+                    "key": "--cosmic",
+                    "help": "Path to COSMIC fusion TSV file (plain or gzipped)"
+                },
+                {
+                    "key": "--mitelman",
+                    "help": "Path to Mitelman database ZIP or extracted MBCA.TXT.DATA file"
+                },
+                {
+                    "key": "--fusiongdb2",
+                    "help": "Path to FusionGDB2 XLSX or pre-processed CSV file"
+                }
+            ]
         }
     }
 }

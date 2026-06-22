@@ -6,7 +6,7 @@ class Settings:
     ROOT_DIR: str = os.path.dirname(os.path.abspath(__file__))
     DATE_FORMAT: str = "%d/%m/%Y"
     THREAD_NUM: int = 2
-    VERSION: str = "4.0.1"
+    VERSION: str = "4.1.2"
     FUSION_WEIGHTS: Dict[str, float] = {
         "cosmic": 0.50,
         "mitelman": 0.50,
@@ -15,8 +15,9 @@ class Settings:
 
     COSMIC: Dict[str, str] = {
         "NAME": "COSMIC",
-        "HOSTNAME": "https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?",
+        "HOSTNAME": "https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted",
         "SCHEMA": "Cosmic.sql",
+        "VERSION": "v101",
         "TARFILE": "Cosmic_Fusion_Tsv_v101_GRCh38.tar",
         "FILE": "Cosmic_Fusion_v101_GRCh38.tsv.gz",
     }
@@ -24,8 +25,8 @@ class Settings:
     FUSIONGDB2: Dict[str, str] = {
         "NAME": "FusionGDB2",
         "SCHEMA": "FusionGDB2.sql",
-        "HOSTNAME": "https://compbio.uth.edu/FusionGDB2/tables",
-        "FILE": "FusionGDB2_id.xlsx",
+        "HOSTNAME": "https://compbio.uth.edu/FusionGDB/combined_tables",
+        "FILE": "combinedFGDB2genes_genes_ID_04302024.txt",
     }
 
     MITELMAN: Dict[str, str] = {

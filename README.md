@@ -65,7 +65,6 @@ Or get help and list all possible parameters.
 fusion_report --help
 fusion_report run --help
 fusion_report download --help
-fusion_report sync --help
 ```
 
 For more info on how to run the script, please see the [documentation](https://matq007.github.io/fusion-report/).

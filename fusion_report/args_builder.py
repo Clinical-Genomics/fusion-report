@@ -43,7 +43,7 @@ class ArgsBuilder:
         """Build command-line arguments."""
         self.run_args(self.arguments["args"]["run"], self.arguments["weight"])
         self.download_args(self.arguments["args"]["download"])
-        self.sync_args(self.arguments["args"]["download"])
+        self.createdb_args(self.arguments["args"]["createdb"])
 
     def run_args(self, args, weight) -> None:
         """Build run command-line arguments."""
@@ -124,13 +124,21 @@ class ArgsBuilder:
 
         self._cosmic(args, download_parser)
 
-    def sync_args(self, args: Dict[str, Any]) -> None:
-        """Build sync command-line arguments."""
-        download_parser = self.command_parser.add_parser("sync", help="Synchronize databases")
+    def createdb_args(self, args: Dict[str, Any]) -> None:
+        """Build createdb command-line arguments."""
+        createdb_parser = self.command_parser.add_parser(
+            "createdb", help="Create databases from local files"
+        )
         for mandatory in args["mandatory"]:
-            download_parser.add_argument(mandatory["key"], help=mandatory["help"], type=str)
+            createdb_parser.add_argument(mandatory["key"], help=mandatory["help"], type=str)
 
-        self._cosmic(args, download_parser)
+        db_group = createdb_parser.add_argument_group(
+            "Database files",
+            "Provide at least one database file to build. "
+            "Only databases with a provided file will be created.",
+        )
+        for optional in args["optionals"]:
+            db_group.add_argument(optional["key"], help=optional["help"], type=str, default=None)
 
     def _cosmic(self, args: Dict[str, Any], parser) -> None:
         """Build COSMIC command-line arguments."""

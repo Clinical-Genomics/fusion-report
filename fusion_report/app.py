@@ -19,12 +19,12 @@ from fusion_report.common.fusion_manager import FusionManager
 from fusion_report.common.logger import Logger
 from fusion_report.common.models.fusion import Fusion
 from fusion_report.common.report import Report
+from fusion_report.createdb import CreateDB
 from fusion_report.data.cosmic import CosmicDB
 from fusion_report.data.fusiongdb2 import FusionGDB2
 from fusion_report.data.mitelman import MitelmanDB
 from fusion_report.download import Download
 from fusion_report.settings import Settings
-from fusion_report.sync import Sync
 
 
 class App:
@@ -69,9 +69,9 @@ class App:
             elif params.command == "download":
                 Logger(__name__).info("Downloading resources...")
                 Download(params)
-            elif params.command == "sync":
-                Logger(__name__).info("Synchronizing databases...")
-                Sync(params)
+            elif params.command == "createdb":
+                Logger(__name__).info("Creating databases from local files...")
+                CreateDB(params)
             else:
                 sys.exit(f"Command {params.command} not recognized!")
         except (AppException, DbException, DownloadException, IOError) as ex:
