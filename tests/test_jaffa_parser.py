@@ -4,7 +4,6 @@ from pathlib import Path
 
 from fusion_report.parsers.jaffa import Jaffa
 
-
 TEST_DATA_DIR = Path(__file__).parent / "test_data"
 
 
