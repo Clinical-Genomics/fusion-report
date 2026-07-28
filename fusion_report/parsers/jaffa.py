@@ -1,5 +1,6 @@
 """Jaffa module"""
 
+import re
 from typing import Any, Dict, List, Optional, Tuple
 
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
@@ -24,13 +25,20 @@ class Jaffa(AbstractFusionTool):
     def _is_true(value: str) -> bool:
         return value.strip().lower() in {"yes", "true", "1", "y"}
 
+    @staticmethod
+    def _parse_fusion(fusion_genes: str) -> str:
+        """Normalize JAFFA fusion separators and return GENE1--GENE2 format."""
+        parts = [x.strip() for x in re.split(r"::|:", fusion_genes) if x.strip()]
+        if len(parts) >= 2:
+            return f"{parts[0]}--{parts[1]}"
+        return fusion_genes.strip().replace("::", "--").replace(":", "--")
+
     def parse(
         self, line: str, delimiter: Optional[str] = ","
     ) -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = [x.strip() for x in line.split(delimiter)]
 
-        fusions = col[self.header.index("fusion genes")].split(":")
-        fusion: str = "--".join([fusions[0], fusions[1]])
+        fusion: str = self._parse_fusion(col[self.header.index("fusion genes")])
 
         known: str = self._value(col, "known")
         known_mitelman: str = self._value(col, "known mitelman")

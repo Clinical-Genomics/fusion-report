@@ -43,6 +43,20 @@ class TestJaffaParser(unittest.TestCase):
         self.assertEqual(details["cosmic_tier"], "1")
         self.assertEqual(details["gtex_samples"], "0")
 
+    def test_parse_double_colon_fusion_delimiter(self):
+        """Newer JAFFA outputs using '::' separators are parsed correctly."""
+        fixture_path = TEST_DATA_DIR / "jaffa_new.csv"
+        parser = Jaffa()
+
+        with fixture_path.open("r", encoding="utf-8") as fixture:
+            parser.set_header(fixture.readline().strip())
+            row = fixture.readline().strip().replace("GOPC:ROS1", "GOPC::ROS1", 1)
+
+        fusion_name, details = parser.parse(row)[0]
+
+        self.assertEqual(fusion_name, "GOPC--ROS1")
+        self.assertEqual(details["known"], "Yes")
+
 
 if __name__ == "__main__":
     unittest.main()
