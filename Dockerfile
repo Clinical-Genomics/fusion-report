@@ -4,9 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN apt-get update
-
-RUN apt-get install -y --no-install-recommends sqlite3 \
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends sqlite3 procps \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir -r requirements.txt \
