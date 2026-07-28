@@ -1,0 +1,2 @@
+sample,fusion genes,chrom1,base1,strand1,chrom2,base2,strand2,gap (kb),spanning pairs,spanning reads,inframe,aligns,rearrangement,contig,contig break,classification,geneCounts1,geneCounts2,known mitelman,known cosmic,cosmic tier,gtex samples
+reads,GOPC::ROS1,chr6,117566854,-,chr6,117321394,-,245.461,65,11,TRUE,TRUE,FALSE,9HL/1,48,HighConfidence,4,5,No,Yes,1,0

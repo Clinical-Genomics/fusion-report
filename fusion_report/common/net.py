@@ -190,7 +190,7 @@ class Net:
             return_err.append(f"Error processing request: {json_err}")
 
     @staticmethod
-    def get_cosmic_from_qiagen(token: str, return_err: List[str], outputpath: str) -> None:
+    def get_cosmic_from_qiagen(token: str, return_err: List[str], outputpath: str, no_ssl) -> None:
         """Method for download COSMIC database from QIAGEN."""
         try:
             Net.get_qiagen_files(token, outputpath)
@@ -252,17 +252,16 @@ class Net:
             return_err.append(f"Mitelman: {ex}")
 
     @staticmethod
-    def clean():
-        """Remove all files except *db and move to output dir."""
-        for temp in glob.glob("*.db"):
-            shutil.copy(temp, "../")
-        os.chdir("../")
-        shutil.rmtree("tmp_dir")
+    def clean(tmp_dir: str, output_dir: str):
+        """Move generated databases to output and remove temporary download directory."""
+        for temp in glob.glob(os.path.join(tmp_dir, "*.db")):
+            shutil.copy(temp, output_dir)
+        shutil.rmtree(tmp_dir, ignore_errors=True)
 
     @staticmethod
-    def timestamp():
+    def timestamp(output_dir: str = "."):
         """Create a timestamp file at DB creation"""
         timestr = time.strftime("%Y-%m-%d/%H:%M")
-        text_file = open("DB-timestamp.txt", "w")
+        text_file = open(os.path.join(output_dir, "DB-timestamp.txt"), "w")
         text_file.write(timestr)
         text_file.close()
