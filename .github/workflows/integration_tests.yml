@@ -1,0 +1,116 @@
+name: Integration Tests
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  test-no-cosmic:
+    name: Integration test (Mitelman + FusionGDB2)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies & package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+          python setup.py install
+
+      - name: Download databases (no COSMIC)
+        run: fusion_report download --no-cosmic ./db
+
+      - name: Test run (no COSMIC)
+        run: |
+          fusion_report run "example-sample" ./docs/example ./db/ \
+            --no-cosmic \
+            --arriba tests/test_data/arriba.tsv \
+            --fusioncatcher tests/test_data/fusioncatcher.txt \
+            --starfusion tests/test_data/starfusion.tsv \
+            --ctat_lr_fusion tests/test_data/ctat_lr_fusion.tsv \
+            --export csv
+
+      - name: Verify output exists
+        run: |
+          test -f ./docs/example/fusions.csv && echo "CSV export OK"
+          test -f ./docs/example/index.html && echo "Report OK"
+
+  test-full:
+    name: Integration test (all databases)
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies & package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+          python setup.py install
+
+      - name: Download all databases
+        run: fusion_report download --cosmic_usr "${{ secrets.COSMIC_USERNAME }}" --cosmic_passwd "${{ secrets.COSMIC_PASSWD }}" ./db
+
+      - name: Test run (all databases)
+        run: |
+          fusion_report run "example-sample" ./docs/example ./db/ \
+            --arriba tests/test_data/arriba.tsv \
+            --fusioncatcher tests/test_data/fusioncatcher.txt \
+            --starfusion tests/test_data/starfusion.tsv \
+            --ctat_lr_fusion tests/test_data/ctat_lr_fusion.tsv \
+            --export csv
+
+  test-createdb:
+    name: Integration test (createdb from local files)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies & package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+          python setup.py install
+
+      - name: Download raw database files
+        run: |
+          mkdir -p raw_files
+          wget -q "https://storage.googleapis.com/mitelman-data-files/prod/mitelman_db.zip" -O raw_files/mitelman_db.zip
+          wget -q "https://compbio.uth.edu/FusionGDB/combined_tables/combinedFGDB2genes_genes_ID_04302024.txt" -O raw_files/combinedFGDB2genes_genes_ID_04302024.txt
+
+      - name: Create databases from local files
+        run: |
+          fusion_report createdb ./db \
+            --mitelman raw_files/mitelman_db.zip \
+            --fusiongdb2 raw_files/combinedFGDB2genes_genes_ID_04302024.txt
+
+      - name: Verify databases created
+        run: |
+          test -f ./db/mitelman.db && echo "Mitelman DB OK"
+          test -f ./db/fusiongdb2.db && echo "FusionGDB2 DB OK"
+          test -f ./db/DB-timestamp.txt && echo "Timestamp OK"
+
+      - name: Test run with created databases
+        run: |
+          fusion_report run "example-sample" ./docs/example ./db/ \
+            --no-cosmic \
+            --arriba tests/test_data/arriba.tsv \
+            --fusioncatcher tests/test_data/fusioncatcher.txt \
+            --starfusion tests/test_data/starfusion.tsv \
+            --ctat_lr_fusion tests/test_data/ctat_lr_fusion.tsv \
+            --export csv

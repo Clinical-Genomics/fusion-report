@@ -18,7 +18,7 @@ class Test(AbstractFusionTool):
         fusion: str = f'{col[0]}'
         details: Dict[str, Any] = {
             'position': f'{col[2]}#{col[3]}'.replace('chr', ''),
-            'score': int(col[1]),
+            'FII': int(col[1]),
         }
 
         return fusion, details

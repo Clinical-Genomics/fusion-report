@@ -1,8 +1,10 @@
 # Download resources
 
+> If you already have the database files locally, you can use [`fusion_report createdb`](createdb.md) to build databases without downloading.
+
 Currently the tool supports three different databases:
 
-* [FusionGDB](https://ccsm.uth.edu/FusionGDB/index.html)
+* [FusionGDB2](https://compbio.uth.edu/FusionGDB/combined_tables/combinedFGDB2genes_genes_ID_04302024.txt)
 * [Mitelman](https://cgap.nci.nih.gov/Chromosomes/Mitelman)
 * [COSMIC](https://cancer.sanger.ac.uk/cosmic/fusion)
 
@@ -15,23 +17,26 @@ fusion_report download
     /path/to/db
 ```
 
-## Manual download
-
-### FusionGDB
-
-Website: [https://ccsm.uth.edu/FusionGDB/index.html](https://ccsm.uth.edu/FusionGDB/index.html)
+With a non-academic/research login -> using QIAGEN with a commercial license:
 
 ```bash
-# Download all files
-wget --no-check-certificate https://ccsm.uth.edu/FusionGDB/tables/TCGA_ChiTaRS_combined_fusion_information_on_hg19.txt -O TCGA_ChiTaRS_combined_fusion_information_on_hg19.txt
-wget --no-check-certificate https://ccsm.uth.edu/FusionGDB/tables/TCGA_ChiTaRS_combined_fusion_ORF_analyzed_gencode_h19v19.txt -O TCGA_ChiTaRS_combined_fusion_ORF_analyzed_gencode_h19v19.txt
-wget --no-check-certificate https://ccsm.uth.edu/FusionGDB/tables/uniprot_gsymbol.txt -O uniprot_gsymbol.txt
-wget --no-check-certificate https://ccsm.uth.edu/FusionGDB/tables/fusion_uniprot_related_drugs.txt -O fusion_uniprot_related_drugs.txt
-wget --no-check-certificate https://ccsm.uth.edu/FusionGDB/tables/fusion_ppi.txt -O fusion_ppi.txt
-wget --no-check-certificate https://ccsm.uth.edu/FusionGDB/tables/fgene_disease_associations.txt -O fgene_disease_associations.txt
-# Create database and import the data
-sqlite3 fusiongdb.db < fusion_report/db/FusionGDB.sql
+fusion_report download
+    --cosmic_usr '<QIAGEN username>'
+    --cosmic_passwd 'QIAGEN <password>'
+    --qiagen
+    /path/to/db
 ```
+
+You can exclude a specific database with --no-cosmic/--no-mitelman/--no-fusiongdb2. Exemple for no cosmic:
+
+```bash
+fusion_report download
+    --no-cosmic
+    /path/to/db
+```
+
+
+## Manual download
 
 ### Mitelman
 

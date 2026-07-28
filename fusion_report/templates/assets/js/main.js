@@ -61,7 +61,7 @@ let progressFormatter = function(cell, formatterParams) {
     let progressValue = ("delimiter" in formatterParams ? value / formatterParams.delimiter : value) * 100;
     let style = "style" in formatterParams ? formatterParams.style : "bg-primary";
     return `<div class="progress">
-                <div class="progress-bar ${style}" role="progressbar" style="width: ${progressValue}%;" 
+                <div class="progress-bar ${style}" role="progressbar" style="width: ${progressValue}%;"
                     aria-valuenow="${progressValue}" aria-valuemin="0" aria-valuemax="100">
                     ${value}
                 </div>
@@ -120,7 +120,7 @@ function toggleCard(currentLink, id) {
     let prevActive = document.getElementsByClassName("card-header")[0].querySelector(".active");
     prevActive.className = "nav-link";
     currentLink.className = "nav-link active";
-    
+
     let allCards = document.getElementsByClassName("card-body");
     Array.from(allCards).map(function(card) {
         card.style.display = "none";

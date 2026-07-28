@@ -1,47 +1,32 @@
 import os
-
-from typing import Any, Dict
+from typing import Dict
 
 
 class Settings:
-
     ROOT_DIR: str = os.path.dirname(os.path.abspath(__file__))
-    VERSION: str = "2.1.5"
     DATE_FORMAT: str = "%d/%m/%Y"
     THREAD_NUM: int = 2
+    VERSION: str = "4.1.3"
     FUSION_WEIGHTS: Dict[str, float] = {
-        "fusiongdb": 0.20,
-        "cosmic": 0.40,
-        "mitelman": 0.40,
+        "cosmic": 0.50,
+        "mitelman": 0.50,
         "fusiongdb2": 0.0,
     }
 
     COSMIC: Dict[str, str] = {
         "NAME": "COSMIC",
-        "HOSTNAME": "https://cancer.sanger.ac.uk/cosmic/file_download/GRCh38/cosmic/v95",
+        "HOSTNAME": "https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted",
         "SCHEMA": "Cosmic.sql",
-        "FILE": "CosmicFusionExport.tsv.gz",
-    }
-
-    FUSIONGDB: Dict[str, Any] = {
-        "NAME": "FusionGDB",
-        "SCHEMA": "FusionGDB.sql",
-        "HOSTNAME": "https://ccsm.uth.edu/FusionGDB/tables",
-        "FILES": [
-            "TCGA_ChiTaRS_combined_fusion_information_on_hg19.txt",
-            "TCGA_ChiTaRS_combined_fusion_ORF_analyzed_gencode_h19v19.txt",
-            "uniprot_gsymbol.txt",
-            "fusion_uniprot_related_drugs.txt",
-            "fusion_ppi.txt",
-            "fgene_disease_associations.txt",
-        ],
+        "VERSION": "v101",
+        "TARFILE": "Cosmic_Fusion_Tsv_v101_GRCh38.tar",
+        "FILE": "Cosmic_Fusion_v101_GRCh38.tsv.gz",
     }
 
     FUSIONGDB2: Dict[str, str] = {
         "NAME": "FusionGDB2",
         "SCHEMA": "FusionGDB2.sql",
-        "HOSTNAME": "https://compbio.uth.edu/FusionGDB2/tables",
-        "FILE": "FusionGDB2_id.xlsx",
+        "HOSTNAME": "https://compbio.uth.edu/FusionGDB/combined_tables",
+        "FILE": "combinedFGDB2genes_genes_ID_04302024.txt",
     }
 
     MITELMAN: Dict[str, str] = {

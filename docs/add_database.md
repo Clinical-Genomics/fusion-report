@@ -31,7 +31,7 @@ class Test(Db, metaclass=Singleton):
 
 ```python
 local_fusions: Dict[str, List[str]] = {
-    FusionGDB(path).name: FusionGDB(path).get_all_fusions(),
+    FusionGDB2(path).name: FusionGDB2(path).get_all_fusions(),
     MitelmanDB(path).name: MitelmanDB(path).get_all_fusions(),
     CosmicDB(path).name: CosmicDB(path).get_all_fusions(),
     TestDB(path).name: TestDB(path).get_all_fusions() # add your database here

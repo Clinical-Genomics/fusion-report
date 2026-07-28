@@ -47,6 +47,27 @@
                 {
                     "key": "--jaffa",
                     "help": "Jaffa output file"
+                },
+                {
+                    "key": "--ctat_lr_fusion",
+                    "help": "CTAT-LR-Fusion output file"
+                }
+            ],
+            "databases": [
+                {
+                    "key": "--no-cosmic",
+                    "help": "Do not download cosmic fusion database",
+                    "action": "store_true"
+                },
+                {
+                    "key": "--no-fusiongdb2",
+                    "help": "Do not download fusiongdb2 fusion database",
+                    "action": "store_true"
+                },
+                {
+                    "key": "--no-mitelman",
+                    "help": "Do not download mitelman fusion database",
+                    "action": "store_true"
                 }
             ],
             "optionals": [
@@ -79,6 +100,28 @@
                     "help": "Output directory"
                 }
             ],
+            "optionals": [
+                {
+                    "key": "--no-cosmic",
+                    "help": "Do not download cosmic fusion database",
+                    "action": "store_true"
+                },
+                {
+                    "key": "--no-fusiongdb2",
+                    "help": "Do not download fusiongdb2 fusion database",
+                    "action": "store_true"
+                },
+                {
+                    "key": "--no-mitelman",
+                    "help": "Do not download mitelman fusion database",
+                    "action": "store_true"
+                },
+                {
+                    "key": "-no_ssl",
+                    "help": "Turn off verification of SSL certificates when downloading data.",
+                    "action": "store_true"
+                }
+            ],
             "cosmic": [
                 {
                     "key": "--cosmic_usr",
@@ -91,6 +134,33 @@
                 {
                     "key": "--cosmic_token",
                     "help": "COSMIC token"
+                },
+                {
+                    "key": "--qiagen",
+                    "help": "Use QIAGEN to download COSMIC db (commercial usage)",
+                    "action": "store_true"
+                }
+            ]
+        },
+        "createdb": {
+            "mandatory": [
+                {
+                    "key": "output",
+                    "help": "Output directory for generated database files"
+                }
+            ],
+            "optionals": [
+                {
+                    "key": "--cosmic",
+                    "help": "Path to COSMIC fusion TSV file (plain or gzipped)"
+                },
+                {
+                    "key": "--mitelman",
+                    "help": "Path to Mitelman database ZIP or extracted MBCA.TXT.DATA file"
+                },
+                {
+                    "key": "--fusiongdb2",
+                    "help": "Path to FusionGDB2 XLSX or pre-processed CSV file"
                 }
             ]
         }

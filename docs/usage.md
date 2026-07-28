@@ -1,6 +1,7 @@
 # Running the tool
 
 > Before running the tool make sure you have downloaded all the necessary resources!
+> You can either use [`fusion_report download`](download.md) or [`fusion_report createdb`](createdb.md) to set up the databases.
 
 ## Run all fusion detection tools
 
@@ -31,7 +32,7 @@ Dummy fusion detected by Squid: `15	34347968	34348134	19	15254151	15254264	.	9	-
 
 ## Set a custom weight for tool
 
-Each tool has a predefined weight when estimating score of a fusion. On default all tools have an equal weight
+Each tool has a predefined weight when estimating the Fusion Indication Index of a fusion. On default all tools have an equal weight
 `(100 / NUMBER_OF_RUNNING_TOOLS)`. To change the weights follow the steps below:
 
 ```bash
@@ -48,5 +49,4 @@ fusion_report run "<SAMPLE NAME>" /path/to/output /path/to/db/ \
 fusion_report --help
 fusion_report run --help
 fusion_report download --help
-fusion_report sync --help
 ```

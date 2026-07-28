@@ -20,27 +20,29 @@ This python script generates an interactive summary report from fusion detection
 * [Arriba](https://github.com/suhrig/arriba)
 * [Illumina Dragen](https://emea.illumina.com/products/by-type/informatics-products/dragen-bio-it-platform.html)
 * [Jaffa](https://github.com/Oshlack/JAFFA)
+* [CTAT-LR-Fusion](https://github.com/TrinityCTAT/CTAT-LR-fusion)
 
 ## Installation
 
 ### Using Conda
 
 ```bash
-conda install -c bioconda fusion-report=2.1.4
+conda install -c bioconda fusion-report
 ```
 
 ### From source
 
 ```bash
+# sqlite3 can be installed via conda/mamba as well
 sudo apt-get install sqlite3
-python3 setup.py install
+pip3 install -r requirements.txt && python3 setup.py install
 ```
 
 ## Usage
 
 ```bash
 # Download required databases
-# Currently supported databases: FusionGDB, Mitelman and COSMIC
+# Currently supported databases: FusionGDB2, Mitelman and COSMIC
 # COSMIC requires login credentials to download Fusion gene Database
 fusion_report download --cosmic_usr '<username>' --cosmic_passwd '<password>' /path/to/db/
 
@@ -63,7 +65,6 @@ Or get help and list all possible parameters.
 fusion_report --help
 fusion_report run --help
 fusion_report download --help
-fusion_report sync --help
 ```
 
 For more info on how to run the script, please see the [documentation](https://matq007.github.io/fusion-report/).

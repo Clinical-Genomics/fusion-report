@@ -12,3 +12,5 @@ tests/sss
 *.log
 .tox/
 .DS_Store
+testfusionreport.sh
+thisismydb/

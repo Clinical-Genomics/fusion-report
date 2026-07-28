@@ -1,13 +1,14 @@
 """Jaffa module"""
-from typing import Any, Dict, List, Optional, Tuple
+
+from typing import Any, Dict, List, Tuple
+
 from fusion_report.parsers.abstract_fusion import AbstractFusionTool
 
 
 class Jaffa(AbstractFusionTool):
     """Jaffa tool parser."""
 
-    def set_header(self, header: str, delimiter: Optional[str] = ","):
-
+    def set_header(self, header: str, delimiter: str | None = ",") -> None:
         self.header: List[str] = header.strip().split(delimiter)
 
     def _value(self, col: List[str], *keys: str, default: str = "") -> str:
