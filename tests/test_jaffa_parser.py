@@ -1,4 +1,5 @@
 """Tests for JAFFA parser header compatibility."""
+
 import unittest
 from pathlib import Path
 

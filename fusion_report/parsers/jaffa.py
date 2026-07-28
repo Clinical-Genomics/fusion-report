@@ -33,9 +33,7 @@ class Jaffa(AbstractFusionTool):
             return f"{parts[0]}--{parts[1]}"
         return fusion_genes.strip().replace("::", "--").replace(":", "--")
 
-    def parse(
-        self, line: str, delimiter: Optional[str] = ","
-    ) -> List[Tuple[str, Dict[str, Any]]]:
+    def parse(self, line: str, delimiter: Optional[str] = ",") -> List[Tuple[str, Dict[str, Any]]]:
         col: List[str] = [x.strip() for x in line.split(delimiter)]
 
         fusion: str = self._parse_fusion(col[self.header.index("fusion genes")])
