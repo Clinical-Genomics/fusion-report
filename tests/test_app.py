@@ -103,12 +103,21 @@ def test_enrich_no_cosmic_no_fusiongdb2_uses_mitelman_only(fusion_app, fake_dbs)
     assert enriched_dbs(fusion_app) == ["Mitelman"]
 
 
-def test_enrich_missing_db_raises_and_creates_no_file(fusion_app, tmp_path, monkeypatch):
+def test_enrich_missing_required_db_raises_and_creates_no_file(fusion_app, tmp_path, monkeypatch):
     # Use the real database classes, but make sure no cached singleton instance is reused.
     monkeypatch.setattr(Singleton, "_instances", {})
-    params = make_params(tmp_path, no_cosmic=True, no_mitelman=True)
-    with pytest.raises(AppException, match="--no-fusiongdb2"):
+    params = make_params(tmp_path, no_cosmic=True, no_fusiongdb2=True)
+    with pytest.raises(AppException, match="--no-mitelman"):
         fusion_app.enrich(params)
+    assert not (tmp_path / "mitelman.db").exists()
+
+
+def test_enrich_missing_optional_fusiongdb2_is_skipped(fusion_app, tmp_path, monkeypatch):
+    """FusionGDB2 is optional: a missing file is skipped with a warning, not created empty."""
+    monkeypatch.setattr(Singleton, "_instances", {})
+    params = make_params(tmp_path, no_cosmic=True, no_mitelman=True)
+    fusion_app.enrich(params)
+    assert enriched_dbs(fusion_app) == []
     assert not (tmp_path / "fusiongdb2.db").exists()
 
 

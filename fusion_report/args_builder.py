@@ -32,6 +32,11 @@ class ArgsBuilder:
             action="version",
             version=f"fusion-report {Settings.VERSION}",
         )
+        self.parser.add_argument(
+            "--debug",
+            action="store_true",
+            help="Show full tracebacks on errors.",
+        )
         self.command_parser: _SubParsersAction = self.parser.add_subparsers(dest="command")
 
     @property
@@ -116,8 +121,9 @@ class ArgsBuilder:
             download_parser.add_argument(mandatory["key"], help=mandatory["help"], type=str)
 
         for optional in args["optionals"]:
+            keys = optional["key"] if isinstance(optional["key"], list) else [optional["key"]]
             download_parser.add_argument(
-                optional["key"],
+                *keys,
                 help=optional["help"],
                 action=optional.get("action", "store"),
             )

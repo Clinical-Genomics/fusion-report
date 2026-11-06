@@ -133,7 +133,9 @@ class App:
 
         if not params.no_fusiongdb2:
             local_fusions.update(
-                self._load_db_fusions(FusionGDB2, Settings.FUSIONGDB2["NAME"], params.db_path)
+                self._load_db_fusions(
+                    FusionGDB2, Settings.FUSIONGDB2["NAME"], params.db_path, optional=True
+                )
             )
 
         for fusion in self.manager.fusions:
@@ -142,17 +144,26 @@ class App:
                     fusion.add_db(db_name)
 
     @staticmethod
-    def _load_db_fusions(db_class, db_name: str, db_path: str) -> Dict[str, List[str]]:
+    def _load_db_fusions(
+        db_class, db_name: str, db_path: str, optional: bool = False
+    ) -> Dict[str, List[str]]:
         """Load all fusions from a local database.
 
         Checks that the database file exists first, because `sqlite3.connect` would otherwise
         silently create an empty database file and only fail later with `no such table`.
+        A missing optional database (FusionGDB2) is skipped with a warning.
 
         Raises:
-            AppException: if the database file does not exist
+            AppException: if a required database file does not exist
         """
         db_file = os.path.join(db_path, f"{db_name.lower()}.db")
         if not os.path.isfile(db_file):
+            if optional:
+                Logger(__name__).warning(
+                    f"Optional database file {db_file} not found, skipping {db_name}. "
+                    f"Use `--no-{db_name.lower()}` to silence this warning."
+                )
+                return {}
             raise AppException(
                 f"Database file {db_file} not found. Download it with `fusion_report download` "
                 f"or skip it with `--no-{db_name.lower()}`."

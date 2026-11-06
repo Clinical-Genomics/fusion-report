@@ -130,13 +130,14 @@ def test_get_cosmic_from_sanger_collects_actionable_error():
 
 
 def test_get_large_file_verifies_ssl_by_default(tmp_path, monkeypatch):
+    from fusion_report.common.fetch import make_session
+
+    assert make_session().verify is True
+    assert make_session(no_ssl=True).verify is False
+
     monkeypatch.chdir(tmp_path)
-    response = mock.MagicMock()
-    response.headers = {}
-    response.iter_content.return_value = [b"data"]
-    with mock.patch("fusion_report.common.net.requests.get", return_value=response) as get:
-        Net.get_large_file("https://example.org/file.zip", False)
-        assert get.call_args.kwargs["verify"] is True
-        Net.get_large_file("https://example.org/file.zip", True)
-        assert get.call_args.kwargs["verify"] is False
-    assert (tmp_path / "file.zip").read_bytes() == b"data"
+    with mock.patch("fusion_report.common.net.download_file") as download:
+        Net.get_large_file("https://example.org/file.zip?sig=1", True, fmt="zip")
+    download.assert_called_once_with(
+        "https://example.org/file.zip?sig=1", "file.zip", fmt="zip", no_ssl=True, source=""
+    )

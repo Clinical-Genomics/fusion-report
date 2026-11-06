@@ -1,5 +1,6 @@
 """Create databases from local files"""
 
+import glob
 import gzip
 import os
 import shutil
@@ -42,6 +43,7 @@ class CreateDB:
         if not os.path.exists(output_path):
             os.makedirs(output_path, 0o755)
 
+        original_cwd = os.getcwd()
         tmp_dir = os.path.join(output_path, "tmp_dir")
         if not os.path.exists(tmp_dir):
             os.mkdir(tmp_dir)
@@ -49,24 +51,28 @@ class CreateDB:
 
         return_err: List[str] = []
 
-        if cosmic_path:
-            self.build_cosmic(cosmic_path, return_err)
+        try:
+            if cosmic_path:
+                self.build_cosmic(cosmic_path, return_err)
 
-        if mitelman_path:
-            self.build_mitelman(mitelman_path, return_err)
+            if mitelman_path:
+                self.build_mitelman(mitelman_path, return_err)
 
-        if fusiongdb2_path:
-            self.build_fusiongdb2(fusiongdb2_path, return_err)
+            if fusiongdb2_path:
+                self.build_fusiongdb2(fusiongdb2_path, return_err)
 
-        if return_err:
-            for err in return_err:
-                LOG.error(err)
-            raise DbException(return_err)
+            if return_err:
+                for err in return_err:
+                    LOG.error(err)
+                raise DbException("\n".join(return_err))
 
-        # Move db files and clean up
-        self._clean()
-        self._timestamp(output_path)
-        LOG.info("Database creation finished")
+            self._timestamp(output_path)
+            LOG.info("Database creation finished")
+        finally:
+            # Always move the databases that were built and remove the temporary directory,
+            # using absolute paths so this works regardless of the working directory.
+            os.chdir(original_cwd)
+            self._clean(tmp_dir, output_path)
 
     @staticmethod
     def build_cosmic(file_path: str, return_err: List[str]) -> None:
@@ -128,6 +134,11 @@ class CreateDB:
                 LOG.info(f"Processing FusionGDB2 file {file_path}")
                 # Headerless 6-column TSV: col2 = 5'-gene, col4 = 3'-gene (0-indexed)
                 df = pd.read_csv(file_path, sep="\t", header=None)
+                if df.shape[1] < 5 or df.empty:
+                    raise ValueError(
+                        f"unexpected file format: expected a headerless 6-column TSV, got "
+                        f"{df.shape[1]} column(s) and {len(df)} row(s)"
+                    )
                 df["fusion"] = df[2] + "--" + df[4]
                 csv_file = "fusionGDB2.csv"
                 df["fusion"].to_csv(csv_file, header=False, index=False, sep=",", encoding="utf-8")
@@ -145,14 +156,11 @@ class CreateDB:
             return_err.append(f"FusionGDB2: {ex}")
 
     @staticmethod
-    def _clean():
+    def _clean(tmp_dir: str, output_dir: str):
         """Move generated .db files to output dir and remove temp directory."""
-        import glob
-
-        for temp in glob.glob("*.db"):
-            shutil.copy(temp, "../")
-        os.chdir("../")
-        shutil.rmtree("tmp_dir")
+        for temp in glob.glob(os.path.join(tmp_dir, "*.db")):
+            shutil.copy(temp, output_dir)
+        shutil.rmtree(tmp_dir, ignore_errors=True)
 
     @staticmethod
     def _timestamp(output_dir: str):
