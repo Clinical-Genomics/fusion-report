@@ -17,9 +17,8 @@ from urllib3.util.retry import Retry
 
 from fusion_report.common import db_builders
 from fusion_report.common.exceptions.download import DownloadException
-from fusion_report.common.fetch import download_file, download_source
+from fusion_report.common.fetch import download_file
 from fusion_report.common.logger import Logger
-from fusion_report.data.sources import get_source
 from fusion_report.settings import Settings
 
 LOG = Logger(__name__)
@@ -254,30 +253,6 @@ class Net:
             db_builders.build_cosmic(Settings.COSMIC["FILE"])
         except Exception as ex:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
-
-    @staticmethod
-    def get_fusiongdb2(self, return_err: List[str], no_ssl) -> None:
-        """Download FusionGDB2 (trying all configured URLs) and build fusiongdb2.db."""
-        source = get_source("fusiongdb2")
-        try:
-            download_source(source, source.filename, no_ssl=no_ssl)
-            db_builders.build_fusiongdb2(source.filename)
-        except DownloadException as ex:
-            return_err.append(str(ex))
-        except Exception as ex:
-            return_err.append(f"{source.name}: {ex}")
-
-    @staticmethod
-    def get_mitelman(self, return_err: List[str], no_ssl) -> None:
-        """Download Mitelman (trying all configured URLs) and build mitelman.db."""
-        source = get_source("mitelman")
-        try:
-            download_source(source, source.filename, no_ssl=no_ssl)
-            db_builders.build_mitelman(source.filename)
-        except DownloadException as ex:
-            return_err.append(str(ex))
-        except Exception as ex:
-            return_err.append(f"{source.name}: {ex}")
 
     @staticmethod
     def clean(tmp_dir: str, output_dir: str):

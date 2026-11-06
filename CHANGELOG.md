@@ -41,7 +41,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests for `App.enrich()` and `App.score()` (`tests/test_app.py`), COSMIC download handling (`tests/test_net_cosmic.py`) and the download command (`tests/test_download.py`).
 - A `Unit Tests` CI workflow that runs `pytest` on every pull request.
 - `--no-ssl` as an alias for `-no_ssl`.
+- `download --allow-missing`: every source becomes optional; failures are warnings and `download` only fails if no database could be built.
+- `download --mitelman-file/--fusiongdb2-file/--cosmic-file`: build a database from a local file instead of downloading it (`--cosmic-file` needs no credentials), and `--mitelman-url/--fusiongdb2-url` to download from another URL such as a mirror.
+- `db_manifest.json`, written by `download` and `createdb`: fusion-report version, redacted command and, per source, status (`ok`/`disabled`/`skipped`/`failed`), origin (URL without query string or local file), sha256, size, version, row count and error. `run` logs where the databases came from and skips FusionGDB2 when the manifest records it as not built.
 - Troubleshooting section in `docs/download.md` (FusionGDB2 status and manual workaround with checksum, SSL, `--debug`).
+- Tests for `--allow-missing`, local files, URL overrides, credential redaction and the manifest in `download`, `createdb` and `run` (`tests/test_manifest.py`).
 - Tests for the source registry, mirror fallback and checksums (`tests/test_sources.py`) and the database builders (`tests/test_db_builders.py`).
 - Tests for validated downloads against a local HTTP server (`tests/test_fetch.py`, `tests/test_download_sources.py`), `createdb` (`tests/test_createdb.py`) and the CLI (`tests/test_cli.py`), with small Mitelman/FusionGDB2 fixtures.
 

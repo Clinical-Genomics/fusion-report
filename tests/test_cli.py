@@ -22,7 +22,29 @@ def test_no_ssl_flag_and_alias(monkeypatch, flag):
 
 
 def test_ssl_verification_is_default(monkeypatch):
-    assert _parse(monkeypatch, "download", "db").no_ssl is False
+    params = _parse(monkeypatch, "download", "db")
+    assert params.no_ssl is False
+    assert params.allow_missing is False
+    assert params.mitelman_file is None and params.fusiongdb2_url is None
+
+
+def test_download_source_override_flags(monkeypatch):
+    params = _parse(
+        monkeypatch,
+        "download",
+        "--allow-missing",
+        "--mitelman-file",
+        "m.zip",
+        "--fusiongdb2-url",
+        "https://mirror.example.org/f.txt",
+        "--cosmic-file",
+        "c.tsv.gz",
+        "db",
+    )
+    assert params.allow_missing is True
+    assert params.mitelman_file == "m.zip"
+    assert params.fusiongdb2_url == "https://mirror.example.org/f.txt"
+    assert params.cosmic_file == "c.tsv.gz"
 
 
 def test_main_prints_readable_error_and_exits_1(monkeypatch, tmp_path, caplog):
