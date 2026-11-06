@@ -1,14 +1,14 @@
-# ![fusion-report](https://raw.githubusercontent.com/matq007/fusion-report/master/fusion_report/templates/assets/img/fusion-report.png)
+# ![fusion-report](https://raw.githubusercontent.com/Clinical-Genomics/fusion-report/master/fusion_report/templates/assets/img/fusion-report.png)
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/fusion-report/README.html)
-![build](https://github.com/matq007/fusion-report/workflows/CI%20%5Bmaster%5D/badge.svg)
+[![Integration Tests](https://github.com/Clinical-Genomics/fusion-report/actions/workflows/integration_tests.yml/badge.svg)](https://github.com/Clinical-Genomics/fusion-report/actions/workflows/integration_tests.yml)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/932dff8661394cc28448af7b22748bb5)](https://app.codacy.com/app/mproksik/fusion-report?utm_source=github.com&utm_medium=referral&utm_content=matq007/fusion-report&utm_campaign=Badge_Grade_Dashboard)
 [![DOI](https://zenodo.org/badge/173453958.svg)](https://zenodo.org/badge/latestdoi/173453958)
 [![Slack Status](https://img.shields.io/badge/slack-join-brightgreen)](https://nf-co.re/join/slack)
 
 This python script generates an interactive summary report from fusion detection tools. Fusion-report is part of a bigger project [nf-core/rnafusion](https://github.com/nf-core/rnafusion) which is designed to detect and report fusion genes from RNA-seq data.
 
-> **TL;DR**: Live demo [here](https://matq007.github.io/fusion-report/example).
+> **TL;DR**: Live demo [here](https://clinical-genomics.github.io/fusion-report/example/).
 
 ## Supported tools
 
@@ -67,7 +67,7 @@ fusion_report run --help
 fusion_report download --help
 ```
 
-For more info on how to run the script, please see the [documentation](https://matq007.github.io/fusion-report/).
+For more info on how to run the script, please see the [documentation](https://clinical-genomics.github.io/fusion-report/) (sources in [`docs/`](https://github.com/Clinical-Genomics/fusion-report/tree/master/docs)).
 
 ## Credits
 
