@@ -29,44 +29,48 @@ class Download:
             self.cosmic_token = Net.get_cosmic_token(params)
 
     def download_all(self, params: Namespace) -> None:
+        original_cwd = os.getcwd()
+        output_dir = os.path.abspath(params.output)
+
         # making sure output directory exists
-        if not os.path.exists(params.output):
-            os.makedirs(params.output, 0o755)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir, 0o755)
 
         """Download all databases."""
         return_err: List[str] = []
-        tmp_dir = os.path.join(params.output, "tmp_dir")
+        tmp_dir = os.path.join(output_dir, "tmp_dir")
         if not os.path.exists(tmp_dir):
             os.mkdir(tmp_dir)
         os.chdir(tmp_dir)
 
-        if not params.no_mitelman:
-            # MITELMAN
-            Net.get_mitelman(self, return_err, params.no_ssl)
+        try:
+            if not params.no_mitelman:
+                # MITELMAN
+                Net.get_mitelman(self, return_err, params.no_ssl)
 
-        if not params.no_fusiongdb2:
-            # FusionGDB2
-            Net.get_fusiongdb2(self, return_err, params.no_ssl)
+            if not params.no_fusiongdb2:
+                # FusionGDB2
+                Net.get_fusiongdb2(self, return_err, params.no_ssl)
 
-        if not params.no_cosmic:
-            # COSMIC
-            self.validate(params)
-            if params.qiagen:
-                Logger(__name__).info("Downloading resources from QIAGEN...")
-                Net.get_cosmic_from_qiagen(
-                    self.cosmic_token, return_err, params.output, params.no_ssl
-                )
-            else:
-                Logger(__name__).info("Downloading resources from SANGER...")
-                Net.get_cosmic_from_sanger(
-                    self.cosmic_token, return_err, params.no_ssl, params.output
-                )
+            if not params.no_cosmic:
+                # COSMIC
+                self.validate(params)
+                if params.qiagen:
+                    Logger(__name__).info("Downloading resources from QIAGEN...")
+                    Net.get_cosmic_from_qiagen(
+                        self.cosmic_token, return_err, output_dir, params.no_ssl
+                    )
+                else:
+                    Logger(__name__).info("Downloading resources from SANGER...")
+                    Net.get_cosmic_from_sanger(
+                        self.cosmic_token, return_err, params.no_ssl, output_dir
+                    )
 
-        if len(return_err) > 0:
-            raise DownloadException(return_err)
+            if len(return_err) > 0:
+                raise DownloadException(return_err)
 
-        Logger(__name__).info("Downloading finished")
-        Net.clean()
-
-        # Create timestamp:
-        Net.timestamp()
+            Logger(__name__).info("Downloading finished")
+            Net.timestamp(output_dir)
+        finally:
+            os.chdir(original_cwd)
+            Net.clean(tmp_dir, output_dir)
