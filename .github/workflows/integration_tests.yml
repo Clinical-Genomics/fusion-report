@@ -22,8 +22,15 @@ jobs:
           pip install -r requirements.txt -r requirements-dev.txt
           python setup.py install
 
-      - name: Download databases (no COSMIC)
-        run: fusion_report download --no-cosmic ./db
+      # PR CI does not depend on remote sources (see #100): `download` builds the databases
+      # from small fixtures. Remote sources are checked by the scheduled check_sources workflow.
+      - name: Build databases with download (local fixtures, no COSMIC)
+        run: |
+          fusion_report download --no-cosmic \
+            --mitelman-file tests/test_data/mitelman_mini.zip \
+            --fusiongdb2-file tests/test_data/fusiongdb2_mini.txt \
+            ./db
+          test -f ./db/db_manifest.json && echo "Manifest OK"
 
       - name: Test run (no COSMIC)
         run: |
@@ -58,8 +65,14 @@ jobs:
           pip install -r requirements.txt -r requirements-dev.txt
           python setup.py install
 
-      - name: Download all databases
-        run: fusion_report download --cosmic_usr "${{ secrets.COSMIC_USERNAME }}" --cosmic_passwd "${{ secrets.COSMIC_PASSWD }}" ./db
+      # Only COSMIC is downloaded live (it needs the repository secrets).
+      - name: Download COSMIC, build the other databases from fixtures
+        run: |
+          fusion_report download \
+            --cosmic_usr "${{ secrets.COSMIC_USERNAME }}" --cosmic_passwd "${{ secrets.COSMIC_PASSWD }}" \
+            --mitelman-file tests/test_data/mitelman_mini.zip \
+            --fusiongdb2-file tests/test_data/fusiongdb2_mini.txt \
+            ./db
 
       - name: Test run (all databases)
         run: |
@@ -87,23 +100,19 @@ jobs:
           pip install -r requirements.txt -r requirements-dev.txt
           python setup.py install
 
-      - name: Download raw database files
-        run: |
-          mkdir -p raw_files
-          wget -q "https://storage.googleapis.com/mitelman-data-files/prod/mitelman_db.zip" -O raw_files/mitelman_db.zip
-          wget -q "https://compbio.uth.edu/FusionGDB/combined_tables/combinedFGDB2genes_genes_ID_04302024.txt" -O raw_files/combinedFGDB2genes_genes_ID_04302024.txt
-
+      # Small fixtures in the Mitelman and FusionGDB2 formats (see #100).
       - name: Create databases from local files
         run: |
           fusion_report createdb ./db \
-            --mitelman raw_files/mitelman_db.zip \
-            --fusiongdb2 raw_files/combinedFGDB2genes_genes_ID_04302024.txt
+            --mitelman tests/test_data/mitelman_mini.zip \
+            --fusiongdb2 tests/test_data/fusiongdb2_mini.txt
 
       - name: Verify databases created
         run: |
           test -f ./db/mitelman.db && echo "Mitelman DB OK"
           test -f ./db/fusiongdb2.db && echo "FusionGDB2 DB OK"
           test -f ./db/DB-timestamp.txt && echo "Timestamp OK"
+          test -f ./db/db_manifest.json && echo "Manifest OK"
 
       - name: Test run with created databases
         run: |

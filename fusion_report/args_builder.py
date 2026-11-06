@@ -32,6 +32,11 @@ class ArgsBuilder:
             action="version",
             version=f"fusion-report {Settings.VERSION}",
         )
+        self.parser.add_argument(
+            "--debug",
+            action="store_true",
+            help="Show full tracebacks on errors.",
+        )
         self.command_parser: _SubParsersAction = self.parser.add_subparsers(dest="command")
 
     @property
@@ -44,6 +49,7 @@ class ArgsBuilder:
         self.run_args(self.arguments["args"]["run"], self.arguments["weight"])
         self.download_args(self.arguments["args"]["download"])
         self.createdb_args(self.arguments["args"]["createdb"])
+        self.check_sources_args(self.arguments["args"]["check-sources"])
 
     def run_args(self, args, weight) -> None:
         """Build run command-line arguments."""
@@ -116,8 +122,9 @@ class ArgsBuilder:
             download_parser.add_argument(mandatory["key"], help=mandatory["help"], type=str)
 
         for optional in args["optionals"]:
+            keys = optional["key"] if isinstance(optional["key"], list) else [optional["key"]]
             download_parser.add_argument(
-                optional["key"],
+                *keys,
                 help=optional["help"],
                 action=optional.get("action", "store"),
             )
@@ -140,6 +147,18 @@ class ArgsBuilder:
         for optional in args["optionals"]:
             db_group.add_argument(optional["key"], help=optional["help"], type=str, default=None)
 
+    def check_sources_args(self, args: Dict[str, Any]) -> None:
+        """Build check-sources command-line arguments."""
+        parser = self.command_parser.add_parser(
+            "check-sources",
+            help="Check that the remote database sources are reachable and serve valid files",
+        )
+        for optional in args["optionals"]:
+            keys = optional["key"] if isinstance(optional["key"], list) else [optional["key"]]
+            parser.add_argument(
+                *keys, help=optional["help"], action=optional.get("action", "store")
+            )
+
     def _cosmic(self, args: Dict[str, Any], parser) -> None:
         """Build COSMIC command-line arguments."""
         download_cosmic = parser.add_argument_group(
@@ -149,7 +168,9 @@ class ArgsBuilder:
         )
         for cosmic in args["cosmic"]:
             if not cosmic.get("action"):
-                download_cosmic.add_argument(cosmic["key"], help=cosmic.get("help"), type=str)
+                download_cosmic.add_argument(
+                    cosmic["key"], help=cosmic.get("help"), type=str, default=cosmic.get("default")
+                )
             else:
                 download_cosmic.add_argument(
                     cosmic["key"], help=cosmic.get("help"), action=cosmic.get("action")

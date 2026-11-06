@@ -12,11 +12,13 @@ from typing import Any, Dict, List
 from tqdm import tqdm
 
 from fusion_report.args_builder import ArgsBuilder
+from fusion_report.check_sources import CheckSources
 from fusion_report.common.exceptions.app import AppException
 from fusion_report.common.exceptions.db import DbException
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.fusion_manager import FusionManager
 from fusion_report.common.logger import Logger
+from fusion_report.common.manifest import DISABLED, OK, SKIPPED, read_manifest
 from fusion_report.common.models.fusion import Fusion
 from fusion_report.common.report import Report
 from fusion_report.createdb import CreateDB
@@ -72,6 +74,9 @@ class App:
             elif params.command == "createdb":
                 Logger(__name__).info("Creating databases from local files...")
                 CreateDB(params)
+            elif params.command == "check-sources":
+                Logger(__name__).info("Checking remote database sources...")
+                CheckSources(params)
             else:
                 sys.exit(f"Command {params.command} not recognized!")
         except (AppException, DbException, DownloadException, IOError) as ex:
@@ -120,26 +125,82 @@ class App:
     def enrich(self, params: Namespace) -> None:
         """Enrich fusion with all relevant information from local databases."""
         local_fusions: Dict[str, List[str]] = {}
+        manifest = read_manifest(params.db_path)
+        if manifest:
+            self._log_manifest(manifest)
+        skip_fusiongdb2 = params.no_fusiongdb2 or (
+            manifest is not None
+            and manifest.get("sources", {}).get("fusiongdb2", {}).get("status")
+            in (SKIPPED, DISABLED)
+        )
 
         if not params.no_cosmic:
             local_fusions.update(
-                {CosmicDB(params.db_path).name: CosmicDB(params.db_path).get_all_fusions()}
-            )
-
-        if not params.no_fusiongdb2:
-            local_fusions.update(
-                {MitelmanDB(params.db_path).name: MitelmanDB(params.db_path).get_all_fusions()}
+                self._load_db_fusions(CosmicDB, Settings.COSMIC["NAME"], params.db_path)
             )
 
         if not params.no_mitelman:
             local_fusions.update(
-                {FusionGDB2(params.db_path).name: FusionGDB2(params.db_path).get_all_fusions()}
+                self._load_db_fusions(MitelmanDB, Settings.MITELMAN["NAME"], params.db_path)
+            )
+
+        if not skip_fusiongdb2:
+            local_fusions.update(
+                self._load_db_fusions(
+                    FusionGDB2, Settings.FUSIONGDB2["NAME"], params.db_path, optional=True
+                )
+            )
+        elif not params.no_fusiongdb2:
+            Logger(__name__).info(
+                "FusionGDB2 was not built for this database folder (see db_manifest.json), "
+                "skipping it."
             )
 
         for fusion in self.manager.fusions:
             for db_name, db_list in local_fusions.items():
                 if fusion.name in db_list:
                     fusion.add_db(db_name)
+
+    @staticmethod
+    def _log_manifest(manifest: Dict[str, Any]) -> None:
+        """Log where the databases in use came from."""
+        for entry in manifest.get("sources", {}).values():
+            if entry.get("status") != OK:
+                continue
+            Logger(__name__).info(
+                f"Database {entry.get('name')}: version {entry.get('version') or 'unknown'}, "
+                f"{entry.get('rows') or '?'} rows, from {entry.get('origin') or 'unknown'} "
+                f"(created {manifest.get('created_utc', 'unknown')} by fusion-report "
+                f"{manifest.get('fusion_report_version', '?')})"
+            )
+
+    @staticmethod
+    def _load_db_fusions(
+        db_class, db_name: str, db_path: str, optional: bool = False
+    ) -> Dict[str, List[str]]:
+        """Load all fusions from a local database.
+
+        Checks that the database file exists first, because `sqlite3.connect` would otherwise
+        silently create an empty database file and only fail later with `no such table`.
+        A missing optional database (FusionGDB2) is skipped with a warning.
+
+        Raises:
+            AppException: if a required database file does not exist
+        """
+        db_file = os.path.join(db_path, f"{db_name.lower()}.db")
+        if not os.path.isfile(db_file):
+            if optional:
+                Logger(__name__).warning(
+                    f"Optional database file {db_file} not found, skipping {db_name}. "
+                    f"Use `--no-{db_name.lower()}` to silence this warning."
+                )
+                return {}
+            raise AppException(
+                f"Database file {db_file} not found. Download it with `fusion_report download` "
+                f"or skip it with `--no-{db_name.lower()}`."
+            )
+        db = db_class(db_path)
+        return {db.name: db.get_all_fusions()}
 
     def export_results(self, path: str, extension: str) -> None:
         """Export results.
@@ -237,7 +298,9 @@ class App:
                 float(Settings.FUSION_WEIGHTS[db_name.lower()]) for db_name in fusion.dbs
             )
 
-            db_score: float = db_hits / db_provided
+            # With no weighted database provided (e.g. --no-cosmic --no-mitelman) the
+            # databases cannot contribute to the score.
+            db_score: float = db_hits / db_provided if db_provided > 0 else 0.0
 
             score: float = float("%0.3f" % (0.5 * tool_score + 0.5 * db_score))
             score_explained = (
