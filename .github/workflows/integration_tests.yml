@@ -22,8 +22,13 @@ jobs:
           pip install -r requirements.txt -r requirements-dev.txt
           python setup.py install
 
-      - name: Download databases (no COSMIC)
-        run: fusion_report download --no-cosmic ./db
+      # FusionGDB2 is no longer downloadable from compbio.uth.edu (see #100),
+      # so build it from a small fixture instead of the live URL.
+      - name: Download databases (no COSMIC, no FusionGDB2)
+        run: fusion_report download --no-cosmic --no-fusiongdb2 ./db
+
+      - name: Create FusionGDB2 database from test fixture
+        run: fusion_report createdb ./db --fusiongdb2 tests/test_data/fusiongdb2_mini.txt
 
       - name: Test run (no COSMIC)
         run: |
@@ -59,7 +64,10 @@ jobs:
           python setup.py install
 
       - name: Download all databases
-        run: fusion_report download --cosmic_usr "${{ secrets.COSMIC_USERNAME }}" --cosmic_passwd "${{ secrets.COSMIC_PASSWD }}" ./db
+        run: fusion_report download --no-fusiongdb2 --cosmic_usr "${{ secrets.COSMIC_USERNAME }}" --cosmic_passwd "${{ secrets.COSMIC_PASSWD }}" ./db
+
+      - name: Create FusionGDB2 database from test fixture
+        run: fusion_report createdb ./db --fusiongdb2 tests/test_data/fusiongdb2_mini.txt
 
       - name: Test run (all databases)
         run: |
@@ -91,13 +99,13 @@ jobs:
         run: |
           mkdir -p raw_files
           wget -q "https://storage.googleapis.com/mitelman-data-files/prod/mitelman_db.zip" -O raw_files/mitelman_db.zip
-          wget -q "https://compbio.uth.edu/FusionGDB/combined_tables/combinedFGDB2genes_genes_ID_04302024.txt" -O raw_files/combinedFGDB2genes_genes_ID_04302024.txt
 
+      # FusionGDB2 uses a small fixture in the 6-column FusionGDB2 format (see #100).
       - name: Create databases from local files
         run: |
           fusion_report createdb ./db \
             --mitelman raw_files/mitelman_db.zip \
-            --fusiongdb2 raw_files/combinedFGDB2genes_genes_ID_04302024.txt
+            --fusiongdb2 tests/test_data/fusiongdb2_mini.txt
 
       - name: Verify databases created
         run: |

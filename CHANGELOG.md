@@ -5,28 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [4.2.0]
+
+### Changed
+
+- **SSL certificate verification is now on by default for database downloads.** Previously `-no_ssl` was passed straight to `verify=`, so verification was disabled by default (causing the `InsecureRequestWarning` seen in [#97](https://github.com/Clinical-Genomics/fusion-report/issues/97)) and only enabled when `-no_ssl` was given. `-no_ssl` now turns verification off, as documented. Users behind TLS-intercepting proxies may need to pass `-no_ssl` or set `REQUESTS_CA_BUNDLE`.
 
 ### Fixed
 
+- Fixed `--no-fusiongdb2` and `--no-mitelman` being swapped in `run` ([#99](https://github.com/Clinical-Genomics/fusion-report/issues/99)). Each flag now skips its own database, so `--no-cosmic --no-fusiongdb2` runs with Mitelman only.
+- Fixed a `ZeroDivisionError` in the Fusion Indication Index when no weighted database is used (e.g. `--no-cosmic --no-mitelman`). The database part of the score is now 0 in that case ([#99](https://github.com/Clinical-Genomics/fusion-report/issues/99)).
+- `run` now fails with a clear error naming the missing database file and the matching `--no-<db>` flag, instead of silently creating an empty `.db` file and failing with `no such table` ([#99](https://github.com/Clinical-Genomics/fusion-report/issues/99)).
 - COSMIC (Sanger) download failures now produce an actionable error message (credentials, malformed token, missing file/version, server-side error, network/SSL) instead of only the raw HTTP error ([#97](https://github.com/Clinical-Genomics/fusion-report/issues/97)).
 - The COSMIC scripted-download request now retries transient Sanger server errors (HTTP 500/502/503/504) with backoff and uses a request timeout ([#97](https://github.com/Clinical-Genomics/fusion-report/issues/97)).
-- SSL certificate verification was disabled by default for database downloads because `-no_ssl` was passed straight to `verify=`. Verification is now on by default and only turned off with `-no_ssl`. This removes the `InsecureRequestWarning` seen in [#97](https://github.com/Clinical-Genomics/fusion-report/issues/97).
-- `download --qiagen` crashed with a `TypeError` because the downloader called `get_cosmic_from_qiagen` with an extra argument.
 - Multiple download errors are now reported one per line instead of as a Python list.
-
-### Added
-
-- Unit tests for COSMIC download handling and the download command (`tests/test_net_cosmic.py`, `tests/test_download.py`).
-- Fixed `--no-fusiongdb2` and `--no-mitelman` being swapped in `run` ([#99](https://github.com/Clinical-Genomics/fusion-report/issues/99)). Each flag now skips its own database, so `--no-cosmic --no-fusiongdb2` runs with Mitelman only.
-- Fixed a `ZeroDivisionError` in the Fusion Indication Index when no weighted database is used (e.g. `--no-cosmic --no-mitelman`). The database part of the score is now 0 in that case.
-- `run` now fails with a clear error naming the missing database file and the matching `--no-<db>` flag, instead of silently creating an empty `.db` file and failing with `no such table`.
-
-### Added
-
-- Added unit tests for `App.enrich()` and `App.score()` (`tests/test_app.py`).
 - Fixed the documentation link pointing to a 404 page ([#96](https://github.com/Clinical-Genomics/fusion-report/issues/96)). The README now links to the hosted documentation at `https://clinical-genomics.github.io/fusion-report/` (and the live demo at `https://clinical-genomics.github.io/fusion-report/example/`) instead of the defunct `https://matq007.github.io/fusion-report/`.
 - Replaced stale `matq007/fusion-report` repository links with `Clinical-Genomics/fusion-report` in the README (logo, CI badge), the docsify config (`docs/index.html`) and the report sidebar template.
+- CI integration tests no longer download FusionGDB2 from compbio.uth.edu, which no longer serves the file to automated clients ([#100](https://github.com/Clinical-Genomics/fusion-report/issues/100)). They build FusionGDB2 from a small fixture (`tests/test_data/fusiongdb2_mini.txt`) via `createdb` instead.
+
+### Added
+
+- Unit tests for `App.enrich()` and `App.score()` (`tests/test_app.py`), COSMIC download handling (`tests/test_net_cosmic.py`) and the download command (`tests/test_download.py`).
+- A `Unit Tests` CI workflow that runs `pytest` on every pull request.
+
+## [4.1.4]
+
+### Fixed
+
+- `download` no longer fails with `Directory not empty: tmp_dir`. Temporary files are handled with absolute paths and cleaned up in a `finally` block, so databases that downloaded successfully are kept even if another source fails ([#95](https://github.com/Clinical-Genomics/fusion-report/pull/95)).
+- `download --qiagen` no longer crashes with a `TypeError` caused by a mismatched `get_cosmic_from_qiagen` signature ([#95](https://github.com/Clinical-Genomics/fusion-report/pull/95)).
+
+### Changed
+
+- The JAFFA parser supports both legacy and newer JAFFA output: `:` and `::` gene delimiters, `known` derived from `known mitelman`/`known cosmic` when the `known` column is absent, and the optional fields `geneCounts1`, `geneCounts2`, `known_mitelman`, `known_cosmic`, `cosmic_tier` and `gtex_samples` ([#95](https://github.com/Clinical-Genomics/fusion-report/pull/95)).
+- The Docker image is now based on `python:3.12-slim`, installs into `/app`, and includes `procps` (needed for Nextflow task metrics) ([#95](https://github.com/Clinical-Genomics/fusion-report/pull/95)).
 
 ## [4.1.2]
 
