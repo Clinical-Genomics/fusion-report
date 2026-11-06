@@ -1,14 +1,14 @@
 import base64
 import glob
 import gzip
-import json
+import io
 import os
 import shutil
-import subprocess
 import tarfile
 import time
 from argparse import Namespace
 from typing import List
+from urllib.parse import urlencode
 
 import pandas as pd
 import requests
@@ -17,7 +17,7 @@ from urllib3.util.retry import Retry
 
 from fusion_report.common import db_builders
 from fusion_report.common.exceptions.download import DownloadException
-from fusion_report.common.fetch import download_file
+from fusion_report.common.fetch import TIMEOUT, download_file, make_session
 from fusion_report.common.logger import Logger
 from fusion_report.settings import Settings
 
@@ -28,6 +28,11 @@ COSMIC_RETRY_STATUSES = (500, 502, 503, 504)
 COSMIC_RETRY_TOTAL = 3
 COSMIC_RETRY_BACKOFF = 2
 COSMIC_TIMEOUT = 60
+
+QIAGEN_CLIENT_ID = "603912630-14192122372034111918-SmRwso"
+QIAGEN_TOKEN_URL = "https://apps.ingenuity.com/qiaoauth/oauth/token"
+QIAGEN_FILES_URL = "https://my.qiagendigitalinsights.com/bbp/data/files/cosmic"
+QIAGEN_DOWNLOAD_URL = "https://my.qiagendigitalinsights.com/bbp/data/download/cosmic-download"
 
 
 class Net:
@@ -44,68 +49,65 @@ class Net:
             raise DownloadException("COSMIC credentials have not been provided correctly")
 
     @staticmethod
-    def run_qiagen_cmd(cmd, return_output=False, silent=False):
-        if not silent:
-            print(cmd)
-        if return_output:
-            output = subprocess.check_output(cmd, shell=True, executable="/bin/bash").strip()
-            return output
-        else:
-            subprocess.check_call(cmd, shell=True, executable="/bin/bash")
+    def get_cosmic_qiagen_token(params: Namespace) -> str:
+        """Request a QIAGEN access token (OAuth password grant).
+
+        Credentials are sent in the request body, never on a command line.
+        """
+        if not params.cosmic_usr or not params.cosmic_passwd:
+            raise DownloadException(
+                "QIAGEN: --cosmic_usr and --cosmic_passwd (your QIAGEN login) are required "
+                "with --qiagen"
+            )
+        data = {
+            "grant_type": "password",
+            "client_id": QIAGEN_CLIENT_ID,
+            "username": params.cosmic_usr,
+            "password": params.cosmic_passwd,
+        }
+        try:
+            with make_session(getattr(params, "no_ssl", False)) as session:
+                response = session.post(QIAGEN_TOKEN_URL, data=data, timeout=TIMEOUT)
+            response.raise_for_status()
+            return response.json()["access_token"]
+        except requests.exceptions.HTTPError as ex:
+            status = ex.response.status_code if ex.response is not None else "?"
+            hint = (
+                " Check your QIAGEN username and password."
+                if status in (400, 401, 403)
+                else " The QIAGEN server may be unavailable, try again later."
+            )
+            raise DownloadException(f"QIAGEN: login failed (HTTP {status}).{hint}") from ex
+        except (requests.exceptions.RequestException, ValueError, KeyError) as ex:
+            raise DownloadException(f"QIAGEN: could not get an access token: {ex}") from ex
 
     @staticmethod
-    def get_qiagen_files(token: str, output_path: str):
-        files_request = (
-            "curl --stderr -s -X GET "
-            '-H "Content-Type: application/octet-stream" '
-            '-H "Authorization: Bearer {token}" '
-            '"https://my.qiagendigitalinsights.com/bbp/data/files/cosmic"'
-            " -o {output_path}qiagen_files.tsv"
+    def get_qiagen_files(token: str, session: requests.Session) -> str:
+        """Return the QIAGEN COSMIC file listing (TSV: file_id, file_name, genome_draft)."""
+        response = session.get(
+            QIAGEN_FILES_URL, headers={"Authorization": f"Bearer {token}"}, timeout=TIMEOUT
         )
-        cmd = files_request.format(token=token, output_path=output_path)
-        return Net.run_qiagen_cmd(cmd, True, True)
+        response.raise_for_status()
+        return response.text
 
     @staticmethod
-    def download_qiagen_file(token: str, file_id: str, output_path: str):
-        file_request = (
-            "curl -s -X GET "
-            '-H "Content-Type: application/octet-stream" '
-            '-H "Authorization: Bearer {token}" '
-            '"https://my.qiagendigitalinsights.com/bbp/data/download/cosmic-download?name={file_id}"'
-            " -o {output_path}{cosmic_file}"
-        )
-        cmd = file_request.format(
-            token=token,
-            file_id=file_id,
-            output_path=output_path,
-            cosmic_file=Settings.COSMIC["FILE"],
-        )
-        Net.run_qiagen_cmd(cmd, True, True)
-
-    @staticmethod
-    def fetch_fusion_file_id(output_path: str):
+    def fetch_fusion_file_id(files_tsv: str) -> str:
+        """Find the file id of the COSMIC fusion file (GRCh38) in the QIAGEN file listing."""
         df = pd.read_csv(
-            output_path + "/qiagen_files.tsv",
+            io.StringIO(files_tsv),
             names=["file_id", "file_name", "genome_draft"],
             sep="\t",
         )
-        file_id = df.loc[
+        matches = df.loc[
             (df["file_name"] == Settings.COSMIC["FILE"]) & (df["genome_draft"] == "cosmic/GRCh38"),
             "file_id",
-        ].values[0]
-        return file_id
-
-    @staticmethod
-    def get_cosmic_qiagen_token(params: Namespace):
-        token_request = (
-            "curl -s -X POST "
-            '-H "Content-Type: application/x-www-form-urlencoded" '
-            '-d "grant_type=password&client_id=603912630-14192122372034111918-SmRwso&username={uid}&password={pwd}" '  # noqa: E501
-            '"https://apps.ingenuity.com/qiaoauth/oauth/token"'
-        )
-        cmd = token_request.format(uid=params.cosmic_usr, pwd=params.cosmic_passwd)
-        token_response = Net.run_qiagen_cmd(cmd, True, True).decode("UTF-8")
-        return json.loads(token_response)["access_token"]
+        ]
+        if matches.empty:
+            raise ValueError(
+                f"{Settings.COSMIC['FILE']} (GRCh38) is not available from QIAGEN. Check "
+                "--cosmic-version."
+            )
+        return str(matches.values[0])
 
     @staticmethod
     def get_large_file(url: str, no_ssl, fmt: str = "binary", source: str = "") -> str:
@@ -241,16 +243,24 @@ class Net:
 
     @staticmethod
     def get_cosmic_from_qiagen(token: str, return_err: List[str], outputpath: str, no_ssl) -> None:
-        """Method for download COSMIC database from QIAGEN."""
+        """Download the COSMIC fusion file from QIAGEN (commercial licence) and build cosmic.db
+        in the current directory."""
         try:
-            Net.get_qiagen_files(token, outputpath)
-        except Exception as ex:
-            LOG.info(ex)
-
-        file_id = Net.fetch_fusion_file_id(outputpath)
-        Net.download_qiagen_file(token, file_id, outputpath)
-        try:
+            with make_session(no_ssl) as session:
+                file_id = Net.fetch_fusion_file_id(Net.get_qiagen_files(token, session))
+                session.headers["Authorization"] = f"Bearer {token}"
+                download_file(
+                    f"{QIAGEN_DOWNLOAD_URL}?{urlencode({'name': file_id})}",
+                    Settings.COSMIC["FILE"],
+                    fmt="gzip",
+                    session=session,
+                    source=Settings.COSMIC["NAME"],
+                )
             db_builders.build_cosmic(Settings.COSMIC["FILE"])
+        except DownloadException as ex:
+            return_err.append(str(ex))
+        except requests.exceptions.RequestException as ex:
+            return_err.append(f'{Settings.COSMIC["NAME"]}: QIAGEN request failed: {ex}')
         except Exception as ex:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
 

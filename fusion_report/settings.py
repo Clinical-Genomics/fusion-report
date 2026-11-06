@@ -1,4 +1,5 @@
 import os
+import re
 from typing import Dict, List
 
 
@@ -49,3 +50,16 @@ class Settings:
         "mitelman": [],
         "fusiongdb2": [],
     }
+
+    @classmethod
+    def use_cosmic_version(cls, version: str) -> None:
+        """Select the COSMIC release to download (e.g. "v101", the default).
+
+        Only the file names change; the database keeps its internal table name, and the file's
+        header is validated against the schema when the database is built.
+        """
+        if not re.fullmatch(r"v\d+", version or ""):
+            raise ValueError(f"invalid COSMIC version '{version}', expected e.g. 'v101'")
+        cls.COSMIC["VERSION"] = version
+        cls.COSMIC["TARFILE"] = f"Cosmic_Fusion_Tsv_{version}_GRCh38.tar"
+        cls.COSMIC["FILE"] = f"Cosmic_Fusion_{version}_GRCh38.tsv.gz"

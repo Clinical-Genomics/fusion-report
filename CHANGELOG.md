@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COSMIC (Sanger) download failures now produce an actionable error message (credentials, malformed token, missing file/version, server-side error, network/SSL) instead of only the raw HTTP error ([#97](https://github.com/Clinical-Genomics/fusion-report/issues/97)).
 - The COSMIC scripted-download request now retries transient Sanger server errors (HTTP 500/502/503/504) with backoff and uses a request timeout ([#97](https://github.com/Clinical-Genomics/fusion-report/issues/97)).
 - Multiple download errors are now reported one per line instead of as a Python list.
+- `download --qiagen` (commercial COSMIC via QIAGEN) could not work: the file listing and the COSMIC file were written to `<output>qiagen_files.tsv`/next to the output directory but read from elsewhere. It now uses `requests` instead of `curl` subprocesses: credentials are sent in the request body instead of on a shell command line (where they were visible in the process list and broke on passwords with quotes), the download is validated like all others, and errors give actionable messages.
 - One failing database source no longer stops the others: unexpected errors while parsing a source (e.g. pandas or zip errors) are reported per source instead of aborting `download`.
 - `createdb` cleans up its temporary directory with absolute paths in a `finally` block (as `download` does since 4.1.4), keeps databases that were built successfully, and restores the working directory.
 - `download` and `createdb` validate the FusionGDB2 file format (6 columns) and that the Mitelman archive contains `MBCA.TXT.DATA`, with a clear message instead of a traceback.
@@ -43,10 +44,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--no-ssl` as an alias for `-no_ssl`.
 - `download --allow-missing`: every source becomes optional; failures are warnings and `download` only fails if no database could be built.
 - `download --mitelman-file/--fusiongdb2-file/--cosmic-file`: build a database from a local file instead of downloading it (`--cosmic-file` needs no credentials), and `--mitelman-url/--fusiongdb2-url` to download from another URL such as a mirror.
+- `download --cosmic-version` (default `v101`) selects the COSMIC release; the file's columns are validated against the schema when the database is built.
 - `fusion_report check-sources`: checks that every remote source is reachable and serves the expected file format (first bytes only), with `--json` output and `--strict` to include optional sources.
 - Weekly `Check database sources` workflow (`.github/workflows/check_sources.yml`) that runs `check-sources` and opens or updates a single `upstream-source-broken` issue when a required source breaks.
 - `db_manifest.json`, written by `download` and `createdb`: fusion-report version, redacted command and, per source, status (`ok`/`disabled`/`skipped`/`failed`), origin (URL without query string or local file), sha256, size, version, row count and error. `run` logs where the databases came from and skips FusionGDB2 when the manifest records it as not built.
 - Troubleshooting section in `docs/download.md` (FusionGDB2 status and manual workaround with checksum, SSL, `--debug`).
+- Tests for `--cosmic-version` and the QIAGEN download against a fake QIAGEN server (`tests/test_cosmic.py`).
 - Tests for `check-sources` and a guard that PR integration tests do not download remote databases (`tests/test_check_sources.py`).
 - Tests for `--allow-missing`, local files, URL overrides, credential redaction and the manifest in `download`, `createdb` and `run` (`tests/test_manifest.py`).
 - Tests for the source registry, mirror fallback and checksums (`tests/test_sources.py`) and the database builders (`tests/test_db_builders.py`).
