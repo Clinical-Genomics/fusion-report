@@ -1,0 +1,80 @@
+name: Check database sources
+
+# Weekly check that the remote database sources are reachable and still serve the expected
+# files. PR CI builds databases from fixtures, so upstream breakage is detected here instead
+# (see #100). On failure, a single issue labelled `upstream-source-broken` is opened or updated.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      strict:
+        description: "Also fail on broken optional sources (FusionGDB2)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-sources:
+    name: Check remote database sources
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out git repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install .
+
+      - name: Check sources
+        id: check
+        run: |
+          set +e
+          fusion_report check-sources --json sources.json ${{ inputs.strict && '--strict' || '' }} 2>&1 | tee check.log
+          echo "status=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sources
+          path: |
+            sources.json
+            check.log
+
+      - name: Open or update issue
+        if: steps.check.outputs.status != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          label="upstream-source-broken"
+          {
+            echo "The scheduled database source check failed on $(date -u +%Y-%m-%d)."
+            echo
+            echo '```'
+            sed 's/\x1b\[[0-9;]*m//g' check.log
+            echo '```'
+            echo
+            echo "Run: ${RUN_URL} (sources.json is attached as an artifact)."
+          } > body.md
+          gh label create "$label" --color B60205 \
+            --description "A remote database source is unavailable or changed" 2>/dev/null || true
+          number=$(gh issue list --label "$label" --state open --json number --jq '.[0].number')
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body-file body.md
+          else
+            gh issue create --title "Database source check failed" --label "$label" --body-file body.md
+          fi
+          exit 1

@@ -12,6 +12,7 @@ from typing import Any, Dict, List
 from tqdm import tqdm
 
 from fusion_report.args_builder import ArgsBuilder
+from fusion_report.check_sources import CheckSources
 from fusion_report.common.exceptions.app import AppException
 from fusion_report.common.exceptions.db import DbException
 from fusion_report.common.exceptions.download import DownloadException
@@ -73,6 +74,9 @@ class App:
             elif params.command == "createdb":
                 Logger(__name__).info("Creating databases from local files...")
                 CreateDB(params)
+            elif params.command == "check-sources":
+                Logger(__name__).info("Checking remote database sources...")
+                CheckSources(params)
             else:
                 sys.exit(f"Command {params.command} not recognized!")
         except (AppException, DbException, DownloadException, IOError) as ex:

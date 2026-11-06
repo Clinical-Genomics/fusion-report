@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Help texts: `run --no-*` now say "Do not use" (they never download), and `createdb --fusiongdb2` documents the `.txt`/`.csv` formats instead of XLSX.
 - Fixed the documentation link pointing to a 404 page ([#96](https://github.com/Clinical-Genomics/fusion-report/issues/96)). The README now links to the hosted documentation at `https://clinical-genomics.github.io/fusion-report/` (and the live demo at `https://clinical-genomics.github.io/fusion-report/example/`) instead of the defunct `https://matq007.github.io/fusion-report/`.
 - Replaced stale `matq007/fusion-report` repository links with `Clinical-Genomics/fusion-report` in the README (logo, CI badge), the docsify config (`docs/index.html`) and the report sidebar template.
-- CI integration tests no longer download FusionGDB2 from compbio.uth.edu, which no longer serves the file to automated clients ([#100](https://github.com/Clinical-Genomics/fusion-report/issues/100)). They build FusionGDB2 from a small fixture (`tests/test_data/fusiongdb2_mini.txt`) via `createdb` instead.
+- PR integration tests no longer download any database from remote sources ([#100](https://github.com/Clinical-Genomics/fusion-report/issues/100)): Mitelman and FusionGDB2 are built from small fixtures (`tests/test_data/mitelman_mini.zip`, `tests/test_data/fusiongdb2_mini.txt`) via `download --*-file` and `createdb`. Only the secrets-gated COSMIC job still downloads COSMIC.
 
 ### Added
 
@@ -43,8 +43,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--no-ssl` as an alias for `-no_ssl`.
 - `download --allow-missing`: every source becomes optional; failures are warnings and `download` only fails if no database could be built.
 - `download --mitelman-file/--fusiongdb2-file/--cosmic-file`: build a database from a local file instead of downloading it (`--cosmic-file` needs no credentials), and `--mitelman-url/--fusiongdb2-url` to download from another URL such as a mirror.
+- `fusion_report check-sources`: checks that every remote source is reachable and serves the expected file format (first bytes only), with `--json` output and `--strict` to include optional sources.
+- Weekly `Check database sources` workflow (`.github/workflows/check_sources.yml`) that runs `check-sources` and opens or updates a single `upstream-source-broken` issue when a required source breaks.
 - `db_manifest.json`, written by `download` and `createdb`: fusion-report version, redacted command and, per source, status (`ok`/`disabled`/`skipped`/`failed`), origin (URL without query string or local file), sha256, size, version, row count and error. `run` logs where the databases came from and skips FusionGDB2 when the manifest records it as not built.
 - Troubleshooting section in `docs/download.md` (FusionGDB2 status and manual workaround with checksum, SSL, `--debug`).
+- Tests for `check-sources` and a guard that PR integration tests do not download remote databases (`tests/test_check_sources.py`).
 - Tests for `--allow-missing`, local files, URL overrides, credential redaction and the manifest in `download`, `createdb` and `run` (`tests/test_manifest.py`).
 - Tests for the source registry, mirror fallback and checksums (`tests/test_sources.py`) and the database builders (`tests/test_db_builders.py`).
 - Tests for validated downloads against a local HTTP server (`tests/test_fetch.py`, `tests/test_download_sources.py`), `createdb` (`tests/test_createdb.py`) and the CLI (`tests/test_cli.py`), with small Mitelman/FusionGDB2 fixtures.
