@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed `--no-fusiongdb2` and `--no-mitelman` being swapped in `run` ([#99](https://github.com/Clinical-Genomics/fusion-report/issues/99)). Each flag now skips its own database, so `--no-cosmic --no-fusiongdb2` runs with Mitelman only.
+- Fixed a `ZeroDivisionError` in the Fusion Indication Index when no weighted database is used (e.g. `--no-cosmic --no-mitelman`). The database part of the score is now 0 in that case.
+- `run` now fails with a clear error naming the missing database file and the matching `--no-<db>` flag, instead of silently creating an empty `.db` file and failing with `no such table`.
+
+### Added
+
+- Added unit tests for `App.enrich()` and `App.score()` (`tests/test_app.py`).
+
 ## [4.1.2]
 
 ### Fixed
