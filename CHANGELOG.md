@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- COSMIC (Sanger) download failures now produce an actionable error message (credentials, malformed token, missing file/version, server-side error, network/SSL) instead of only the raw HTTP error ([#97](https://github.com/Clinical-Genomics/fusion-report/issues/97)).
+- The COSMIC scripted-download request now retries transient Sanger server errors (HTTP 500/502/503/504) with backoff and uses a request timeout ([#97](https://github.com/Clinical-Genomics/fusion-report/issues/97)).
+- SSL certificate verification was disabled by default for database downloads because `-no_ssl` was passed straight to `verify=`. Verification is now on by default and only turned off with `-no_ssl`. This removes the `InsecureRequestWarning` seen in [#97](https://github.com/Clinical-Genomics/fusion-report/issues/97).
+- `download --qiagen` crashed with a `TypeError` because the downloader called `get_cosmic_from_qiagen` with an extra argument.
+- Multiple download errors are now reported one per line instead of as a Python list.
+
+### Added
+
+- Unit tests for COSMIC download handling and the download command (`tests/test_net_cosmic.py`, `tests/test_download.py`).
+
 ## [4.1.2]
 
 ### Fixed

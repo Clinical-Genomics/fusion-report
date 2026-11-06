@@ -13,6 +13,8 @@ from zipfile import ZipFile
 
 import pandas as pd
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.logger import Logger
@@ -22,6 +24,12 @@ from fusion_report.data.mitelman import MitelmanDB
 from fusion_report.settings import Settings
 
 LOG = Logger(__name__)
+
+# Sanger's scripted-download API intermittently answers with 5xx; retry those a few times.
+COSMIC_RETRY_STATUSES = (500, 502, 503, 504)
+COSMIC_RETRY_TOTAL = 3
+COSMIC_RETRY_BACKOFF = 2
+COSMIC_TIMEOUT = 60
 
 
 class Net:
@@ -107,7 +115,7 @@ class Net:
         LOG.info(f"Downloading {url}")
         try:
             headers = {"User-Agent": "Mozilla/5.0"}
-            response = requests.get(url, headers=headers, stream=True, verify=no_ssl)
+            response = requests.get(url, headers=headers, stream=True, verify=not no_ssl)
             file = url.split("/")[-1].split("?")[0]
 
             if (
@@ -123,14 +131,72 @@ class Net:
             raise DownloadException(ex) from ex
 
     @staticmethod
-    def get_cosmic_from_sanger_url(token: str, file_path: str) -> str:
-        """Method for download COSMIC database from sanger website."""
+    def get_cosmic_from_sanger_url(token: str, file_path: str, no_ssl: bool = False) -> str:
+        """Request a (pre-signed) download URL for a COSMIC file from the Sanger scripted API.
+
+        Transient server errors (5xx) are retried with exponential backoff before giving up.
+        """
         params = {"path": file_path, "bucket": "downloads"}
         url = Settings.COSMIC["HOSTNAME"]
         headers = {"Authorization": f"Basic {token}"}
-        response = requests.get(url, headers=headers, params=params)
+        retry = Retry(
+            total=COSMIC_RETRY_TOTAL,
+            backoff_factor=COSMIC_RETRY_BACKOFF,
+            status_forcelist=COSMIC_RETRY_STATUSES,
+            allowed_methods=frozenset(["GET"]),
+            raise_on_status=False,
+        )
+        with requests.Session() as session:
+            session.mount("https://", HTTPAdapter(max_retries=retry))
+            response = session.get(
+                url, headers=headers, params=params, verify=not no_ssl, timeout=COSMIC_TIMEOUT
+            )
         response.raise_for_status()
         return response.json().get("url")
+
+    @staticmethod
+    def describe_cosmic_error(err: requests.exceptions.RequestException, file_path: str) -> str:
+        """Turn a failed COSMIC (Sanger) request into an actionable error message."""
+        status = getattr(getattr(err, "response", None), "status_code", None)
+        if status in (401, 403):
+            hint = (
+                "authentication failed. Check --cosmic_usr (the e-mail address of your COSMIC "
+                "account) and --cosmic_passwd, and that you can log in at "
+                "https://cancer.sanger.ac.uk/cosmic/login."
+            )
+        elif status == 400:
+            hint = (
+                "the request was rejected as malformed. If you used --cosmic_token, it must be "
+                "base64('<email>:<password>'); otherwise use --cosmic_usr/--cosmic_passwd."
+            )
+        elif status == 404:
+            hint = (
+                f"the file '{file_path}' was not found. COSMIC {Settings.COSMIC['VERSION']} "
+                "may no longer be available for scripted download."
+            )
+        elif status is not None and status >= 500:
+            hint = (
+                f"the Sanger server returned HTTP {status} for '{file_path}' (after "
+                f"{COSMIC_RETRY_TOTAL} retries). This is a server-side error and is often "
+                "temporary, so try again later. If it persists, log in at "
+                "https://cancer.sanger.ac.uk/cosmic and check that your account is active, that "
+                "you have accepted the current non-commercial licence, and that you can download "
+                f"'{Settings.COSMIC['TARFILE']}' in the browser. Commercial users must download "
+                "COSMIC via QIAGEN (--qiagen). Use --no-cosmic to skip COSMIC."
+            )
+        elif isinstance(err, requests.exceptions.SSLError):
+            hint = (
+                "SSL certificate verification failed. If you are behind a proxy that intercepts "
+                "TLS, re-run with -no_ssl."
+            )
+        elif isinstance(err, (requests.exceptions.ConnectionError, requests.exceptions.Timeout)):
+            hint = (
+                "could not reach https://cancer.sanger.ac.uk. Check your network/proxy settings "
+                "or try again later."
+            )
+        else:
+            hint = "the download request failed."
+        return f'{Settings.COSMIC["NAME"]}: {hint} (details: {err})'
 
     @staticmethod
     def extract_gz(file_path: str) -> str | None:
@@ -168,7 +234,7 @@ class Net:
         """Downloads the COSMIC database from the Sanger website."""
         file_path = f"grch38/cosmic/{Settings.COSMIC['VERSION']}/{Settings.COSMIC['TARFILE']}"
         try:
-            download_url = Net.get_cosmic_from_sanger_url(token, file_path=file_path)
+            download_url = Net.get_cosmic_from_sanger_url(token, file_path=file_path, no_ssl=no_ssl)
 
             if not download_url:
                 raise ValueError("Failed to retrieve the download URL.")
@@ -185,7 +251,7 @@ class Net:
             db.setup([os.path.basename(renamed_file)], delimiter="\t", skip_header=True)
 
         except requests.exceptions.RequestException as req_err:
-            return_err.append(f'{Settings.COSMIC["NAME"]}: {req_err}')
+            return_err.append(Net.describe_cosmic_error(req_err, file_path))
         except (ValueError, KeyError) as json_err:
             return_err.append(f"Error processing request: {json_err}")
 

@@ -53,9 +53,7 @@ class Download:
             self.validate(params)
             if params.qiagen:
                 Logger(__name__).info("Downloading resources from QIAGEN...")
-                Net.get_cosmic_from_qiagen(
-                    self.cosmic_token, return_err, params.output, params.no_ssl
-                )
+                Net.get_cosmic_from_qiagen(self.cosmic_token, return_err, params.output)
             else:
                 Logger(__name__).info("Downloading resources from SANGER...")
                 Net.get_cosmic_from_sanger(
@@ -63,7 +61,7 @@ class Download:
                 )
 
         if len(return_err) > 0:
-            raise DownloadException(return_err)
+            raise DownloadException("\n".join(return_err))
 
         Logger(__name__).info("Downloading finished")
         Net.clean()
