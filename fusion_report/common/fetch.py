@@ -7,11 +7,14 @@ Every remote file goes through `download_file`, which:
 * fails on non-2xx responses instead of saving the error page,
 * rejects HTML pages served in place of a data file (moved/blocked sources),
 * checks the file's magic bytes and the received size against Content-Length,
+* verifies a pinned sha256 and, when the server provides one (Google Cloud Storage), the md5,
 * writes to `<file>.part` and only moves it into place once all checks passed.
 """
 
+import base64
+import hashlib
 import os
-from typing import Optional
+from typing import Dict, List, Optional
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -103,6 +106,7 @@ def download_file(
     no_ssl: bool = False,
     session: Optional[requests.Session] = None,
     source: str = "",
+    sha256: Optional[str] = None,
 ) -> str:
     """Download `url` to `dest` and validate it.
 
@@ -110,7 +114,8 @@ def download_file(
         the destination path
 
     Raises:
-        FetchError: on HTTP errors, HTML instead of data, wrong format or truncated downloads
+        FetchError: on HTTP errors, HTML instead of data, wrong format, truncated downloads or
+            checksum mismatches
     """
     LOG.info(f"Downloading {url}")
     own_session = session is None
@@ -132,10 +137,14 @@ def download_file(
                     "automated downloads."
                 )
             received = 0
+            sha = hashlib.sha256()
+            md5 = hashlib.md5()  # nosec: only used to compare with the server-provided md5
             with open(part, "wb") as out_file:
                 for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
                     if chunk:
                         out_file.write(chunk)
+                        sha.update(chunk)
+                        md5.update(chunk)
                         received += len(chunk)
             expected = response.headers.get("Content-Length")
             encoded = response.headers.get("Content-Encoding")
@@ -144,7 +153,15 @@ def download_file(
                     f"{prefix}truncated download from {url}: received {received} of "
                     f"{expected} bytes"
                 )
+            server_md5 = _goog_md5(response.headers)
+            if server_md5 and not encoded and server_md5 != md5.digest():
+                raise FetchError(f"{prefix}md5 checksum mismatch for {url}")
         check_magic(part, fmt, source)
+        if sha256 and sha.hexdigest() != sha256.lower():
+            raise FetchError(
+                f"{prefix}sha256 checksum mismatch for {url}: expected {sha256}, "
+                f"got {sha.hexdigest()}. The file differs from the known version."
+            )
         os.replace(part, dest)
         return dest
     except requests.exceptions.SSLError as ex:
@@ -160,3 +177,50 @@ def download_file(
             os.remove(part)
         if own_session:
             session.close()
+
+
+def _goog_md5(headers) -> Optional[bytes]:
+    """Return the md5 digest from a Google Cloud Storage `x-goog-hash` header, if present."""
+    for part in headers.get("x-goog-hash", "").split(","):
+        name, _, value = part.strip().partition("=")
+        if name == "md5" and value:
+            try:
+                return base64.b64decode(value)
+            except ValueError:
+                return None
+    return None
+
+
+def download_source(source, dest: str, no_ssl: bool = False, urls: Optional[List[str]] = None):
+    """Download a registry `Source`, trying its URLs (or `urls`) in order.
+
+    Returns:
+        the URL the file was downloaded from
+
+    Raises:
+        FetchError: listing every attempted URL if all of them fail
+    """
+    candidates = urls if urls is not None else source.urls
+    if not candidates:
+        raise FetchError(f"{source.name}: no download URL configured")
+    errors: Dict[str, str] = {}
+    with make_session(no_ssl) as session:
+        for url in candidates:
+            try:
+                download_file(
+                    url,
+                    dest,
+                    fmt=source.fmt,
+                    session=session,
+                    source=source.name,
+                    sha256=source.sha256,
+                )
+                return url
+            except FetchError as ex:
+                errors[url] = str(ex)
+                if url != candidates[-1]:
+                    LOG.warning(f"{ex} Trying the next mirror.")
+    if len(errors) == 1:
+        raise FetchError(next(iter(errors.values())))
+    attempts = "\n".join(f"  - {err}" for err in errors.values())
+    raise FetchError(f"{source.name}: all {len(errors)} download URLs failed:\n{attempts}")

@@ -34,6 +34,8 @@ def sources(http_server, monkeypatch):
     """Point Mitelman and FusionGDB2 at the local server; serve valid files by default."""
     monkeypatch.setitem(Settings.MITELMAN, "HOSTNAME", http_server.url("/mitelman"))
     monkeypatch.setitem(Settings.FUSIONGDB2, "HOSTNAME", http_server.url("/fusiongdb2"))
+    # the fixture is not the real (pinned) FusionGDB2 file
+    monkeypatch.setitem(Settings.FUSIONGDB2, "SHA256", None)
     mitelman_path = f"/mitelman/{Settings.MITELMAN['FILE']}"
     fusiongdb2_path = f"/fusiongdb2/{Settings.FUSIONGDB2['FILE']}"
     http_server.add(mitelman_path, (200, {"Content-Type": "application/zip"}, MITELMAN_ZIP))
@@ -103,3 +105,23 @@ def test_no_fusiongdb2_does_not_request_it(sources, tmp_path):
     server, _, fusiongdb2_path = sources
     Download(_params(tmp_path, no_fusiongdb2=True))
     assert fusiongdb2_path not in server.hits
+
+
+def test_fusiongdb2_checksum_mismatch_is_only_a_warning(sources, tmp_path, caplog, monkeypatch):
+    monkeypatch.setitem(Settings.FUSIONGDB2, "SHA256", "0" * 64)
+    Download(_params(tmp_path))
+    assert (tmp_path / "mitelman.db").exists()
+    assert not (tmp_path / "fusiongdb2.db").exists()
+    assert "sha256 checksum mismatch" in caplog.text
+
+
+def test_fusiongdb2_falls_back_to_mirror(sources, tmp_path, monkeypatch):
+    server, _, fusiongdb2_path = sources
+    server.add(fusiongdb2_path, HTML_429)
+    mirror = server.add("/mirror/fgdb2.txt", (200, {"Content-Type": "text/plain"}, FUSIONGDB2_TXT))
+    monkeypatch.setitem(Settings.MIRRORS, "fusiongdb2", [mirror])
+
+    Download(_params(tmp_path))
+
+    assert (tmp_path / "fusiongdb2.db").exists()
+    assert server.hits["/mirror/fgdb2.txt"] == 1

@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **FusionGDB2 is now an optional source** ([#100](https://github.com/Clinical-Genomics/fusion-report/issues/100)). If it cannot be downloaded, `download` logs a warning with recovery options and still writes the other databases, and `run` skips a missing `fusiongdb2.db` with a warning. FusionGDB2 has weight 0 in the Fusion Indication Index, so scores are unaffected. COSMIC and Mitelman remain required unless disabled with `--no-*`.
 - All database downloads go through a validated download path (`fusion_report/common/fetch.py`): retries with backoff for HTTP 429/5xx, timeouts, `raise_for_status`, rejection of HTML pages served instead of data, magic-byte and size checks, and atomic writes via a `.part` file. This replaces saving whatever the server returned, which caused `BadZipFile`/`KeyError: 2` crashes ([#97](https://github.com/Clinical-Genomics/fusion-report/issues/97), [#100](https://github.com/Clinical-Genomics/fusion-report/issues/100)).
 - Downloads identify themselves with a `fusion-report/<version>` User-Agent instead of impersonating a browser.
+- Remote sources are described in one registry (`fusion_report/data/sources.py`, built from `Settings`): required/optional, weight, version, format, ordered download URLs (`Settings.MIRRORS` adds fallbacks) and an optional pinned sha256. FusionGDB2 is pinned to the known `04302024` file, so any mirror must serve exactly that file.
+- Database parsing and validation is shared by `download` and `createdb` (`fusion_report/common/db_builders.py`): Mitelman must have 12 columns, FusionGDB2 exactly 6, and the COSMIC header must have the schema's 25 columns with the gene symbol columns in place, each with a clear error message.
 - Errors are printed as a single readable message with exit code 1; add the new global `--debug` flag (`fusion_report --debug <command> ...`) for the full traceback.
 
 ### Fixed
@@ -26,6 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - One failing database source no longer stops the others: unexpected errors while parsing a source (e.g. pandas or zip errors) are reported per source instead of aborting `download`.
 - `createdb` cleans up its temporary directory with absolute paths in a `finally` block (as `download` does since 4.1.4), keeps databases that were built successfully, and restores the working directory.
 - `download` and `createdb` validate the FusionGDB2 file format (6 columns) and that the Mitelman archive contains `MBCA.TXT.DATA`, with a clear message instead of a traceback.
+- Downloads verify the md5 that Google Cloud Storage provides (Mitelman) and fall back to the next configured URL when one fails, listing every failed attempt if all fail.
+- `createdb --fusiongdb2` with a pre-processed `.csv` only worked if the file was named `fusionGDB2.csv` (the table name is derived from the file name); any name now works.
+- Building COSMIC failed on case-insensitive file systems (macOS) because `Cosmic_Fusion_v101_GRCh38.tsv` and `cosmic_fusion_v101_grch38.tsv` are the same file there.
 - Help texts: `run --no-*` now say "Do not use" (they never download), and `createdb --fusiongdb2` documents the `.txt`/`.csv` formats instead of XLSX.
 - Fixed the documentation link pointing to a 404 page ([#96](https://github.com/Clinical-Genomics/fusion-report/issues/96)). The README now links to the hosted documentation at `https://clinical-genomics.github.io/fusion-report/` (and the live demo at `https://clinical-genomics.github.io/fusion-report/example/`) instead of the defunct `https://matq007.github.io/fusion-report/`.
 - Replaced stale `matq007/fusion-report` repository links with `Clinical-Genomics/fusion-report` in the README (logo, CI badge), the docsify config (`docs/index.html`) and the report sidebar template.
@@ -37,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A `Unit Tests` CI workflow that runs `pytest` on every pull request.
 - `--no-ssl` as an alias for `-no_ssl`.
 - Troubleshooting section in `docs/download.md` (FusionGDB2 status and manual workaround with checksum, SSL, `--debug`).
+- Tests for the source registry, mirror fallback and checksums (`tests/test_sources.py`) and the database builders (`tests/test_db_builders.py`).
 - Tests for validated downloads against a local HTTP server (`tests/test_fetch.py`, `tests/test_download_sources.py`), `createdb` (`tests/test_createdb.py`) and the CLI (`tests/test_cli.py`), with small Mitelman/FusionGDB2 fixtures.
 
 ## [4.1.4]
