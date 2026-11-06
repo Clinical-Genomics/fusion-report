@@ -167,6 +167,24 @@
                 }
             ]
         },
+        "check-sources": {
+            "optionals": [
+                {
+                    "key": "--json",
+                    "help": "Write the check results as JSON to this file"
+                },
+                {
+                    "key": "--strict",
+                    "help": "Also fail when an optional source (FusionGDB2) is broken",
+                    "action": "store_true"
+                },
+                {
+                    "key": ["-no_ssl", "--no-ssl"],
+                    "help": "Turn off verification of SSL certificates.",
+                    "action": "store_true"
+                }
+            ]
+        },
         "createdb": {
             "mandatory": [
                 {

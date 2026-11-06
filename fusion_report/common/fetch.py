@@ -73,30 +73,39 @@ def looks_like_html(head: bytes) -> bool:
     return head.lstrip().lower().startswith(HTML_PREFIXES)
 
 
-def check_magic(path: str, fmt: str, source: str = "") -> None:
-    """Verify that the file at `path` matches the expected format.
+def check_head(head: bytes, fmt: str, content_type: str = "") -> Optional[str]:
+    """Check the first bytes (and optionally the Content-Type) of a file.
 
     Args:
         fmt: one of "zip", "gzip", "tar", "text" or "binary" (no check)
+
+    Returns:
+        an error message, or None if the bytes look like the expected format
+    """
+    if not head:
+        return "downloaded file is empty"
+    if fmt != "binary" and ("text/html" in content_type.lower() or looks_like_html(head)):
+        return (
+            f"expected a {fmt} file but received an HTML page. The upstream source may have "
+            "moved or be blocking automated downloads."
+        )
+    if fmt in MAGIC and not head.startswith(MAGIC[fmt]):
+        return f"downloaded file is not a valid {fmt} file"
+    if fmt == "tar" and head[TAR_MAGIC_OFFSET : TAR_MAGIC_OFFSET + len(TAR_MAGIC)] != TAR_MAGIC:
+        return "downloaded file is not a valid tar archive"
+    return None
+
+
+def check_magic(path: str, fmt: str, source: str = "") -> None:
+    """Verify that the file at `path` matches the expected format.
 
     Raises:
         FetchError
     """
     with open(path, "rb") as handle:
-        head = handle.read(512)
-
-    prefix = f"{source}: " if source else ""
-    if not head:
-        raise FetchError(f"{prefix}downloaded file is empty")
-    if fmt != "binary" and looks_like_html(head):
-        raise FetchError(
-            f"{prefix}expected a {fmt} file but received an HTML page. The upstream source may "
-            "have moved or be blocking automated downloads."
-        )
-    if fmt in MAGIC and not head.startswith(MAGIC[fmt]):
-        raise FetchError(f"{prefix}downloaded file is not a valid {fmt} file")
-    if fmt == "tar" and head[TAR_MAGIC_OFFSET : TAR_MAGIC_OFFSET + len(TAR_MAGIC)] != TAR_MAGIC:
-        raise FetchError(f"{prefix}downloaded file is not a valid tar archive")
+        error = check_head(handle.read(512), fmt)
+    if error:
+        raise FetchError(f"{source}: {error}" if source else error)
 
 
 def download_file(

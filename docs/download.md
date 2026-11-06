@@ -109,3 +109,7 @@ rm CosmicFusionExport.tsv
 # Create database and import the data
 sqlite3 cosmic.db < fusion_report/db/Cosmic.sql
 ```
+
+## Checking the remote sources
+
+`fusion_report check-sources` fetches the first bytes of every remote source and checks the HTTP status, content type and file format, without downloading the full files. It exits with an error if a required source (COSMIC API, Mitelman) is broken, or any source with `--strict`, and can write the results (including ETag/Last-Modified) as JSON with `--json results.json`. The repository runs it weekly (`.github/workflows/check_sources.yml`) and opens or updates an issue labelled `upstream-source-broken` when it fails.
