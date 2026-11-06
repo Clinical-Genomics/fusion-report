@@ -56,17 +56,17 @@
             "databases": [
                 {
                     "key": "--no-cosmic",
-                    "help": "Do not download cosmic fusion database",
+                    "help": "Do not use the cosmic fusion database",
                     "action": "store_true"
                 },
                 {
                     "key": "--no-fusiongdb2",
-                    "help": "Do not download fusiongdb2 fusion database",
+                    "help": "Do not use the fusiongdb2 fusion database",
                     "action": "store_true"
                 },
                 {
                     "key": "--no-mitelman",
-                    "help": "Do not download mitelman fusion database",
+                    "help": "Do not use the mitelman fusion database",
                     "action": "store_true"
                 }
             ],
@@ -117,8 +117,8 @@
                     "action": "store_true"
                 },
                 {
-                    "key": "-no_ssl",
-                    "help": "Turn off verification of SSL certificates when downloading data.",
+                    "key": ["-no_ssl", "--no-ssl"],
+                    "help": "Turn off verification of SSL certificates when downloading data. Prefer setting REQUESTS_CA_BUNDLE when behind a TLS-intercepting proxy.",
                     "action": "store_true"
                 }
             ],
@@ -160,7 +160,7 @@
                 },
                 {
                     "key": "--fusiongdb2",
-                    "help": "Path to FusionGDB2 XLSX or pre-processed CSV file"
+                    "help": "Path to FusionGDB2 headerless 6-column TSV (.txt) or pre-processed CSV (.csv) file"
                 }
             ]
         }

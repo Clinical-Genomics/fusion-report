@@ -17,6 +17,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from fusion_report.common.exceptions.download import DownloadException
+from fusion_report.common.fetch import download_file
 from fusion_report.common.logger import Logger
 from fusion_report.data.cosmic import CosmicDB
 from fusion_report.data.fusiongdb2 import FusionGDB2
@@ -110,25 +111,14 @@ class Net:
         return json.loads(token_response)["access_token"]
 
     @staticmethod
-    def get_large_file(url: str, no_ssl) -> None:
-        """Method for downloading a large file."""
-        LOG.info(f"Downloading {url}")
-        try:
-            headers = {"User-Agent": "Mozilla/5.0"}
-            response = requests.get(url, headers=headers, stream=True, verify=not no_ssl)
-            file = url.split("/")[-1].split("?")[0]
+    def get_large_file(url: str, no_ssl, fmt: str = "binary", source: str = "") -> str:
+        """Download a file into the current directory and validate it (see `common.fetch`).
 
-            if (
-                not os.path.exists(file)
-                or (response.headers.get("Content-Length") or 0) != os.stat(file).st_size
-            ):
-                with open(file, "wb") as out_file:
-                    for chunk in response.iter_content(chunk_size=8192):
-                        if chunk:
-                            out_file.write(chunk)
-        except Exception as ex:
-            LOG.error(f"Error downloading {url}, {ex}")
-            raise DownloadException(ex) from ex
+        Raises:
+            DownloadException: on HTTP errors, HTML instead of data or a wrong/truncated file
+        """
+        file = url.split("/")[-1].split("?")[0]
+        return download_file(url, file, fmt=fmt, no_ssl=no_ssl, source=source)
 
     @staticmethod
     def get_cosmic_from_sanger_url(token: str, file_path: str, no_ssl: bool = False) -> str:
@@ -240,9 +230,12 @@ class Net:
                 raise ValueError("Failed to retrieve the download URL.")
 
             LOG.info(f"Download URL: {download_url}")
-            Net.get_large_file(download_url, no_ssl)
-            Net.extract_tar(Settings.COSMIC["TARFILE"], ".")
+            Net.get_large_file(download_url, no_ssl, fmt="tar", source=Settings.COSMIC["NAME"])
+            if Net.extract_tar(Settings.COSMIC["TARFILE"], ".") is None:
+                raise ValueError(f"{Settings.COSMIC['FILE']} not found in the downloaded archive")
             extracted_file = Net.extract_gz("." + "/" + Settings.COSMIC["FILE"])
+            if extracted_file is None:
+                raise ValueError(f"could not decompress {Settings.COSMIC['FILE']}")
             renamed_file = os.path.join(
                 os.path.dirname(extracted_file), "cosmic_fusion_v101_grch38.tsv"
             )
@@ -252,8 +245,10 @@ class Net:
 
         except requests.exceptions.RequestException as req_err:
             return_err.append(Net.describe_cosmic_error(req_err, file_path))
-        except (ValueError, KeyError) as json_err:
-            return_err.append(f"Error processing request: {json_err}")
+        except DownloadException as ex:
+            return_err.append(str(ex))
+        except Exception as ex:
+            return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
 
     @staticmethod
     def get_cosmic_from_qiagen(token: str, return_err: List[str], outputpath: str, no_ssl) -> None:
@@ -286,10 +281,15 @@ class Net:
         """Method for download FusionGDB2 database."""
         try:
             url: str = f'{Settings.FUSIONGDB2["HOSTNAME"]}/{Settings.FUSIONGDB2["FILE"]}'
-            Net.get_large_file(url, no_ssl)
+            Net.get_large_file(url, no_ssl, fmt="text", source=Settings.FUSIONGDB2["NAME"])
             file: str = f'{Settings.FUSIONGDB2["FILE"]}'
             # Headerless 6-column TSV: col2 = 5'-gene, col4 = 3'-gene (0-indexed)
             df = pd.read_csv(file, sep="\t", header=None)
+            if df.shape[1] < 5 or df.empty:
+                raise ValueError(
+                    f"unexpected file format: expected a headerless 6-column TSV, got "
+                    f"{df.shape[1]} column(s) and {len(df)} row(s)"
+                )
             df["fusion"] = df[2] + "--" + df[4]
             file_csv = "fusionGDB2.csv"
             df["fusion"].to_csv(file_csv, header=False, index=False, sep=",", encoding="utf-8")
@@ -298,24 +298,30 @@ class Net:
             db.setup([file_csv], delimiter=",", skip_header=False)
 
         except DownloadException as ex:
-            return_err.append(f"FusionGDB2: {ex}")
+            return_err.append(str(ex))
+        except Exception as ex:
+            return_err.append(f'{Settings.FUSIONGDB2["NAME"]}: {ex}')
 
     @staticmethod
     def get_mitelman(self, return_err: List[str], no_ssl) -> None:
         """Method for download Mitelman database."""
         try:
             url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
-            Net.get_large_file(url, no_ssl)
+            Net.get_large_file(url, no_ssl, fmt="zip", source=Settings.MITELMAN["NAME"])
             with ZipFile(Settings.MITELMAN["FILE"], "r") as archive:
                 files = [
                     x for x in archive.namelist() if "MBCA.TXT.DATA" in x and "MACOSX" not in x
                 ]
+                if not files:
+                    raise ValueError("MBCA.TXT.DATA not found in the downloaded archive")
                 archive.extractall()
 
             db = MitelmanDB(".")
             db.setup(files, delimiter="\t", skip_header=False, encoding="ISO-8859-1")
         except DownloadException as ex:
-            return_err.append(f"Mitelman: {ex}")
+            return_err.append(str(ex))
+        except Exception as ex:
+            return_err.append(f'{Settings.MITELMAN["NAME"]}: {ex}')
 
     @staticmethod
     def clean(tmp_dir: str, output_dir: str):
