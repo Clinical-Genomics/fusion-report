@@ -123,23 +123,42 @@ class App:
 
         if not params.no_cosmic:
             local_fusions.update(
-                {CosmicDB(params.db_path).name: CosmicDB(params.db_path).get_all_fusions()}
-            )
-
-        if not params.no_fusiongdb2:
-            local_fusions.update(
-                {MitelmanDB(params.db_path).name: MitelmanDB(params.db_path).get_all_fusions()}
+                self._load_db_fusions(CosmicDB, Settings.COSMIC["NAME"], params.db_path)
             )
 
         if not params.no_mitelman:
             local_fusions.update(
-                {FusionGDB2(params.db_path).name: FusionGDB2(params.db_path).get_all_fusions()}
+                self._load_db_fusions(MitelmanDB, Settings.MITELMAN["NAME"], params.db_path)
+            )
+
+        if not params.no_fusiongdb2:
+            local_fusions.update(
+                self._load_db_fusions(FusionGDB2, Settings.FUSIONGDB2["NAME"], params.db_path)
             )
 
         for fusion in self.manager.fusions:
             for db_name, db_list in local_fusions.items():
                 if fusion.name in db_list:
                     fusion.add_db(db_name)
+
+    @staticmethod
+    def _load_db_fusions(db_class, db_name: str, db_path: str) -> Dict[str, List[str]]:
+        """Load all fusions from a local database.
+
+        Checks that the database file exists first, because `sqlite3.connect` would otherwise
+        silently create an empty database file and only fail later with `no such table`.
+
+        Raises:
+            AppException: if the database file does not exist
+        """
+        db_file = os.path.join(db_path, f"{db_name.lower()}.db")
+        if not os.path.isfile(db_file):
+            raise AppException(
+                f"Database file {db_file} not found. Download it with `fusion_report download` "
+                f"or skip it with `--no-{db_name.lower()}`."
+            )
+        db = db_class(db_path)
+        return {db.name: db.get_all_fusions()}
 
     def export_results(self, path: str, extension: str) -> None:
         """Export results.
@@ -237,7 +256,9 @@ class App:
                 float(Settings.FUSION_WEIGHTS[db_name.lower()]) for db_name in fusion.dbs
             )
 
-            db_score: float = db_hits / db_provided
+            # With no weighted database provided (e.g. --no-cosmic --no-mitelman) the
+            # databases cannot contribute to the score.
+            db_score: float = db_hits / db_provided if db_provided > 0 else 0.0
 
             score: float = float("%0.3f" % (0.5 * tool_score + 0.5 * db_score))
             score_explained = (
