@@ -117,6 +117,31 @@
                     "action": "store_true"
                 },
                 {
+                    "key": "--allow-missing",
+                    "help": "Treat every database as optional: warn about sources that cannot be downloaded instead of failing, as long as at least one database is built.",
+                    "action": "store_true"
+                },
+                {
+                    "key": "--mitelman-file",
+                    "help": "Build Mitelman from this local file (ZIP or MBCA.TXT.DATA) instead of downloading it"
+                },
+                {
+                    "key": "--fusiongdb2-file",
+                    "help": "Build FusionGDB2 from this local file (headerless 6-column .txt or pre-processed .csv) instead of downloading it"
+                },
+                {
+                    "key": "--cosmic-file",
+                    "help": "Build COSMIC from this local fusion TSV (plain or gzipped) instead of downloading it; no credentials needed"
+                },
+                {
+                    "key": "--mitelman-url",
+                    "help": "Download Mitelman from this URL instead of the default"
+                },
+                {
+                    "key": "--fusiongdb2-url",
+                    "help": "Download FusionGDB2 from this URL (e.g. a mirror) instead of the default"
+                },
+                {
                     "key": ["-no_ssl", "--no-ssl"],
                     "help": "Turn off verification of SSL certificates when downloading data. Prefer setting REQUESTS_CA_BUNDLE when behind a TLS-intercepting proxy.",
                     "action": "store_true"

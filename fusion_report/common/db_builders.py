@@ -64,7 +64,7 @@ def _check_cosmic_header(header: List[str], data_file: str) -> None:
         )
 
 
-def _count_lines(path: str, encoding: str = "utf-8", skip_header: bool = False) -> int:
+def count_rows(path: str, encoding: str = "utf-8", skip_header: bool = False) -> int:
     with open(path, "r", encoding=encoding) as handle:
         count = sum(1 for line in handle if line.strip())
     return count - 1 if skip_header and count else count
@@ -95,7 +95,7 @@ def build_mitelman(file_path: str) -> int:
                 f"unexpected file format in {os.path.basename(data_file)}: expected "
                 f"{MITELMAN_COLUMNS} tab-separated columns, got {columns}"
             )
-        rows += _count_lines(data_file, encoding="ISO-8859-1")
+        rows += count_rows(data_file, encoding="ISO-8859-1")
     if rows == 0:
         raise ValueError("the Mitelman data file is empty")
 
@@ -126,7 +126,7 @@ def build_fusiongdb2(file_path: str) -> int:
     else:
         raise ValueError(f"unsupported file format: {file_path}. Expected .txt or .csv")
 
-    rows = _count_lines(csv_file)
+    rows = count_rows(csv_file)
     if rows == 0:
         raise ValueError("the FusionGDB2 file is empty")
     FusionGDB2(".").setup([csv_file], delimiter=",", skip_header=False)
@@ -153,7 +153,7 @@ def build_cosmic(file_path: str) -> int:
         # the table file only differ in case
         shutil.copy(data_file, f"{COSMIC_TABLE_FILE}.tmp")
         os.replace(f"{COSMIC_TABLE_FILE}.tmp", COSMIC_TABLE_FILE)
-    rows = _count_lines(COSMIC_TABLE_FILE, skip_header=True)
+    rows = count_rows(COSMIC_TABLE_FILE, skip_header=True)
     if rows == 0:
         raise ValueError("the COSMIC file has no data rows")
     CosmicDB(".").setup([COSMIC_TABLE_FILE], delimiter="\t", skip_header=True)

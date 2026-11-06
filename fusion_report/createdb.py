@@ -10,6 +10,8 @@ from typing import List
 from fusion_report.common import db_builders
 from fusion_report.common.exceptions.db import DbException
 from fusion_report.common.logger import Logger
+from fusion_report.common.manifest import OK, Manifest
+from fusion_report.data.sources import get_source
 
 LOG = Logger(__name__)
 
@@ -44,6 +46,7 @@ class CreateDB:
         os.chdir(tmp_dir)
 
         return_err: List[str] = []
+        self.manifest = Manifest("createdb")
 
         try:
             if cosmic_path:
@@ -67,32 +70,32 @@ class CreateDB:
             # using absolute paths so this works regardless of the working directory.
             os.chdir(original_cwd)
             self._clean(tmp_dir, output_path)
+            if any(s["status"] == OK for s in self.manifest.data["sources"].values()):
+                self.manifest.write(output_path)
 
-    @staticmethod
-    def _build(name: str, builder, file_path: str, return_err: List[str]) -> None:
+    def _build(self, key: str, builder, file_path: str, return_err: List[str]) -> None:
+        source = get_source(key)
         try:
             if not os.path.exists(file_path):
-                raise FileNotFoundError(f"{name} file not found: {file_path}")
-            LOG.info(f"Building {name} database from {file_path}")
+                raise FileNotFoundError(f"{source.name} file not found: {file_path}")
+            LOG.info(f"Building {source.name} database from {file_path}")
             rows = builder(file_path)
-            LOG.info(f"{name} database created successfully ({rows} rows)")
+            self.manifest.record_file(source, file_path, f"file:{file_path}", rows)
+            LOG.info(f"{source.name} database created successfully ({rows} rows)")
         except Exception as ex:
-            return_err.append(f"{name}: {ex}")
+            return_err.append(f"{source.name}: {ex}")
 
-    @staticmethod
-    def build_cosmic(file_path: str, return_err: List[str]) -> None:
+    def build_cosmic(self, file_path: str, return_err: List[str]) -> None:
         """Build COSMIC database from a local TSV file (plain or gzipped)."""
-        CreateDB._build("COSMIC", db_builders.build_cosmic, file_path, return_err)
+        self._build("cosmic", db_builders.build_cosmic, file_path, return_err)
 
-    @staticmethod
-    def build_mitelman(file_path: str, return_err: List[str]) -> None:
+    def build_mitelman(self, file_path: str, return_err: List[str]) -> None:
         """Build Mitelman database from a ZIP archive or extracted data file."""
-        CreateDB._build("Mitelman", db_builders.build_mitelman, file_path, return_err)
+        self._build("mitelman", db_builders.build_mitelman, file_path, return_err)
 
-    @staticmethod
-    def build_fusiongdb2(file_path: str, return_err: List[str]) -> None:
+    def build_fusiongdb2(self, file_path: str, return_err: List[str]) -> None:
         """Build FusionGDB2 database from a TSV or pre-processed CSV file."""
-        CreateDB._build("FusionGDB2", db_builders.build_fusiongdb2, file_path, return_err)
+        self._build("fusiongdb2", db_builders.build_fusiongdb2, file_path, return_err)
 
     @staticmethod
     def _clean(tmp_dir: str, output_dir: str):

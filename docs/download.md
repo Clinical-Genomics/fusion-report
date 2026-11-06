@@ -36,6 +36,26 @@ fusion_report download
 ```
 
 
+## Local files, alternative URLs and missing sources
+
+Every database can also be built from a local file instead of downloading it, and Mitelman/FusionGDB2 can be downloaded from another URL (for example an institutional mirror):
+
+```bash
+fusion_report download
+    --no-cosmic
+    --mitelman-file /path/to/mitelman_db.zip
+    --fusiongdb2-url https://mirror.example.org/combinedFGDB2genes_genes_ID_04302024.txt
+    /path/to/db
+```
+
+`--cosmic-file /path/to/Cosmic_Fusion_v101_GRCh38.tsv.gz` builds COSMIC from a file you downloaded yourself, without credentials.
+
+By default COSMIC and Mitelman are required and FusionGDB2 is optional. With `--allow-missing`, every source is optional: sources that cannot be downloaded are reported as warnings, and `download` only fails if no database could be built at all.
+
+## Provenance: `db_manifest.json`
+
+`download` and `createdb` write `db_manifest.json` next to the databases. It records the fusion-report version, the command (with COSMIC credentials redacted) and, per source, whether it was built (`ok`), turned off (`disabled`), skipped because it is optional (`skipped`) or `failed`, where the data came from (URL without query string, or local file), the sha256 and size of the input file and the number of imported rows. `run` logs this information and skips FusionGDB2 automatically when the manifest says it was not built.
+
 ## Troubleshooting
 
 `download` validates every file before using it: HTTP errors, HTML pages served instead of data (for example when a source has moved or blocks automated downloads), files of the wrong type and truncated downloads all fail with a message that names the source. Transient errors (HTTP 429/5xx) are retried with backoff. Each database is downloaded independently, so one failing source does not stop the others, and the databases that succeeded are kept.
@@ -48,7 +68,7 @@ fusion_report download
 The FusionGDB2 website (compbio.uth.edu) currently blocks automated downloads, see [#100](https://github.com/Clinical-Genomics/fusion-report/issues/100). The dataset itself is frozen (April 2024). Options:
 
 * skip it with `--no-fusiongdb2` (no effect on scoring), or
-* obtain `combinedFGDB2genes_genes_ID_04302024.txt` manually and build the database with `fusion_report createdb /path/to/db --fusiongdb2 combinedFGDB2genes_genes_ID_04302024.txt`. The original file has 98,154 rows and the sha256 checksum `c09b637b17e461d66cec869d8f083049647a5ee1a34d438d88df2af57d53278f`.
+* obtain `combinedFGDB2genes_genes_ID_04302024.txt` manually and pass it to `download` with `--fusiongdb2-file`, or build the database with `fusion_report createdb /path/to/db --fusiongdb2 combinedFGDB2genes_genes_ID_04302024.txt`. The original file has 98,154 rows and the sha256 checksum `c09b637b17e461d66cec869d8f083049647a5ee1a34d438d88df2af57d53278f`.
 
 ### SSL certificate errors
 

@@ -17,6 +17,7 @@ from fusion_report.common.exceptions.db import DbException
 from fusion_report.common.exceptions.download import DownloadException
 from fusion_report.common.fusion_manager import FusionManager
 from fusion_report.common.logger import Logger
+from fusion_report.common.manifest import DISABLED, OK, SKIPPED, read_manifest
 from fusion_report.common.models.fusion import Fusion
 from fusion_report.common.report import Report
 from fusion_report.createdb import CreateDB
@@ -120,6 +121,14 @@ class App:
     def enrich(self, params: Namespace) -> None:
         """Enrich fusion with all relevant information from local databases."""
         local_fusions: Dict[str, List[str]] = {}
+        manifest = read_manifest(params.db_path)
+        if manifest:
+            self._log_manifest(manifest)
+        skip_fusiongdb2 = params.no_fusiongdb2 or (
+            manifest is not None
+            and manifest.get("sources", {}).get("fusiongdb2", {}).get("status")
+            in (SKIPPED, DISABLED)
+        )
 
         if not params.no_cosmic:
             local_fusions.update(
@@ -131,17 +140,35 @@ class App:
                 self._load_db_fusions(MitelmanDB, Settings.MITELMAN["NAME"], params.db_path)
             )
 
-        if not params.no_fusiongdb2:
+        if not skip_fusiongdb2:
             local_fusions.update(
                 self._load_db_fusions(
                     FusionGDB2, Settings.FUSIONGDB2["NAME"], params.db_path, optional=True
                 )
+            )
+        elif not params.no_fusiongdb2:
+            Logger(__name__).info(
+                "FusionGDB2 was not built for this database folder (see db_manifest.json), "
+                "skipping it."
             )
 
         for fusion in self.manager.fusions:
             for db_name, db_list in local_fusions.items():
                 if fusion.name in db_list:
                     fusion.add_db(db_name)
+
+    @staticmethod
+    def _log_manifest(manifest: Dict[str, Any]) -> None:
+        """Log where the databases in use came from."""
+        for entry in manifest.get("sources", {}).values():
+            if entry.get("status") != OK:
+                continue
+            Logger(__name__).info(
+                f"Database {entry.get('name')}: version {entry.get('version') or 'unknown'}, "
+                f"{entry.get('rows') or '?'} rows, from {entry.get('origin') or 'unknown'} "
+                f"(created {manifest.get('created_utc', 'unknown')} by fusion-report "
+                f"{manifest.get('fusion_report_version', '?')})"
+            )
 
     @staticmethod
     def _load_db_fusions(
