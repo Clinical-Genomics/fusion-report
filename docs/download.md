@@ -27,6 +27,8 @@ fusion_report download
     /path/to/db
 ```
 
+COSMIC v101 is downloaded by default. Another release can be selected with `--cosmic-version` (for example `--cosmic-version v103`); its fusion file must have the same columns, which is checked when the database is built.
+
 You can exclude a specific database with --no-cosmic/--no-mitelman/--no-fusiongdb2. Exemple for no cosmic:
 
 ```bash

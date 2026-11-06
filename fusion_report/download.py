@@ -11,6 +11,7 @@ from fusion_report.common.logger import Logger
 from fusion_report.common.manifest import DISABLED, FAILED, SKIPPED, Manifest
 from fusion_report.common.net import Net
 from fusion_report.data.sources import Source, get_source
+from fusion_report.settings import Settings
 
 LOG = Logger(__name__)
 
@@ -58,6 +59,12 @@ class Download:
             for path in [getattr(params, f"{key}_file", None)]
         }
         allow_missing = getattr(params, "allow_missing", False)
+        cosmic_version = getattr(params, "cosmic_version", None)
+        if cosmic_version and not params.no_cosmic:
+            try:
+                Settings.use_cosmic_version(cosmic_version)
+            except ValueError as ex:
+                raise DownloadException(f"COSMIC: {ex}") from ex
 
         # making sure output directory exists
         if not os.path.exists(output_dir):

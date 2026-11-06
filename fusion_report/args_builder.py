@@ -168,7 +168,9 @@ class ArgsBuilder:
         )
         for cosmic in args["cosmic"]:
             if not cosmic.get("action"):
-                download_cosmic.add_argument(cosmic["key"], help=cosmic.get("help"), type=str)
+                download_cosmic.add_argument(
+                    cosmic["key"], help=cosmic.get("help"), type=str, default=cosmic.get("default")
+                )
             else:
                 download_cosmic.add_argument(
                     cosmic["key"], help=cosmic.get("help"), action=cosmic.get("action")

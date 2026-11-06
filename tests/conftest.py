@@ -1,5 +1,6 @@
 """Shared test fixtures."""
 
+import copy
 import os
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -9,6 +10,7 @@ import pytest
 
 from fusion_report.common import fetch
 from fusion_report.common.singleton import Singleton
+from fusion_report.settings import Settings
 
 # (status, headers, body)
 Response = Tuple[int, Dict[str, str], bytes]
@@ -24,6 +26,7 @@ class FakeServer:
         self.routes: Dict[str, List[Response]] = {}
         self.hits: Dict[str, int] = {}
         self.request_headers: List[Dict[str, str]] = []
+        self.request_bodies: List[bytes] = []
         server = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -39,6 +42,11 @@ class FakeServer:
                     self.send_header(key, value)
                 self.end_headers()
                 self.wfile.write(body)
+
+            def do_POST(self):  # noqa: N802
+                length = int(self.headers.get("Content-Length") or 0)
+                server.request_bodies.append(self.rfile.read(length))
+                self.do_GET()
 
             def log_message(self, *args):
                 pass
@@ -77,5 +85,8 @@ def _isolated_state(monkeypatch):
     """Restore the working directory and reset cached database singletons per test."""
     cwd = os.getcwd()
     monkeypatch.setattr(Singleton, "_instances", {})
+    # Settings dicts are class-level state (e.g. changed by --cosmic-version)
+    for name in ("COSMIC", "MITELMAN", "FUSIONGDB2", "MIRRORS"):
+        monkeypatch.setattr(Settings, name, copy.deepcopy(getattr(Settings, name)))
     yield
     os.chdir(cwd)

@@ -161,6 +161,11 @@
                     "help": "COSMIC token"
                 },
                 {
+                    "key": "--cosmic-version",
+                    "help": "COSMIC release to download (default: v101). Other releases must have the same fusion file columns.",
+                    "default": "v101"
+                },
+                {
                     "key": "--qiagen",
                     "help": "Use QIAGEN to download COSMIC db (commercial usage)",
                     "action": "store_true"

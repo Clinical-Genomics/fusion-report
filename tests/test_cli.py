@@ -26,6 +26,13 @@ def test_ssl_verification_is_default(monkeypatch):
     assert params.no_ssl is False
     assert params.allow_missing is False
     assert params.mitelman_file is None and params.fusiongdb2_url is None
+    assert params.cosmic_version == "v101"
+
+
+def test_cosmic_version_flag(monkeypatch):
+    assert (
+        _parse(monkeypatch, "download", "--cosmic-version", "v103", "db").cosmic_version == "v103"
+    )
 
 
 def test_download_source_override_flags(monkeypatch):
