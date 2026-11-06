@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed the documentation link pointing to a 404 page ([#96](https://github.com/Clinical-Genomics/fusion-report/issues/96)). The README now links to the hosted documentation at `https://clinical-genomics.github.io/fusion-report/` (and the live demo at `https://clinical-genomics.github.io/fusion-report/example/`) instead of the defunct `https://matq007.github.io/fusion-report/`.
+- Replaced stale `matq007/fusion-report` repository links with `Clinical-Genomics/fusion-report` in the README (logo, CI badge), the docsify config (`docs/index.html`) and the report sidebar template.
+
 ## [4.1.2]
 
 ### Fixed
