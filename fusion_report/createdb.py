@@ -1,21 +1,15 @@
 """Create databases from local files"""
 
 import glob
-import gzip
 import os
 import shutil
 import time
 from argparse import Namespace
 from typing import List
-from zipfile import ZipFile
 
-import pandas as pd
-
+from fusion_report.common import db_builders
 from fusion_report.common.exceptions.db import DbException
 from fusion_report.common.logger import Logger
-from fusion_report.data.cosmic import CosmicDB
-from fusion_report.data.fusiongdb2 import FusionGDB2
-from fusion_report.data.mitelman import MitelmanDB
 
 LOG = Logger(__name__)
 
@@ -75,85 +69,30 @@ class CreateDB:
             self._clean(tmp_dir, output_path)
 
     @staticmethod
-    def build_cosmic(file_path: str, return_err: List[str]) -> None:
-        """Build COSMIC database from a local TSV file (plain or gzipped)."""
+    def _build(name: str, builder, file_path: str, return_err: List[str]) -> None:
         try:
             if not os.path.exists(file_path):
-                raise FileNotFoundError(f"COSMIC file not found: {file_path}")
-
-            data_file = file_path
-            if file_path.endswith(".gz"):
-                LOG.info(f"Decompressing {file_path}")
-                decompressed = os.path.basename(file_path).rsplit(".gz", 1)[0]
-                with gzip.open(file_path, "rb") as f_in, open(decompressed, "wb") as f_out:
-                    shutil.copyfileobj(f_in, f_out)
-                data_file = decompressed
-
-            # Rename to match expected table name
-            target_file = "cosmic_fusion_v101_grch38.tsv"
-            if os.path.basename(data_file) != target_file:
-                shutil.copy(data_file, target_file)
-
-            db = CosmicDB(".")
-            db.setup([target_file], delimiter="\t", skip_header=True)
-            LOG.info("COSMIC database created successfully")
+                raise FileNotFoundError(f"{name} file not found: {file_path}")
+            LOG.info(f"Building {name} database from {file_path}")
+            rows = builder(file_path)
+            LOG.info(f"{name} database created successfully ({rows} rows)")
         except Exception as ex:
-            return_err.append(f"COSMIC: {ex}")
+            return_err.append(f"{name}: {ex}")
+
+    @staticmethod
+    def build_cosmic(file_path: str, return_err: List[str]) -> None:
+        """Build COSMIC database from a local TSV file (plain or gzipped)."""
+        CreateDB._build("COSMIC", db_builders.build_cosmic, file_path, return_err)
 
     @staticmethod
     def build_mitelman(file_path: str, return_err: List[str]) -> None:
         """Build Mitelman database from a ZIP archive or extracted data file."""
-        try:
-            if not os.path.exists(file_path):
-                raise FileNotFoundError(f"Mitelman file not found: {file_path}")
-
-            if file_path.endswith(".zip"):
-                LOG.info(f"Extracting {file_path}")
-                with ZipFile(file_path, "r") as archive:
-                    files = [
-                        x for x in archive.namelist() if "MBCA.TXT.DATA" in x and "MACOSX" not in x
-                    ]
-                    archive.extractall()
-            else:
-                files = [file_path]
-
-            db = MitelmanDB(".")
-            db.setup(files, delimiter="\t", skip_header=False, encoding="ISO-8859-1")
-            LOG.info("Mitelman database created successfully")
-        except Exception as ex:
-            return_err.append(f"Mitelman: {ex}")
+        CreateDB._build("Mitelman", db_builders.build_mitelman, file_path, return_err)
 
     @staticmethod
     def build_fusiongdb2(file_path: str, return_err: List[str]) -> None:
         """Build FusionGDB2 database from a TSV or pre-processed CSV file."""
-        try:
-            if not os.path.exists(file_path):
-                raise FileNotFoundError(f"FusionGDB2 file not found: {file_path}")
-
-            if file_path.endswith(".txt"):
-                LOG.info(f"Processing FusionGDB2 file {file_path}")
-                # Headerless 6-column TSV: col2 = 5'-gene, col4 = 3'-gene (0-indexed)
-                df = pd.read_csv(file_path, sep="\t", header=None)
-                if df.shape[1] < 5 or df.empty:
-                    raise ValueError(
-                        f"unexpected file format: expected a headerless 6-column TSV, got "
-                        f"{df.shape[1]} column(s) and {len(df)} row(s)"
-                    )
-                df["fusion"] = df[2] + "--" + df[4]
-                csv_file = "fusionGDB2.csv"
-                df["fusion"].to_csv(csv_file, header=False, index=False, sep=",", encoding="utf-8")
-            elif file_path.endswith(".csv"):
-                csv_file = file_path
-            else:
-                raise ValueError(
-                    f"Unsupported FusionGDB2 file format: {file_path}. " "Expected .txt or .csv"
-                )
-
-            db = FusionGDB2(".")
-            db.setup([csv_file], delimiter=",", skip_header=False)
-            LOG.info("FusionGDB2 database created successfully")
-        except Exception as ex:
-            return_err.append(f"FusionGDB2: {ex}")
+        CreateDB._build("FusionGDB2", db_builders.build_fusiongdb2, file_path, return_err)
 
     @staticmethod
     def _clean(tmp_dir: str, output_dir: str):

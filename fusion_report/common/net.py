@@ -9,19 +9,17 @@ import tarfile
 import time
 from argparse import Namespace
 from typing import List
-from zipfile import ZipFile
 
 import pandas as pd
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+from fusion_report.common import db_builders
 from fusion_report.common.exceptions.download import DownloadException
-from fusion_report.common.fetch import download_file
+from fusion_report.common.fetch import download_file, download_source
 from fusion_report.common.logger import Logger
-from fusion_report.data.cosmic import CosmicDB
-from fusion_report.data.fusiongdb2 import FusionGDB2
-from fusion_report.data.mitelman import MitelmanDB
+from fusion_report.data.sources import get_source
 from fusion_report.settings import Settings
 
 LOG = Logger(__name__)
@@ -233,15 +231,7 @@ class Net:
             Net.get_large_file(download_url, no_ssl, fmt="tar", source=Settings.COSMIC["NAME"])
             if Net.extract_tar(Settings.COSMIC["TARFILE"], ".") is None:
                 raise ValueError(f"{Settings.COSMIC['FILE']} not found in the downloaded archive")
-            extracted_file = Net.extract_gz("." + "/" + Settings.COSMIC["FILE"])
-            if extracted_file is None:
-                raise ValueError(f"could not decompress {Settings.COSMIC['FILE']}")
-            renamed_file = os.path.join(
-                os.path.dirname(extracted_file), "cosmic_fusion_v101_grch38.tsv"
-            )
-            os.rename(extracted_file, renamed_file)
-            db = CosmicDB(".")
-            db.setup([os.path.basename(renamed_file)], delimiter="\t", skip_header=True)
+            db_builders.build_cosmic(Settings.COSMIC["FILE"])
 
         except requests.exceptions.RequestException as req_err:
             return_err.append(Net.describe_cosmic_error(req_err, file_path))
@@ -260,68 +250,34 @@ class Net:
 
         file_id = Net.fetch_fusion_file_id(outputpath)
         Net.download_qiagen_file(token, file_id, outputpath)
-        file: str = Settings.COSMIC["FILE"]
-        files = []
-
         try:
-            files.append(".".join(file.split(".")[:-1]))
-
-            with gzip.open(file, "rb") as archive, open(files[0], "wb") as out_file:
-                shutil.copyfileobj(archive, out_file)
-
-            renamed_file = "cosmic_fusion_v101_grch38.tsv"
-            os.rename(files[0], renamed_file)
-            db = CosmicDB(".")
-            db.setup([renamed_file], delimiter="\t", skip_header=True)
+            db_builders.build_cosmic(Settings.COSMIC["FILE"])
         except Exception as ex:
             return_err.append(f'{Settings.COSMIC["NAME"]}: {ex}')
 
     @staticmethod
     def get_fusiongdb2(self, return_err: List[str], no_ssl) -> None:
-        """Method for download FusionGDB2 database."""
+        """Download FusionGDB2 (trying all configured URLs) and build fusiongdb2.db."""
+        source = get_source("fusiongdb2")
         try:
-            url: str = f'{Settings.FUSIONGDB2["HOSTNAME"]}/{Settings.FUSIONGDB2["FILE"]}'
-            Net.get_large_file(url, no_ssl, fmt="text", source=Settings.FUSIONGDB2["NAME"])
-            file: str = f'{Settings.FUSIONGDB2["FILE"]}'
-            # Headerless 6-column TSV: col2 = 5'-gene, col4 = 3'-gene (0-indexed)
-            df = pd.read_csv(file, sep="\t", header=None)
-            if df.shape[1] < 5 or df.empty:
-                raise ValueError(
-                    f"unexpected file format: expected a headerless 6-column TSV, got "
-                    f"{df.shape[1]} column(s) and {len(df)} row(s)"
-                )
-            df["fusion"] = df[2] + "--" + df[4]
-            file_csv = "fusionGDB2.csv"
-            df["fusion"].to_csv(file_csv, header=False, index=False, sep=",", encoding="utf-8")
-
-            db = FusionGDB2(".")
-            db.setup([file_csv], delimiter=",", skip_header=False)
-
+            download_source(source, source.filename, no_ssl=no_ssl)
+            db_builders.build_fusiongdb2(source.filename)
         except DownloadException as ex:
             return_err.append(str(ex))
         except Exception as ex:
-            return_err.append(f'{Settings.FUSIONGDB2["NAME"]}: {ex}')
+            return_err.append(f"{source.name}: {ex}")
 
     @staticmethod
     def get_mitelman(self, return_err: List[str], no_ssl) -> None:
-        """Method for download Mitelman database."""
+        """Download Mitelman (trying all configured URLs) and build mitelman.db."""
+        source = get_source("mitelman")
         try:
-            url: str = f'{Settings.MITELMAN["HOSTNAME"]}/{Settings.MITELMAN["FILE"]}'
-            Net.get_large_file(url, no_ssl, fmt="zip", source=Settings.MITELMAN["NAME"])
-            with ZipFile(Settings.MITELMAN["FILE"], "r") as archive:
-                files = [
-                    x for x in archive.namelist() if "MBCA.TXT.DATA" in x and "MACOSX" not in x
-                ]
-                if not files:
-                    raise ValueError("MBCA.TXT.DATA not found in the downloaded archive")
-                archive.extractall()
-
-            db = MitelmanDB(".")
-            db.setup(files, delimiter="\t", skip_header=False, encoding="ISO-8859-1")
+            download_source(source, source.filename, no_ssl=no_ssl)
+            db_builders.build_mitelman(source.filename)
         except DownloadException as ex:
             return_err.append(str(ex))
         except Exception as ex:
-            return_err.append(f'{Settings.MITELMAN["NAME"]}: {ex}')
+            return_err.append(f"{source.name}: {ex}")
 
     @staticmethod
     def clean(tmp_dir: str, output_dir: str):
