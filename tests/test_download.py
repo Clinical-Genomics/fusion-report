@@ -55,4 +55,4 @@ def test_download_qiagen_calls_with_matching_signature(tmp_path):
         Download(_params(tmp_path, qiagen=True))
 
     qiagen.assert_called_once()
-    assert qiagen.call_args.args == ("T", [], str(tmp_path))
+    assert qiagen.call_args.args == ("T", [], str(tmp_path), False)
